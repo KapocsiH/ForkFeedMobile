@@ -1,0 +1,22 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:ForkFeedMobile"
+             xmlns:helpers="clr-namespace:ForkFeedMobile.Helpers"
+             x:Class="ForkFeedMobile.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Global Converters -->
+            <helpers:InvertBoolConverter x:Key="InvertBool" />
+            <helpers:StringNotEmptyConverter x:Key="StringNotEmpty" />
+            <helpers:NotNullConverter x:Key="NotNull" />
+            <helpers:FavoriteIconConverter x:Key="FavoriteIcon" />
+            <helpers:RatingStarColorConverter x:Key="RatingStarColor" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

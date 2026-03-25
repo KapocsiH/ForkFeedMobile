@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             x:Class="ForkFeedMobile.Views.ProfilePage"
+             x:DataType="vm:ProfileViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <!-- Logged-In View -->
+            <VerticalStackLayout IsVisible="{Binding IsLoggedIn}" Spacing="16">
+
+                <!-- Avatar -->
+                <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60"
+                       Padding="0" HasShadow="True" BorderColor="Transparent"
+                       HorizontalOptions="Center" IsClippedToBounds="True">
+                    <Image Source="{Binding User.AvatarUrl}" Aspect="AspectFill" />
+                </Frame>
+
+                <Label Text="{Binding User.DisplayName}"
+                       FontSize="24" FontAttributes="Bold"
+                       HorizontalTextAlignment="Center" />
+
+                <Label Text="{Binding User.Email}"
+                       FontSize="14" TextColor="{StaticResource Gray400}"
+                       HorizontalTextAlignment="Center" />
+
+                <!-- Stats -->
+                <Frame CornerRadius="12" Padding="16" HasShadow="True" BorderColor="Transparent"
+                       BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="4">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Recipes" FontSize="13"
+                               TextColor="{StaticResource Gray400}" HorizontalTextAlignment="Center" />
+                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding User.RecipeCount}"
+                               FontSize="22" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+
+                        <Label Grid.Row="0" Grid.Column="1" Text="Member Since" FontSize="13"
+                               TextColor="{StaticResource Gray400}" HorizontalTextAlignment="Center" />
+                        <Label Grid.Row="1" Grid.Column="1"
+                               Text="{Binding User.MemberSince, StringFormat='{0:MMM yyyy}'}"
+                               FontSize="18" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                    </Grid>
+                </Frame>
+
+                <Button Text="Logout"
+                        Command="{Binding LogoutCommand}"
+                        BackgroundColor="{StaticResource ErrorRed}"
+                        TextColor="White"
+                        CornerRadius="12" HeightRequest="50"
+                        Margin="0,16,0,0" />
+            </VerticalStackLayout>
+
+            <!-- Login View -->
+            <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBool}}" Spacing="14">
+
+                <Label Text="??" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
+                <Label Text="Welcome to ForkFeed"
+                       FontSize="24" FontAttributes="Bold"
+                       HorizontalTextAlignment="Center" />
+                <Label Text="Sign in to save your recipes and favorites"
+                       FontSize="14" TextColor="{StaticResource Gray400}"
+                       HorizontalTextAlignment="Center" />
+
+                <Entry Placeholder="Email" Text="{Binding Email}"
+                       Keyboard="Email" Margin="0,12,0,0" />
+                <Entry Placeholder="Password" Text="{Binding Password}"
+                       IsPassword="True" />
+
+                <Label Text="{Binding LoginError}"
+                       TextColor="{StaticResource ErrorRed}"
+                       FontSize="13"
+                       IsVisible="{Binding LoginError, Converter={StaticResource StringNotEmpty}}"
+                       HorizontalTextAlignment="Center" />
+
+                <Button Text="Login"
+                        Command="{Binding LoginCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        CornerRadius="12" HeightRequest="50"
+                        FontSize="18" FontAttributes="Bold" />
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Primary}" />
+
+                <Label Text="Hint: Use any email and password to log in"
+                       FontSize="12" TextColor="{StaticResource Gray300}"
+                       HorizontalTextAlignment="Center" FontAttributes="Italic" />
+            </VerticalStackLayout>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

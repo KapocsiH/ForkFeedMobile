@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             x:Class="ForkFeedMobile.Views.CookingModePage"
+             x:DataType="vm:CookingModeViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="True"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}">
+
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="24">
+
+        <!-- Progress -->
+        <Label Grid.Row="0"
+               Text="{Binding StepProgress}"
+               FontSize="16" TextColor="{StaticResource Gray400}"
+               HorizontalTextAlignment="Center"
+               Margin="0,16,0,0" />
+
+        <!-- Step Content (swipeable area) -->
+        <Frame Grid.Row="1"
+               CornerRadius="16" Padding="24"
+               BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}"
+               BorderColor="Transparent" HasShadow="True"
+               VerticalOptions="Center">
+            <Frame.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Left" Command="{Binding NextStepCommand}" />
+                <SwipeGestureRecognizer Direction="Right" Command="{Binding PreviousStepCommand}" />
+            </Frame.GestureRecognizers>
+
+            <VerticalStackLayout Spacing="16" VerticalOptions="Center">
+                <Label Text="{Binding CurrentStep.StepNumber, StringFormat='Step {0}'}"
+                       FontSize="40" FontAttributes="Bold"
+                       TextColor="{StaticResource Primary}"
+                       HorizontalTextAlignment="Center" />
+
+                <Label Text="{Binding CurrentStep.Description}"
+                       FontSize="22"
+                       LineBreakMode="WordWrap"
+                       HorizontalTextAlignment="Center" />
+
+                <Label Text="? Swipe to navigate ?"
+                       FontSize="13" TextColor="{StaticResource Gray300}"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,24,0,0" />
+            </VerticalStackLayout>
+        </Frame>
+
+        <!-- Navigation Buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,16,0,0">
+            <Button Grid.Column="0"
+                    Text="? Previous"
+                    Command="{Binding PreviousStepCommand}"
+                    IsEnabled="{Binding CanGoBack}"
+                    BackgroundColor="{StaticResource Gray200}"
+                    TextColor="{StaticResource Gray600}"
+                    CornerRadius="12"
+                    HeightRequest="50" />
+            <Button Grid.Column="1"
+                    Text="Next ?"
+                    Command="{Binding NextStepCommand}"
+                    IsEnabled="{Binding CanGoForward}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="50" />
+        </Grid>
+
+        <!-- Finish Button (visible on last step) -->
+        <Button Grid.Row="3"
+                Text="? Finish Cooking"
+                Command="{Binding FinishCookingCommand}"
+                IsVisible="{Binding CanGoForward, Converter={StaticResource InvertBool}}"
+                BackgroundColor="{StaticResource SuccessGreen}"
+                TextColor="White"
+                FontSize="18" FontAttributes="Bold"
+                CornerRadius="12"
+                HeightRequest="56"
+                Margin="0,12,0,0" />
+    </Grid>
+</ContentPage>

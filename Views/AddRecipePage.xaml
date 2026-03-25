@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             x:Class="ForkFeedMobile.Views.AddRecipePage"
+             x:DataType="vm:AddRecipeViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="12">
+
+            <!-- Image Picker -->
+            <Frame CornerRadius="12" Padding="0" HeightRequest="200"
+                   BackgroundColor="{StaticResource Gray100}" BorderColor="Transparent"
+                   HasShadow="False">
+                <Grid>
+                    <Image Source="{Binding SelectedImageSource}"
+                           Aspect="AspectFill"
+                           IsVisible="{Binding SelectedImageSource, Converter={StaticResource NotNull}}" />
+                    <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
+                        <Label Text="??" FontSize="40" HorizontalTextAlignment="Center" />
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Button Text="Gallery" Command="{Binding PickImageCommand}"
+                                    BackgroundColor="{StaticResource Primary}" TextColor="White"
+                                    CornerRadius="8" FontSize="13" HeightRequest="36" />
+                            <Button Text="Camera" Command="{Binding TakePhotoCommand}"
+                                    BackgroundColor="{StaticResource Accent}" TextColor="White"
+                                    CornerRadius="8" FontSize="13" HeightRequest="36" />
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Grid>
+            </Frame>
+
+            <!-- Title -->
+            <Label Text="Recipe Title" FontSize="14" FontAttributes="Bold" />
+            <Entry Placeholder="e.g. Grandma's Apple Pie"
+                   Text="{Binding RecipeTitle}" />
+
+            <!-- Description -->
+            <Label Text="Description" FontSize="14" FontAttributes="Bold" />
+            <Editor Placeholder="Describe your recipe..."
+                    Text="{Binding Description}"
+                    HeightRequest="80"
+                    AutoSize="TextChanges" />
+
+            <!-- Difficulty -->
+            <Label Text="Difficulty" FontSize="14" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding DifficultyOptions}"
+                    SelectedItem="{Binding SelectedDifficulty}" />
+
+            <!-- Ingredients -->
+            <Label Text="Ingredients" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                <Entry Grid.Column="0" Placeholder="Ingredient name"
+                       Text="{Binding NewIngredientName}" />
+                <Entry Grid.Column="1" Placeholder="Qty" WidthRequest="80"
+                       Text="{Binding NewIngredientQty}" />
+                <Button Grid.Column="2" Text="+" WidthRequest="44" HeightRequest="44"
+                        Command="{Binding AddIngredientCommand}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        CornerRadius="22" FontSize="20" Padding="0" />
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Ingredient">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                               BackgroundColor="{StaticResource ErrorRed}"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=RemoveIngredientCommand}"
+                                               CommandParameter="{Binding}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Grid ColumnDefinitions="*,Auto" Padding="8,4" BackgroundColor="Transparent">
+                                <Label Grid.Column="0" Text="{Binding Name}" FontSize="15" VerticalOptions="Center" />
+                                <Label Grid.Column="1" Text="{Binding Quantity}" FontSize="14"
+                                       TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
+                            </Grid>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Steps -->
+            <Label Text="Steps" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
+                <Entry Grid.Column="0" Placeholder="Describe this step..."
+                       Text="{Binding NewStepDescription}" />
+                <Button Grid.Column="1" Text="+" WidthRequest="44" HeightRequest="44"
+                        Command="{Binding AddStepCommand}"
+                        BackgroundColor="{StaticResource Primary}" TextColor="White"
+                        CornerRadius="22" FontSize="20" Padding="0" />
+            </Grid>
+
+            <CollectionView ItemsSource="{Binding Steps}" SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:RecipeStep">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Delete"
+                                               BackgroundColor="{StaticResource ErrorRed}"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=RemoveStepCommand}"
+                                               CommandParameter="{Binding}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <HorizontalStackLayout Spacing="8" Padding="8,4" BackgroundColor="Transparent">
+                                <Label Text="{Binding StepNumber, StringFormat='{0}.'}"
+                                       FontAttributes="Bold" FontSize="15" VerticalOptions="Center"
+                                       TextColor="{StaticResource Primary}" />
+                                <Label Text="{Binding Description}" FontSize="15" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Save Button -->
+            <Button Text="?? Save Recipe"
+                    Command="{Binding SaveRecipeCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    FontSize="18" FontAttributes="Bold"
+                    CornerRadius="12"
+                    HeightRequest="56"
+                    Margin="0,16,0,24" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

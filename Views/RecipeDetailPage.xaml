@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             x:Class="ForkFeedMobile.Views.RecipeDetailPage"
+             x:DataType="vm:RecipeDetailViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*">
+
+            <!-- Loading -->
+            <ActivityIndicator Grid.Row="0"
+                               IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               VerticalOptions="Center" HorizontalOptions="Center"
+                               Margin="0,40" />
+
+            <!-- Error -->
+            <VerticalStackLayout Grid.Row="0"
+                                 IsVisible="{Binding HasError}"
+                                 Padding="20" Spacing="10"
+                                 VerticalOptions="Center" HorizontalOptions="Center">
+                <Label Text="{Binding ErrorMessage}" TextColor="{StaticResource ErrorRed}"
+                       HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+            <!-- Content -->
+            <VerticalStackLayout Grid.Row="1" Spacing="0">
+
+                <!-- Hero Image -->
+                <Image Source="{Binding Recipe.ImageUrl}"
+                       Aspect="AspectFill"
+                       HeightRequest="260" />
+
+                <VerticalStackLayout Padding="16" Spacing="12">
+
+                    <!-- Title Row -->
+                    <Grid ColumnDefinitions="*,Auto,Auto">
+                        <Label Grid.Column="0"
+                               Text="{Binding Recipe.Title}"
+                               FontSize="24" FontAttributes="Bold" />
+
+                        <!-- Favorite -->
+                        <Label Grid.Column="1"
+                               Text="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteIcon}}"
+                               FontSize="28" VerticalOptions="Center"
+                               Margin="0,0,8,0">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <!-- Share -->
+                        <Label Grid.Column="2"
+                               Text="??" FontSize="24" VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShareRecipeCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </Grid>
+
+                    <!-- Meta info -->
+                    <HorizontalStackLayout Spacing="16">
+                        <Frame Padding="8,4" CornerRadius="8"
+                               BackgroundColor="{StaticResource Secondary}" BorderColor="Transparent">
+                            <Label Text="{Binding Recipe.Difficulty}" FontSize="13" />
+                        </Frame>
+                        <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource Gray500}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="? " />
+                                    <Span Text="{Binding Recipe.TimeMinutes}" />
+                                    <Span Text=" min" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                    </HorizontalStackLayout>
+
+                    <!-- Rating Stars -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Your Rating" FontSize="14" TextColor="{StaticResource Gray500}" />
+                        <HorizontalStackLayout Spacing="4">
+                            <Label Text="?" FontSize="28"
+                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=1}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="1" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="?" FontSize="28"
+                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=2}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="2" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="?" FontSize="28"
+                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=3}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="3" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="?" FontSize="28"
+                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=4}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="4" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <Label Text="?" FontSize="28"
+                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=5}">
+                                <Label.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="5" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+
+                    <!-- Description -->
+                    <Label Text="{Binding Recipe.Description}"
+                           FontSize="15" TextColor="{StaticResource Gray500}"
+                           LineBreakMode="WordWrap" />
+
+                    <!-- Ingredients Section -->
+                    <Label Text="Ingredients" FontSize="20" FontAttributes="Bold" Margin="0,8,0,0" />
+
+                    <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Ingredient">
+                                <Grid ColumnDefinitions="Auto,*,Auto" Padding="0,4" ColumnSpacing="8">
+                                    <CheckBox Grid.Column="0" IsChecked="{Binding IsChecked}"
+                                              Color="{StaticResource Primary}" />
+                                    <Label Grid.Column="1" Text="{Binding Name}"
+                                           VerticalOptions="Center" FontSize="15" />
+                                    <Label Grid.Column="2" Text="{Binding Quantity}"
+                                           VerticalOptions="Center" FontSize="14"
+                                           TextColor="{StaticResource Gray400}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Steps Section -->
+                    <Label Text="Steps" FontSize="20" FontAttributes="Bold" Margin="0,8,0,0" />
+
+                    <CollectionView ItemsSource="{Binding Steps}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:RecipeStep">
+                                <HorizontalStackLayout Spacing="10" Padding="0,6">
+                                    <Frame WidthRequest="32" HeightRequest="32" CornerRadius="16"
+                                           BackgroundColor="{StaticResource Primary}" Padding="0"
+                                           BorderColor="Transparent">
+                                        <Label Text="{Binding StepNumber}" TextColor="White"
+                                               FontSize="14" FontAttributes="Bold"
+                                               HorizontalOptions="Center" VerticalOptions="Center" />
+                                    </Frame>
+                                    <Label Text="{Binding Description}" FontSize="15"
+                                           VerticalOptions="Center" LineBreakMode="WordWrap"
+                                           MaximumWidthRequest="300" />
+                                </HorizontalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
+                    <!-- Start Cooking Button -->
+                    <Button Text="?? Start Cooking"
+                            Command="{Binding StartCookingCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            FontSize="18" FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="56"
+                            Margin="0,16,0,24" />
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </Grid>
+    </ScrollView>
+</ContentPage>
