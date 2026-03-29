@@ -18,7 +18,22 @@ namespace ForkFeedMobile
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // Services (singleton so mock data persists across pages)
+            // ── API Service ──────────────────────────────────────
+            // REAL API – uses the Vercel backend
+            builder.Services.AddSingleton<IApiService>(sp =>
+            {
+                var httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri("https://forkfeed.vercel.app/api/"),
+                    Timeout = TimeSpan.FromSeconds(30)
+                };
+                return new ApiService(httpClient);
+            });
+
+            // MOCK API – uncomment the line below (and comment the block above) to use mock data
+            // builder.Services.AddSingleton<IApiService, MockApiService>();
+
+            // Services (singleton so state persists across pages)
             builder.Services.AddSingleton<RecipeService>();
             builder.Services.AddSingleton<FavoritesService>();
             builder.Services.AddSingleton<AuthService>();

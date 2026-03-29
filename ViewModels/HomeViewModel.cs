@@ -30,6 +30,9 @@ public partial class HomeViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isRefreshing;
 
+    [ObservableProperty]
+    private bool _isEmpty;
+
     public List<string> DifficultyOptions { get; } = new() { "All", "Easy", "Medium", "Hard" };
     public List<string> SortOptions { get; } = new() { "Date", "Difficulty", "Rating" };
 
@@ -49,6 +52,7 @@ public partial class HomeViewModel : BaseViewModel
         {
             IsBusy = true;
             ClearError();
+            IsEmpty = false;
 
             _currentPage = 0;
             _hasMoreItems = true;
@@ -64,11 +68,15 @@ public partial class HomeViewModel : BaseViewModel
                 Recipes.Add(r);
             }
 
-            if (recipes.Count == 0) _hasMoreItems = false;
+            if (recipes.Count == 0)
+            {
+                _hasMoreItems = false;
+                IsEmpty = true;
+            }
         }
-        catch
+        catch (Exception ex)
         {
-            SetError("Unable to load recipes. Check your connection.");
+            SetError($"Unable to load recipes. {ex.Message}");
         }
         finally
         {
@@ -102,6 +110,11 @@ public partial class HomeViewModel : BaseViewModel
                 r.IsFavorite = await _favoritesService.IsFavoriteAsync(r.Id);
                 Recipes.Add(r);
             }
+        }
+        catch
+        {
+            // Silently fail on load-more; user can scroll again to retry
+            _currentPage--;
         }
         finally
         {
