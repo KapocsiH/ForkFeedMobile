@@ -1,3 +1,5 @@
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ForkFeedMobile.Models;
@@ -66,7 +68,13 @@ public partial class ProfileViewModel : BaseViewModel
             RefreshState();
             Email = string.Empty;
             Password = string.Empty;
-            await LoadProfileAsync();
+
+            // Navigate to Home so the Profile tab gets a fresh OnAppearing
+            // the next time the user opens it.
+            await Shell.Current.GoToAsync("//Home");
+
+            var toast = Toast.Make("Logged in successfully! ??", ToastDuration.Short, 14);
+            await toast.Show();
         }
         else
         {
