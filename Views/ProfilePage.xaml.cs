@@ -26,5 +26,16 @@ public partial class ProfilePage : ContentPage
             await asyncCmd.ExecuteAsync(null);
         else
             _vm.RefreshCommand.Execute(null);
+
+        if (_vm.IsLoggedIn)
+        {
+            await AnimateHeaderAsync();
+        }
+    }
+
+    private async Task AnimateHeaderAsync()
+    {
+        ProfileHeader.Opacity = 0;
+        await ProfileHeader.FadeTo(1, 500, Easing.CubicIn);
     }
 }

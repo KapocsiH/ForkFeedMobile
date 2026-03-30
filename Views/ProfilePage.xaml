@@ -10,41 +10,108 @@
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}"
+                               HorizontalOptions="Center"
+                               Margin="0,24,0,0" />
+
             <!-- Logged-In View -->
             <VerticalStackLayout IsVisible="{Binding IsLoggedIn}" Spacing="16">
 
-                <!-- Avatar -->
-                <Frame WidthRequest="120" HeightRequest="120" CornerRadius="60"
-                       Padding="0" HasShadow="True" BorderColor="Transparent"
-                       HorizontalOptions="Center" IsClippedToBounds="True">
-                    <Image Source="{Binding User.AvatarUrl}" Aspect="AspectFill" />
-                </Frame>
+                <!-- Profile Header (Instagram-like) -->
+                <Grid x:Name="ProfileHeader"
+                      ColumnDefinitions="Auto,*"
+                      ColumnSpacing="20"
+                      Padding="8"
+                      Opacity="0">
 
+                    <!-- Circular Profile Image -->
+                    <Border Grid.Column="0"
+                            WidthRequest="100" HeightRequest="100"
+                            StrokeShape="RoundRectangle 50"
+                            StrokeThickness="0"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center">
+                        <Border.Shadow>
+                            <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.25" />
+                        </Border.Shadow>
+                        <Image Source="{Binding User.AvatarUrl}"
+                               Aspect="AspectFill"
+                               WidthRequest="100"
+                               HeightRequest="100" />
+                    </Border>
+
+                    <!-- Stats Row: Rating | Recipes | Collections -->
+                    <Grid Grid.Column="1"
+                          ColumnDefinitions="*,*,*"
+                          VerticalOptions="Center"
+                          HorizontalOptions="FillAndExpand">
+
+                        <!-- Average Rating -->
+                        <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                            <Label Text="{Binding AverageRating, StringFormat='{0:F1}'}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Rating"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray400}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+
+                        <!-- Recipe Count -->
+                        <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                            <Label Text="{Binding RecipeCount}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Recipes"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray400}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+
+                        <!-- Collection Count -->
+                        <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                            <Label Text="{Binding CollectionCount}"
+                                   FontSize="22" FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center" />
+                            <Label Text="Collections"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Gray400}"
+                                   HorizontalTextAlignment="Center" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </Grid>
+
+                <!-- Display Name -->
                 <Label Text="{Binding User.DisplayName}"
-                       FontSize="24" FontAttributes="Bold"
-                       HorizontalTextAlignment="Center" />
+                       FontSize="20" FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"
+                       Margin="0,4,0,0" />
 
                 <Label Text="{Binding User.Email}"
                        FontSize="14" TextColor="{StaticResource Gray400}"
                        HorizontalTextAlignment="Center" />
 
-                <!-- Stats -->
-                <Frame CornerRadius="12" Padding="16" HasShadow="True" BorderColor="Transparent"
-                       BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                    <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="4">
-                        <Label Grid.Row="0" Grid.Column="0" Text="Recipes" FontSize="13"
-                               TextColor="{StaticResource Gray400}" HorizontalTextAlignment="Center" />
-                        <Label Grid.Row="1" Grid.Column="0" Text="{Binding User.RecipeCount}"
-                               FontSize="22" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+                <!-- Error Message -->
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="{StaticResource ErrorRed}"
+                       FontSize="13"
+                       IsVisible="{Binding HasError}"
+                       HorizontalTextAlignment="Center" />
 
-                        <Label Grid.Row="0" Grid.Column="1" Text="Member Since" FontSize="13"
-                               TextColor="{StaticResource Gray400}" HorizontalTextAlignment="Center" />
-                        <Label Grid.Row="1" Grid.Column="1"
-                               Text="{Binding User.MemberSince, StringFormat='{0:MMM yyyy}'}"
-                               FontSize="18" FontAttributes="Bold" HorizontalTextAlignment="Center" />
-                    </Grid>
-                </Frame>
+                <!-- Work in progress -->
+                <Label Text="Work in progress"
+                       FontSize="20"
+                       TextColor="{StaticResource Gray400}"
+                       Opacity="0.6"
+                       HorizontalTextAlignment="Center"
+                       HorizontalOptions="Center"
+                       VerticalOptions="CenterAndExpand"
+                       Margin="0,40,0,0" />
 
+                <!-- Logout -->
                 <Button Text="Logout"
                         Command="{Binding LogoutCommand}"
                         BackgroundColor="{StaticResource ErrorRed}"

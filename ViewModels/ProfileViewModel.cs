@@ -8,6 +8,7 @@ namespace ForkFeedMobile.ViewModels;
 public partial class ProfileViewModel : BaseViewModel
 {
     private readonly AuthService _authService;
+    private readonly IApiService _apiService;
 
     [ObservableProperty]
     private bool _isLoggedIn;
@@ -24,9 +25,22 @@ public partial class ProfileViewModel : BaseViewModel
     [ObservableProperty]
     private string _loginError = string.Empty;
 
-    public ProfileViewModel(AuthService authService)
+    [ObservableProperty]
+    private double _averageRating;
+
+    [ObservableProperty]
+    private int _recipeCount;
+
+    [ObservableProperty]
+    private int _collectionCount;
+
+    [ObservableProperty]
+    private bool _isProfileLoaded;
+
+    public ProfileViewModel(AuthService authService, IApiService apiService)
     {
         _authService = authService;
+        _apiService = apiService;
         Title = "Profile";
     }
 
@@ -52,6 +66,7 @@ public partial class ProfileViewModel : BaseViewModel
             RefreshState();
             Email = string.Empty;
             Password = string.Empty;
+            await LoadProfileAsync();
         }
         else
         {
@@ -65,6 +80,10 @@ public partial class ProfileViewModel : BaseViewModel
         IsBusy = true;
         await _authService.LogoutAsync();
         IsBusy = false;
+        IsProfileLoaded = false;
+        AverageRating = 0;
+        RecipeCount = 0;
+        CollectionCount = 0;
         RefreshState();
     }
 
@@ -87,6 +106,45 @@ public partial class ProfileViewModel : BaseViewModel
         await _authService.TryRestoreSessionAsync();
         IsBusy = false;
         RefreshState();
+
+        if (IsLoggedIn)
+            await LoadProfileAsync();
+    }
+
+    [RelayCommand]
+    private async Task LoadProfileAsync()
+    {
+        if (!IsLoggedIn)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            ClearError();
+
+            var result = await _apiService.GetMyStatsAsync();
+
+            if (result.IsSuccess && result.Data?.Stats != null)
+            {
+                var stats = result.Data.Stats;
+                AverageRating = Math.Round(stats.AverageRecipeRating, 1);
+                RecipeCount = stats.RecipesCount;
+                CollectionCount = stats.RecipeBooksCount;
+            }
+            else
+            {
+                SetError("Could not load profile stats.");
+            }
+        }
+        catch
+        {
+            SetError("Failed to load profile data.");
+        }
+        finally
+        {
+            IsBusy = false;
+            IsProfileLoaded = true;
+        }
     }
 
     private void RefreshState()
