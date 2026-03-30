@@ -28,7 +28,6 @@ public partial class ProfileViewModel : BaseViewModel
     {
         _authService = authService;
         Title = "Profile";
-        RefreshState();
     }
 
     [RelayCommand]
@@ -44,7 +43,7 @@ public partial class ProfileViewModel : BaseViewModel
 
         IsBusy = true;
 
-        var success = await _authService.LoginAsync(Email, Password);
+        var (success, error) = await _authService.LoginAsync(Email, Password);
 
         IsBusy = false;
 
@@ -56,20 +55,37 @@ public partial class ProfileViewModel : BaseViewModel
         }
         else
         {
-            LoginError = "Invalid credentials.";
+            LoginError = error ?? "Invalid credentials.";
         }
     }
 
     [RelayCommand]
     private async Task LogoutAsync()
     {
+        IsBusy = true;
         await _authService.LogoutAsync();
+        IsBusy = false;
         RefreshState();
     }
 
     [RelayCommand]
-    private void Refresh()
+    private async Task GoToForgotPasswordAsync()
     {
+        await Shell.Current.GoToAsync("ForgotPassword");
+    }
+
+    [RelayCommand]
+    private async Task GoToRegisterAsync()
+    {
+        await Shell.Current.GoToAsync("Register");
+    }
+
+    [RelayCommand]
+    private async Task RefreshAsync()
+    {
+        IsBusy = true;
+        await _authService.TryRestoreSessionAsync();
+        IsBusy = false;
         RefreshState();
     }
 

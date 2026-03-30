@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             x:Class="ForkFeedMobile.Views.RegisterPage"
+             x:DataType="vm:RegisterViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="True">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="14">
+
+            <Label Text="??" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
+            <Label Text="Join ForkFeed"
+                   FontSize="24" FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+            <Label Text="Create an account to share your recipes"
+                   FontSize="14" TextColor="{StaticResource Gray400}"
+                   HorizontalTextAlignment="Center" Margin="0,0,0,8" />
+
+            <Entry Placeholder="Username" Text="{Binding Username}" />
+            <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" />
+            <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
+            <Entry Placeholder="Confirm Password" Text="{Binding ConfirmPassword}" IsPassword="True" />
+
+            <Label Text="{Binding RegisterError}"
+                   TextColor="{StaticResource ErrorRed}"
+                   FontSize="13"
+                   IsVisible="{Binding RegisterError, Converter={StaticResource StringNotEmpty}}"
+                   HorizontalTextAlignment="Center" />
+
+            <Button Text="Create Account"
+                    Command="{Binding RegisterCommand}"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12" HeightRequest="50"
+                    FontSize="18" FontAttributes="Bold" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               Color="{StaticResource Primary}" />
+
+            <Button Text="Already have an account? Sign in"
+                    Command="{Binding GoBackCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource Primary}"
+                    FontSize="14"
+                    Padding="0"
+                    HeightRequest="40" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
