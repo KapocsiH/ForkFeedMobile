@@ -43,52 +43,55 @@
                                HeightRequest="100" />
                     </Border>
 
-                    <!-- Stats Row: Rating | Recipes | Collections -->
-                    <Grid Grid.Column="1"
-                          ColumnDefinitions="*,*,*"
-                          VerticalOptions="Center"
-                          HorizontalOptions="FillAndExpand">
+                    <!-- Username + Stats -->
+                    <VerticalStackLayout Grid.Column="1"
+                                         VerticalOptions="Center"
+                                         Spacing="8">
 
-                        <!-- Average Rating -->
-                        <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
-                            <Label Text="{Binding AverageRating, StringFormat='{0:F1}'}"
-                                   FontSize="22" FontAttributes="Bold"
-                                   HorizontalTextAlignment="Center" />
-                            <Label Text="Rating"
-                                   FontSize="12"
-                                   TextColor="{StaticResource Gray400}"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
+                        <!-- Display Name -->
+                        <Label Text="{Binding User.DisplayName}"
+                               FontSize="20" FontAttributes="Bold"
+                               HorizontalTextAlignment="Start" />
 
-                        <!-- Recipe Count -->
-                        <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
-                            <Label Text="{Binding RecipeCount}"
-                                   FontSize="22" FontAttributes="Bold"
-                                   HorizontalTextAlignment="Center" />
-                            <Label Text="Recipes"
-                                   FontSize="12"
-                                   TextColor="{StaticResource Gray400}"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
+                        <!-- Stats Row: Rating | Recipes | Collections -->
+                        <Grid ColumnDefinitions="*,*,*"
+                              HorizontalOptions="FillAndExpand">
 
-                        <!-- Collection Count -->
-                        <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
-                            <Label Text="{Binding CollectionCount}"
-                                   FontSize="22" FontAttributes="Bold"
-                                   HorizontalTextAlignment="Center" />
-                            <Label Text="Collections"
-                                   FontSize="12"
-                                   TextColor="{StaticResource Gray400}"
-                                   HorizontalTextAlignment="Center" />
-                        </VerticalStackLayout>
-                    </Grid>
+                            <!-- Average Rating -->
+                            <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding AverageRating, StringFormat='{0:F1}'}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="Rating"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray400}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+
+                            <!-- Recipe Count -->
+                            <VerticalStackLayout Grid.Column="1" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding RecipeCount}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="Recipes"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray400}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+
+                            <!-- Collection Count -->
+                            <VerticalStackLayout Grid.Column="2" Spacing="2" HorizontalOptions="Center">
+                                <Label Text="{Binding CollectionCount}"
+                                       FontSize="22" FontAttributes="Bold"
+                                       HorizontalTextAlignment="Center" />
+                                <Label Text="Collections"
+                                       FontSize="12"
+                                       TextColor="{StaticResource Gray400}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </Grid>
+                    </VerticalStackLayout>
                 </Grid>
-
-                <!-- Display Name -->
-                <Label Text="{Binding User.DisplayName}"
-                       FontSize="20" FontAttributes="Bold"
-                       HorizontalTextAlignment="Center"
-                       Margin="0,4,0,0" />
 
                 <Label Text="{Binding User.Email}"
                        FontSize="14" TextColor="{StaticResource Gray400}"
