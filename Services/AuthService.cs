@@ -171,6 +171,7 @@ public class AuthService
         DisplayName = user.Username,
         Email = user.Email ?? string.Empty,
         AvatarUrl = user.ProfileImageUrl ?? string.Empty,
+        Bio = user.Bio ?? string.Empty,
         MemberSince = user.CreatedAt ?? DateTime.Now
     };
 

@@ -95,6 +95,39 @@
                         </VerticalStackLayout>
                     </Grid>
 
+                    <!-- Bio Section -->
+                    <VerticalStackLayout IsVisible="{Binding HasBio}"
+                                         Spacing="4"
+                                         Padding="8,4,8,0">
+                        <Label Text="{Binding Bio}"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                               LineBreakMode="TailTruncation"
+                               MaxLines="{Binding BioMaxLines}"
+                               HorizontalTextAlignment="Start" />
+                        <Label Text="{Binding IsBioExpanded, StringFormat='{0:More;;Less}'}"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="{StaticResource Primary}"
+                               HorizontalTextAlignment="Start">
+                            <Label.Triggers>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding IsBioExpanded}"
+                                             Value="False">
+                                    <Setter Property="Text" Value="More" />
+                                </DataTrigger>
+                                <DataTrigger TargetType="Label"
+                                             Binding="{Binding IsBioExpanded}"
+                                             Value="True">
+                                    <Setter Property="Text" Value="Less" />
+                                </DataTrigger>
+                            </Label.Triggers>
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ToggleBioCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </VerticalStackLayout>
+
                     <!-- Error Message -->
                     <Label Text="{Binding ErrorMessage}"
                            TextColor="{StaticResource ErrorRed}"
@@ -188,7 +221,7 @@
                    HeightRequest="22"
                    HorizontalOptions="Center"
                    VerticalOptions="Center"
-                   Margin="0 0 0 3"/>
+                   Margin="3,0,0,0"/>
         </Border>
     </Grid>
 </ContentPage>

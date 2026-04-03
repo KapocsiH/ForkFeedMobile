@@ -39,6 +39,18 @@ public partial class ProfileViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isProfileLoaded;
 
+    [ObservableProperty]
+    private string _bio = string.Empty;
+
+    [ObservableProperty]
+    private bool _isBioExpanded;
+
+    [ObservableProperty]
+    private bool _hasBio;
+
+    [ObservableProperty]
+    private int _bioMaxLines = 3;
+
     public ProfileViewModel(AuthService authService, IApiService apiService)
     {
         _authService = authService;
@@ -92,6 +104,10 @@ public partial class ProfileViewModel : BaseViewModel
         AverageRating = 0;
         RecipeCount = 0;
         CollectionCount = 0;
+        Bio = string.Empty;
+        HasBio = false;
+        IsBioExpanded = false;
+        BioMaxLines = 3;
         RefreshState();
     }
 
@@ -155,9 +171,20 @@ public partial class ProfileViewModel : BaseViewModel
         }
     }
 
+    [RelayCommand]
+    private void ToggleBio()
+    {
+        IsBioExpanded = !IsBioExpanded;
+        BioMaxLines = IsBioExpanded ? int.MaxValue : 3;
+    }
+
     private void RefreshState()
     {
         IsLoggedIn = _authService.IsLoggedIn;
         User = _authService.CurrentUser;
+        Bio = User?.Bio ?? string.Empty;
+        HasBio = !string.IsNullOrWhiteSpace(Bio);
+        IsBioExpanded = false;
+        BioMaxLines = 3;
     }
 }
