@@ -57,7 +57,7 @@
 
                             <!-- Stats Row: Rating | Recipes | Collections -->
                             <Grid ColumnDefinitions="*,*,*"
-                                  HorizontalOptions="FillAndExpand">
+                                  HorizontalOptions="Fill">
 
                                 <!-- Average Rating -->
                                 <VerticalStackLayout Grid.Column="0" Spacing="2" HorizontalOptions="Center">
@@ -109,7 +109,7 @@
                            Opacity="0.6"
                            HorizontalTextAlignment="Center"
                            HorizontalOptions="Center"
-                           VerticalOptions="CenterAndExpand"
+                           VerticalOptions="Center"
                            Margin="0,40,0,0" />
                 </VerticalStackLayout>
 
