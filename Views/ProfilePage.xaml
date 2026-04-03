@@ -116,7 +116,7 @@
                 <!-- Login View -->
                 <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBool}}" Spacing="14">
 
-                    <Label Text="👨‍🍳" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
+                    <Label Text="🍴" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
                     <Label Text="Welcome to ForkFeed"
                            FontSize="24" FontAttributes="Bold"
                            HorizontalTextAlignment="Center" />
@@ -187,7 +187,8 @@
                    WidthRequest="22"
                    HeightRequest="22"
                    HorizontalOptions="Center"
-                   VerticalOptions="Center"/>
+                   VerticalOptions="Center"
+                   Margin="0 0 0 3"/>
         </Border>
     </Grid>
 </ContentPage>
