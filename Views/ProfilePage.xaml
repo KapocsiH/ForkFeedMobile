@@ -135,15 +135,117 @@
                            IsVisible="{Binding HasError}"
                            HorizontalTextAlignment="Center" />
 
-                    <!-- Work in progress -->
-                    <Label Text="Work in progress"
-                           FontSize="20"
+                    <!-- Tab Switcher -->
+                    <Grid ColumnDefinitions="*,*,*"
+                          Margin="0,8,0,0">
+
+                        <!-- Recipes Tab -->
+                        <VerticalStackLayout Grid.Column="0"
+                                             Spacing="6"
+                                             HorizontalOptions="Fill">
+                            <Label Text="Recipes"
+                                   FontSize="15"
+                                   HorizontalTextAlignment="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding IsRecipesTabSelected}"
+                                                 Value="True">
+                                        <Setter Property="FontAttributes" Value="Bold" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <BoxView HeightRequest="2"
+                                     HorizontalOptions="Fill"
+                                     Color="{StaticResource Primary}"
+                                     IsVisible="{Binding IsRecipesTabSelected}" />
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}"
+                                                      CommandParameter="Recipes" />
+                            </VerticalStackLayout.GestureRecognizers>
+                        </VerticalStackLayout>
+
+                        <!-- Books Tab -->
+                        <VerticalStackLayout Grid.Column="1"
+                                             Spacing="6"
+                                             HorizontalOptions="Fill">
+                            <Label Text="Books"
+                                   FontSize="15"
+                                   HorizontalTextAlignment="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding IsBooksTabSelected}"
+                                                 Value="True">
+                                        <Setter Property="FontAttributes" Value="Bold" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <BoxView HeightRequest="2"
+                                     HorizontalOptions="Fill"
+                                     Color="{StaticResource Primary}"
+                                     IsVisible="{Binding IsBooksTabSelected}" />
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}"
+                                                      CommandParameter="Books" />
+                            </VerticalStackLayout.GestureRecognizers>
+                        </VerticalStackLayout>
+
+                        <!-- Comments Tab -->
+                        <VerticalStackLayout Grid.Column="2"
+                                             Spacing="6"
+                                             HorizontalOptions="Fill">
+                            <Label Text="Comments"
+                                   FontSize="15"
+                                   HorizontalTextAlignment="Center">
+                                <Label.Triggers>
+                                    <DataTrigger TargetType="Label"
+                                                 Binding="{Binding IsCommentsTabSelected}"
+                                                 Value="True">
+                                        <Setter Property="FontAttributes" Value="Bold" />
+                                    </DataTrigger>
+                                </Label.Triggers>
+                            </Label>
+                            <BoxView HeightRequest="2"
+                                     HorizontalOptions="Fill"
+                                     Color="{StaticResource Primary}"
+                                     IsVisible="{Binding IsCommentsTabSelected}" />
+                            <VerticalStackLayout.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SelectTabCommand}"
+                                                      CommandParameter="Comments" />
+                            </VerticalStackLayout.GestureRecognizers>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Divider -->
+                    <BoxView HeightRequest="1"
+                             HorizontalOptions="Fill"
+                             Color="{StaticResource Gray200}"
+                             Margin="0,-4,0,0" />
+
+                    <!-- Tab Placeholder Content -->
+                    <Label Text="Recipes coming soon"
+                           IsVisible="{Binding IsRecipesTabSelected}"
+                           FontSize="16"
                            TextColor="{StaticResource Gray400}"
                            Opacity="0.6"
                            HorizontalTextAlignment="Center"
                            HorizontalOptions="Center"
-                           VerticalOptions="Center"
-                           Margin="0,40,0,0" />
+                           Margin="0,32,0,0" />
+                    <Label Text="Books coming soon"
+                           IsVisible="{Binding IsBooksTabSelected}"
+                           FontSize="16"
+                           TextColor="{StaticResource Gray400}"
+                           Opacity="0.6"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"
+                           Margin="0,32,0,0" />
+                    <Label Text="Comments coming soon"
+                           IsVisible="{Binding IsCommentsTabSelected}"
+                           FontSize="16"
+                           TextColor="{StaticResource Gray400}"
+                           Opacity="0.6"
+                           HorizontalTextAlignment="Center"
+                           HorizontalOptions="Center"
+                           Margin="0,32,0,0" />
                 </VerticalStackLayout>
 
                 <!-- Login View -->

@@ -51,6 +51,16 @@ public partial class ProfileViewModel : BaseViewModel
     [ObservableProperty]
     private int _bioMaxLines = 3;
 
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsRecipesTabSelected))]
+    [NotifyPropertyChangedFor(nameof(IsBooksTabSelected))]
+    [NotifyPropertyChangedFor(nameof(IsCommentsTabSelected))]
+    private string _selectedTab = "Recipes";
+
+    public bool IsRecipesTabSelected => SelectedTab == "Recipes";
+    public bool IsBooksTabSelected => SelectedTab == "Books";
+    public bool IsCommentsTabSelected => SelectedTab == "Comments";
+
     public ProfileViewModel(AuthService authService, IApiService apiService)
     {
         _authService = authService;
@@ -108,6 +118,7 @@ public partial class ProfileViewModel : BaseViewModel
         HasBio = false;
         IsBioExpanded = false;
         BioMaxLines = 3;
+        SelectedTab = "Recipes";
         RefreshState();
     }
 
@@ -169,6 +180,12 @@ public partial class ProfileViewModel : BaseViewModel
             IsBusy = false;
             IsProfileLoaded = true;
         }
+    }
+
+    [RelayCommand]
+    private void SelectTab(string tab)
+    {
+        SelectedTab = tab;
     }
 
     [RelayCommand]
