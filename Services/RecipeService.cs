@@ -122,6 +122,42 @@ public class RecipeService
         return result.Data.Recipes.Select(MapToRecipe).ToList();
     }
 
+    public async Task<List<UserComment>> GetUserCommentsWithRecipeInfoAsync(int userId)
+    {
+        var comments = new List<UserComment>();
+
+        // Get all recipes to cross-reference comments with recipe info
+        var recipesResult = await _api.GetRecipesAsync(1, 100);
+        if (!recipesResult.IsSuccess || recipesResult.Data == null)
+            return comments;
+
+        var recipes = recipesResult.Data.Recipes;
+
+        foreach (var recipe in recipes)
+        {
+            var commentsResult = await _api.GetRecipeCommentsAsync(recipe.Id, 1, 100);
+            if (!commentsResult.IsSuccess || commentsResult.Data == null)
+                continue;
+
+            var userComments = commentsResult.Data.Comments
+                .Where(c => c.User?.Id == userId);
+
+            foreach (var c in userComments)
+            {
+                comments.Add(new UserComment
+                {
+                    RecipeId = recipe.Id,
+                    RecipeTitle = recipe.Title,
+                    RecipeAuthorUsername = recipe.Author?.Username ?? "Unknown",
+                    RecipeAuthorProfileImageUrl = ResolveImageUrl(recipe.Author?.ProfileImageUrl),
+                    CommentText = c.Content
+                });
+            }
+        }
+
+        return comments;
+    }
+
     public async Task AddRecipeAsync(Recipe recipe)
     {
         // For now, creating recipes via the API would require auth.

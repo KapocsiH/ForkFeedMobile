@@ -52,6 +52,9 @@ public partial class ProfileViewModel : BaseViewModel
     private bool _hasBio;
 
     [ObservableProperty]
+    private bool _isBioTruncated;
+
+    [ObservableProperty]
     private int _bioMaxLines = 3;
 
     [ObservableProperty]
@@ -65,6 +68,7 @@ public partial class ProfileViewModel : BaseViewModel
     public bool IsCommentsTabSelected => SelectedTab == "Comments";
 
     public ObservableCollection<Recipe> UserRecipes { get; } = new();
+    public ObservableCollection<UserComment> UserComments { get; } = new();
 
     public ProfileViewModel(AuthService authService, IApiService apiService,
         RecipeService recipeService, FavoritesService favoritesService)
@@ -125,9 +129,11 @@ public partial class ProfileViewModel : BaseViewModel
         Bio = string.Empty;
         HasBio = false;
         IsBioExpanded = false;
+        IsBioTruncated = false;
         BioMaxLines = 3;
         SelectedTab = "Recipes";
         UserRecipes.Clear();
+        UserComments.Clear();
         RefreshState();
     }
 
@@ -155,6 +161,7 @@ public partial class ProfileViewModel : BaseViewModel
         {
             await LoadProfileAsync();
             await LoadUserRecipesAsync();
+            await LoadUserCommentsAsync();
         }
     }
 
@@ -218,10 +225,37 @@ public partial class ProfileViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task LoadUserCommentsAsync()
+    {
+        if (!IsLoggedIn || User == null)
+            return;
+
+        try
+        {
+            var comments = await _recipeService.GetUserCommentsWithRecipeInfoAsync(User.Id);
+
+            UserComments.Clear();
+            foreach (var c in comments)
+                UserComments.Add(c);
+        }
+        catch
+        {
+            // Silently fail; the user can retry by switching tabs
+        }
+    }
+
+    [RelayCommand]
     private async Task GoToRecipeDetailAsync(Recipe recipe)
     {
         if (recipe == null) return;
         await Shell.Current.GoToAsync($"RecipeDetail?recipeId={recipe.Id}");
+    }
+
+    [RelayCommand]
+    private async Task GoToCommentRecipeDetailAsync(UserComment comment)
+    {
+        if (comment == null) return;
+        await Shell.Current.GoToAsync($"RecipeDetail?recipeId={comment.RecipeId}");
     }
 
     [RelayCommand]
@@ -257,6 +291,7 @@ public partial class ProfileViewModel : BaseViewModel
         Bio = User?.Bio ?? string.Empty;
         HasBio = !string.IsNullOrWhiteSpace(Bio);
         IsBioExpanded = false;
+        IsBioTruncated = false;
         BioMaxLines = 3;
     }
 }

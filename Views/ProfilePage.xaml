@@ -303,14 +303,65 @@
                            HorizontalTextAlignment="Center"
                            HorizontalOptions="Center"
                            Margin="0,32,0,0" />
-                    <Label Text="Comments coming soon"
-                           IsVisible="{Binding IsCommentsTabSelected}"
-                           FontSize="16"
-                           TextColor="{StaticResource Gray400}"
-                           Opacity="0.6"
-                           HorizontalTextAlignment="Center"
-                           HorizontalOptions="Center"
-                           Margin="0,32,0,0" />
+
+                    <!-- Comments Tab Content -->
+                    <CollectionView ItemsSource="{Binding UserComments}"
+                                    IsVisible="{Binding IsCommentsTabSelected}"
+                                    SelectionMode="None">
+
+                        <CollectionView.EmptyView>
+                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
+                                <Label Text="💬" FontSize="48" HorizontalTextAlignment="Center" />
+                                <Label Text="No comments yet" FontSize="18"
+                                       TextColor="{StaticResource Gray400}"
+                                       HorizontalTextAlignment="Center" />
+                            </VerticalStackLayout>
+                        </CollectionView.EmptyView>
+
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:UserComment">
+                                <Frame Margin="0,8" Padding="0" CornerRadius="12" HasShadow="True" BorderColor="Transparent"
+                                       BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                                    <Frame.GestureRecognizers>
+                                        <TapGestureRecognizer
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToCommentRecipeDetailCommand}"
+                                            CommandParameter="{Binding}" />
+                                    </Frame.GestureRecognizers>
+
+                                    <VerticalStackLayout Padding="12" Spacing="6">
+                                        <!-- Recipe Title -->
+                                        <Label Text="{Binding RecipeTitle}"
+                                               FontSize="18" FontAttributes="Bold"
+                                               LineBreakMode="TailTruncation" />
+
+                                        <!-- Recipe Author Row -->
+                                        <HorizontalStackLayout Spacing="8"
+                                                               VerticalOptions="Center">
+                                            <Border WidthRequest="28" HeightRequest="28"
+                                                    StrokeShape="RoundRectangle 14"
+                                                    StrokeThickness="0">
+                                                <Image Source="{Binding RecipeAuthorProfileImageUrl}"
+                                                       Aspect="AspectFill"
+                                                       WidthRequest="28"
+                                                       HeightRequest="28" />
+                                            </Border>
+                                            <Label Text="{Binding RecipeAuthorUsername}"
+                                                   FontSize="14"
+                                                   TextColor="{StaticResource Gray500}"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+
+                                        <!-- Comment Text -->
+                                        <Label Text="{Binding CommentText}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="3" />
+                                    </VerticalStackLayout>
+                                </Frame>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </VerticalStackLayout>
 
                 <!-- Login View -->
