@@ -223,6 +223,14 @@ public class ApiService : IApiService
     public Task<ApiResult<UserStatsResponse>> GetMyStatsAsync() =>
         GetAsync<UserStatsResponse>("users/me/stats");
 
+    public Task<ApiResult<MessageResponse>> UpdateMyProfileAsync(UpdateProfileRequest request) =>
+        PatchAsync<MessageResponse>("users/me", request);
+
+    public async Task<ApiResult<UploadResponse>> UploadProfileImageAsync(Stream imageStream, string fileName)
+    {
+        return await UploadAsync<UploadResponse>("uploads", imageStream, fileName);
+    }
+
     public Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync() =>
         PostAsync<MessageResponse>("users/me/deactivate", null);
 
@@ -322,6 +330,35 @@ public class ApiService : IApiService
         }
     }
 
+    private async Task<ApiResult<T>> PatchAsync<T>(string endpoint, object? body)
+    {
+        try
+        {
+            HttpContent? content = null;
+            if (body != null)
+            {
+                var json = JsonSerializer.Serialize(body, _jsonOptions);
+                content = new StringContent(json, Encoding.UTF8, "application/json");
+            }
+
+            var request = new HttpRequestMessage(HttpMethod.Patch, endpoint) { Content = content };
+            var response = await _httpClient.SendAsync(request);
+            return await HandleResponseAsync<T>(response);
+        }
+        catch (HttpRequestException ex)
+        {
+            return ApiResult<T>.Failure($"Network error: {ex.Message}");
+        }
+        catch (TaskCanceledException)
+        {
+            return ApiResult<T>.Failure("Request timed out. Please try again.");
+        }
+        catch (Exception ex)
+        {
+            return ApiResult<T>.Failure($"Unexpected error: {ex.Message}");
+        }
+    }
+
     private async Task<ApiResult<T>> DeleteAsync<T>(string endpoint)
     {
         try
@@ -349,7 +386,8 @@ public class ApiService : IApiService
         {
             using var formData = new MultipartFormDataContent();
             using var streamContent = new StreamContent(fileStream);
-            streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            var contentType = GetMimeType(fileName);
+            streamContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
             formData.Add(streamContent, "file", fileName);
 
             var response = await _httpClient.PostAsync(endpoint, formData);
@@ -367,6 +405,24 @@ public class ApiService : IApiService
         {
             return ApiResult<T>.Failure($"Unexpected error: {ex.Message}");
         }
+    }
+
+    private static string GetMimeType(string fileName)
+    {
+        var extension = Path.GetExtension(fileName)?.ToLowerInvariant();
+        return extension switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".gif" => "image/gif",
+            ".bmp" => "image/bmp",
+            ".webp" => "image/webp",
+            ".heic" => "image/heic",
+            ".heif" => "image/heif",
+            ".tiff" or ".tif" => "image/tiff",
+            ".svg" => "image/svg+xml",
+            _ => "application/octet-stream"
+        };
     }
 
     private async Task<ApiResult<T>> HandleResponseAsync<T>(HttpResponseMessage response)

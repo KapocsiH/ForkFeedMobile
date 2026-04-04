@@ -13,6 +13,7 @@ namespace ForkFeedMobile
             Routing.RegisterRoute("CookingMode", typeof(CookingModePage));
             Routing.RegisterRoute("Register", typeof(RegisterPage));
             Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
+            Routing.RegisterRoute("EditProfile", typeof(EditProfilePage));
         }
     }
 }

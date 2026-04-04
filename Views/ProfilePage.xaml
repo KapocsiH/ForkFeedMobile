@@ -418,28 +418,52 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- Logout button pinned to bottom-right -->
-        <Border IsVisible="{Binding IsLoggedIn}"
-                BackgroundColor="{StaticResource ErrorRed}"
-                StrokeShape="RoundRectangle 14"
-                StrokeThickness="0"
-                WidthRequest="48"
-                HeightRequest="48"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                Margin="0,0,20,20">
-            <Border.Shadow>
-                <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.3" />
-            </Border.Shadow>
-            <Border.GestureRecognizers>
-                <TapGestureRecognizer Command="{Binding LogoutCommand}" />
-            </Border.GestureRecognizers>
-            <Image Source="logout.png"
-                   WidthRequest="22"
-                   HeightRequest="22"
-                   HorizontalOptions="Center"
-                   VerticalOptions="Center"
-                   Margin="3,0,0,0"/>
-        </Border>
+        <!-- Action buttons pinned to bottom-right -->
+        <VerticalStackLayout IsVisible="{Binding IsLoggedIn}"
+                             Spacing="12"
+                             HorizontalOptions="End"
+                             VerticalOptions="End"
+                             Margin="0,0,20,20">
+
+            <!-- Settings button -->
+            <Border BackgroundColor="White"
+                    StrokeShape="RoundRectangle 14"
+                    StrokeThickness="0"
+                    WidthRequest="48"
+                    HeightRequest="48"
+                    HorizontalOptions="End">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.3" />
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding GoToEditProfileCommand}" />
+                </Border.GestureRecognizers>
+                <Label Text="⚙️"
+                       FontSize="22"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center" />
+            </Border>
+
+            <!-- Logout button -->
+            <Border BackgroundColor="{StaticResource ErrorRed}"
+                    StrokeShape="RoundRectangle 14"
+                    StrokeThickness="0"
+                    WidthRequest="48"
+                    HeightRequest="48"
+                    HorizontalOptions="End">
+                <Border.Shadow>
+                    <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.3" />
+                </Border.Shadow>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding LogoutCommand}" />
+                </Border.GestureRecognizers>
+                <Image Source="logout.png"
+                       WidthRequest="22"
+                       HeightRequest="22"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Margin="3,0,0,0"/>
+            </Border>
+        </VerticalStackLayout>
     </Grid>
 </ContentPage>

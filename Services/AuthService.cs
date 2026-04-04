@@ -159,6 +159,18 @@ public class AuthService
         return true;
     }
 
+    public void UpdateCurrentUser(string? displayName = null, string? bio = null, string? avatarUrl = null)
+    {
+        if (_currentUser == null) return;
+
+        if (displayName != null)
+            _currentUser.DisplayName = displayName;
+        if (bio != null)
+            _currentUser.Bio = bio;
+        if (avatarUrl != null)
+            _currentUser.AvatarUrl = avatarUrl;
+    }
+
     private void SetTokenOnApiService(string? token)
     {
         if (_apiService is ApiService apiService)

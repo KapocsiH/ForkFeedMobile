@@ -278,6 +278,21 @@ public partial class ProfileViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task GoToEditProfileAsync()
+    {
+        if (User == null) return;
+
+        var parameters = new Dictionary<string, object>
+        {
+            { "username", User.DisplayName },
+            { "bio", User.Bio ?? string.Empty },
+            { "avatarUrl", User.AvatarUrl ?? string.Empty }
+        };
+
+        await Shell.Current.GoToAsync("EditProfile", parameters);
+    }
+
+    [RelayCommand]
     private void ToggleBio()
     {
         IsBioExpanded = !IsBioExpanded;

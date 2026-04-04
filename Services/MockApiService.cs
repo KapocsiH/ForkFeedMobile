@@ -276,6 +276,12 @@ public class MockApiService : IApiService
     public Task<ApiResult<UserStatsResponse>> GetMyStatsAsync() =>
         Ok(new UserStatsResponse { Stats = new UserStats { RecipesCount = 5, RecipeBooksCount = 1, AverageRecipeRating = 4.2 } });
 
+    public Task<ApiResult<MessageResponse>> UpdateMyProfileAsync(UpdateProfileRequest request) =>
+        Ok(new MessageResponse { Message = "Profile updated" });
+
+    public Task<ApiResult<UploadResponse>> UploadProfileImageAsync(Stream imageStream, string fileName) =>
+        Ok(new UploadResponse { Url = "https://mock.url/profile.jpg", Message = "Profile image uploaded" });
+
     public Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync() =>
         Ok(new MessageResponse { Message = "Deactivated" });
 
