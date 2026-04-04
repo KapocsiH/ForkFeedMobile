@@ -111,6 +111,17 @@ public class RecipeService
         return recipe;
     }
 
+    public async Task<List<Recipe>> GetUserRecipesAsync(int userId, int page = 0, int pageSize = 20)
+    {
+        var apiPage = page + 1;
+        var result = await _api.GetUserRecipesAsync(userId, apiPage, pageSize);
+
+        if (!result.IsSuccess || result.Data == null)
+            return new List<Recipe>();
+
+        return result.Data.Recipes.Select(MapToRecipe).ToList();
+    }
+
     public async Task AddRecipeAsync(Recipe recipe)
     {
         // For now, creating recipes via the API would require auth.
@@ -120,17 +131,33 @@ public class RecipeService
 
     // ?? Mapping helpers ??????????????????????????????????????????
 
+    private const string BaseUrl = "https://forkfeed.vercel.app";
+
     private static Recipe MapToRecipe(ApiRecipe api) => new()
     {
         Id = api.Id,
         Title = api.Title,
         Description = api.Description ?? string.Empty,
-        ImageUrl = api.ImageUrl ?? string.Empty,
+        ImageUrl = ResolveImageUrl(api.ImageUrl),
         Difficulty = CapitalizeFirst(api.Difficulty),
         TimeMinutes = api.PreparationTime,
         Rating = api.AverageRating,
         CreatedAt = api.CreatedAt,
     };
+
+    private static string ResolveImageUrl(string? url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+            return string.Empty;
+
+        // Already absolute
+        if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
+            url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+            return url;
+
+        // Relative path — resolve against the API base
+        return $"{BaseUrl}{(url.StartsWith('/') ? url : "/" + url)}";
+    }
 
     private static string CapitalizeFirst(string value) =>
         string.IsNullOrEmpty(value) ? value

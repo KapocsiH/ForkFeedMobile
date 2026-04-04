@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -11,6 +12,8 @@ public partial class ProfileViewModel : BaseViewModel
 {
     private readonly AuthService _authService;
     private readonly IApiService _apiService;
+    private readonly RecipeService _recipeService;
+    private readonly FavoritesService _favoritesService;
 
     [ObservableProperty]
     private bool _isLoggedIn;
@@ -61,10 +64,15 @@ public partial class ProfileViewModel : BaseViewModel
     public bool IsBooksTabSelected => SelectedTab == "Books";
     public bool IsCommentsTabSelected => SelectedTab == "Comments";
 
-    public ProfileViewModel(AuthService authService, IApiService apiService)
+    public ObservableCollection<Recipe> UserRecipes { get; } = new();
+
+    public ProfileViewModel(AuthService authService, IApiService apiService,
+        RecipeService recipeService, FavoritesService favoritesService)
     {
         _authService = authService;
         _apiService = apiService;
+        _recipeService = recipeService;
+        _favoritesService = favoritesService;
         Title = "Profile";
     }
 
@@ -119,6 +127,7 @@ public partial class ProfileViewModel : BaseViewModel
         IsBioExpanded = false;
         BioMaxLines = 3;
         SelectedTab = "Recipes";
+        UserRecipes.Clear();
         RefreshState();
     }
 
@@ -143,7 +152,10 @@ public partial class ProfileViewModel : BaseViewModel
         RefreshState();
 
         if (IsLoggedIn)
+        {
             await LoadProfileAsync();
+            await LoadUserRecipesAsync();
+        }
     }
 
     [RelayCommand]
@@ -179,6 +191,49 @@ public partial class ProfileViewModel : BaseViewModel
         {
             IsBusy = false;
             IsProfileLoaded = true;
+        }
+    }
+
+    [RelayCommand]
+    private async Task LoadUserRecipesAsync()
+    {
+        if (!IsLoggedIn || User == null)
+            return;
+
+        try
+        {
+            var recipes = await _recipeService.GetUserRecipesAsync(User.Id);
+
+            UserRecipes.Clear();
+            foreach (var r in recipes)
+            {
+                r.IsFavorite = await _favoritesService.IsFavoriteAsync(r.Id);
+                UserRecipes.Add(r);
+            }
+        }
+        catch
+        {
+            // Silently fail; the user can retry by switching tabs
+        }
+    }
+
+    [RelayCommand]
+    private async Task GoToRecipeDetailAsync(Recipe recipe)
+    {
+        if (recipe == null) return;
+        await Shell.Current.GoToAsync($"RecipeDetail?recipeId={recipe.Id}");
+    }
+
+    [RelayCommand]
+    private async Task ToggleUserRecipeFavoriteAsync(Recipe recipe)
+    {
+        await _favoritesService.ToggleFavoriteAsync(recipe);
+        recipe.IsFavorite = await _favoritesService.IsFavoriteAsync(recipe.Id);
+
+        var index = UserRecipes.IndexOf(recipe);
+        if (index >= 0)
+        {
+            UserRecipes[index] = recipe;
         }
     }
 
