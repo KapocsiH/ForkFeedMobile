@@ -22,7 +22,35 @@ public class FavoritesService
         if (!result.IsSuccess || result.Data == null)
             return new List<Recipe>();
 
-        var recipes = result.Data.AllRecipes.Select(MapToRecipe).ToList();
+        var apiRecipes = result.Data.AllRecipes;
+
+        // The favorites endpoint may return incomplete recipe objects (e.g. missing
+        // preparation_time). Fetch the full recipe list and merge any missing data.
+        var needsSupplement = apiRecipes.Any(r => r.PreparationTime == 0);
+        if (needsSupplement)
+        {
+            var fullResult = await _api.GetRecipesAsync(1, 100);
+            if (fullResult.IsSuccess && fullResult.Data != null)
+            {
+                var lookup = fullResult.Data.Recipes.ToDictionary(r => r.Id);
+                for (var i = 0; i < apiRecipes.Count; i++)
+                {
+                    if (lookup.TryGetValue(apiRecipes[i].Id, out var full))
+                    {
+                        if (apiRecipes[i].PreparationTime == 0)
+                            apiRecipes[i].PreparationTime = full.PreparationTime;
+                        if (apiRecipes[i].AverageRating == 0)
+                            apiRecipes[i].AverageRating = full.AverageRating;
+                        if (string.IsNullOrWhiteSpace(apiRecipes[i].ImageUrl))
+                            apiRecipes[i].ImageUrl = full.ImageUrl;
+                        if (string.IsNullOrWhiteSpace(apiRecipes[i].Description))
+                            apiRecipes[i].Description = full.Description;
+                    }
+                }
+            }
+        }
+
+        var recipes = apiRecipes.Select(MapToRecipe).ToList();
 
         // Sync the local cache with what the server returned
         _favoriteIds.Clear();
