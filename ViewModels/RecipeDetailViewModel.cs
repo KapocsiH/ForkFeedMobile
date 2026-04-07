@@ -80,7 +80,6 @@ public partial class RecipeDetailViewModel : BaseViewModel
     {
         if (Recipe == null) return;
         await _favoritesService.ToggleFavoriteAsync(Recipe);
-        Recipe.IsFavorite = await _favoritesService.IsFavoriteAsync(Recipe.Id);
         OnPropertyChanged(nameof(Recipe));
     }
 

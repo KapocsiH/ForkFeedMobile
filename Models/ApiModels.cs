@@ -441,13 +441,50 @@ public class FavoriteResponse
     public string? Message { get; set; }
 }
 
+public class ApiFavoriteItem
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("user_id")]
+    public int UserId { get; set; }
+
+    [JsonPropertyName("recipe_id")]
+    public int RecipeId { get; set; }
+
+    [JsonPropertyName("recipe")]
+    public ApiRecipe? Recipe { get; set; }
+}
+
 public class FavoritesResponse
 {
+    [JsonPropertyName("favorites")]
+    public List<ApiFavoriteItem> Favorites { get; set; } = new();
+
     [JsonPropertyName("recipes")]
     public List<ApiRecipe> Recipes { get; set; } = new();
 
     [JsonPropertyName("pagination")]
     public PaginationInfo? Pagination { get; set; }
+
+    /// <summary>
+    /// Returns the recipe objects from whichever list the API actually populated.
+    /// Prefers the top-level Recipes list (full data) over nested Favorite items.
+    /// </summary>
+    [JsonIgnore]
+    public List<ApiRecipe> AllRecipes
+    {
+        get
+        {
+            if (Recipes.Count > 0)
+                return Recipes;
+
+            return Favorites
+                .Where(f => f.Recipe != null)
+                .Select(f => f.Recipe!)
+                .ToList();
+        }
+    }
 }
 
 // ?? Recipe Book ??????????????????????????????????????????????????

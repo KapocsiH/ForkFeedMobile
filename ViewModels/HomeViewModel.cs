@@ -136,13 +136,15 @@ public partial class HomeViewModel : BaseViewModel
     [RelayCommand]
     private async Task ToggleFavoriteAsync(Recipe recipe)
     {
-        await _favoritesService.ToggleFavoriteAsync(recipe);
-        recipe.IsFavorite = await _favoritesService.IsFavoriteAsync(recipe.Id);
+        var success = await _favoritesService.ToggleFavoriteAsync(recipe);
 
-        var index = Recipes.IndexOf(recipe);
-        if (index >= 0)
+        if (success)
         {
-            Recipes[index] = recipe;
+            var index = Recipes.IndexOf(recipe);
+            if (index >= 0)
+            {
+                Recipes[index] = recipe;
+            }
         }
     }
 

@@ -173,15 +173,16 @@ public class MockApiService : IApiService
     public Task<ApiResult<MessageResponse>> RateRecipeAsync(int recipeId, CreateRatingRequest request) =>
         Ok(new MessageResponse { Message = "Rated" });
 
-    public Task<ApiResult<FavoriteResponse>> ToggleRecipeFavoriteAsync(int recipeId)
+    public Task<ApiResult<FavoriteResponse>> AddRecipeFavoriteAsync(int recipeId)
     {
-        if (_favoriteIds.Contains(recipeId))
-        {
-            _favoriteIds.Remove(recipeId);
-            return Ok(new FavoriteResponse { IsFavorite = false, Message = "Removed from favorites" });
-        }
         _favoriteIds.Add(recipeId);
         return Ok(new FavoriteResponse { IsFavorite = true, Message = "Added to favorites" });
+    }
+
+    public Task<ApiResult<MessageResponse>> RemoveRecipeFavoriteAsync(int recipeId)
+    {
+        _favoriteIds.Remove(recipeId);
+        return Ok(new MessageResponse { Message = "Removed from favorites" });
     }
 
     public Task<ApiResult<MessageResponse>> UploadRecipeImageAsync(int recipeId, Stream imageStream, string fileName) =>

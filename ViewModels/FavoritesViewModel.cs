@@ -24,24 +24,60 @@ public partial class FavoritesViewModel : BaseViewModel
     [RelayCommand]
     private async Task LoadFavoritesAsync()
     {
-        IsBusy = true;
+        if (IsBusy) return;
 
-        var favs = await _favoritesService.GetFavoritesAsync();
+        try
+        {
+            IsBusy = true;
+            ClearError();
 
-        Favorites.Clear();
-        foreach (var r in favs)
-            Favorites.Add(r);
+            var favs = await _favoritesService.GetFavoritesAsync();
 
-        IsEmpty = Favorites.Count == 0;
-        IsBusy = false;
+            Favorites.Clear();
+            foreach (var r in favs)
+                Favorites.Add(r);
+
+            IsEmpty = Favorites.Count == 0;
+        }
+        catch (Exception ex)
+        {
+            SetError($"Unable to load favorites. {ex.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]
     private async Task RemoveFavoriteAsync(Recipe recipe)
     {
-        await _favoritesService.ToggleFavoriteAsync(recipe);
-        Favorites.Remove(recipe);
-        IsEmpty = Favorites.Count == 0;
+        if (recipe == null) return;
+
+        try
+        {
+            var success = await _favoritesService.ToggleFavoriteAsync(recipe);
+
+            if (success)
+            {
+                Favorites.Remove(recipe);
+                IsEmpty = Favorites.Count == 0;
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert(
+                    "Error",
+                    "Failed to remove from favorites. Please try again.",
+                    "OK");
+            }
+        }
+        catch (Exception)
+        {
+            await Shell.Current.DisplayAlert(
+                "Error",
+                "Something went wrong. Please try again.",
+                "OK");
+        }
     }
 
     [RelayCommand]

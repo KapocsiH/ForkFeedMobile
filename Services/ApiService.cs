@@ -141,8 +141,11 @@ public class ApiService : IApiService
     public Task<ApiResult<MessageResponse>> RateRecipeAsync(int recipeId, CreateRatingRequest request) =>
         PostAsync<MessageResponse>($"recipes/{recipeId}/ratings", request);
 
-    public Task<ApiResult<FavoriteResponse>> ToggleRecipeFavoriteAsync(int recipeId) =>
+    public Task<ApiResult<FavoriteResponse>> AddRecipeFavoriteAsync(int recipeId) =>
         PostAsync<FavoriteResponse>($"recipes/{recipeId}/favorite", null);
+
+    public Task<ApiResult<MessageResponse>> RemoveRecipeFavoriteAsync(int recipeId) =>
+        DeleteAsync<MessageResponse>($"recipes/{recipeId}/favorite");
 
     public async Task<ApiResult<MessageResponse>> UploadRecipeImageAsync(int recipeId, Stream imageStream, string fileName)
     {
@@ -278,12 +281,10 @@ public class ApiService : IApiService
     {
         try
         {
-            HttpContent? content = null;
-            if (body != null)
-            {
-                var json = JsonSerializer.Serialize(body, _jsonOptions);
-                content = new StringContent(json, Encoding.UTF8, "application/json");
-            }
+            var json = body != null
+                ? JsonSerializer.Serialize(body, _jsonOptions)
+                : "{}";
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             var response = await _httpClient.PostAsync(endpoint, content);
             return await HandleResponseAsync<T>(response);
@@ -432,12 +433,15 @@ public class ApiService : IApiService
 
         if (response.IsSuccessStatusCode)
         {
+            if (string.IsNullOrWhiteSpace(responseBody))
+                return ApiResult<T>.Success(default!, statusCode);
+
             try
             {
                 var data = JsonSerializer.Deserialize<T>(responseBody, _jsonOptions);
                 return data != null
                     ? ApiResult<T>.Success(data, statusCode)
-                    : ApiResult<T>.Failure("Empty response from server.", statusCode);
+                    : ApiResult<T>.Success(default!, statusCode);
             }
             catch (JsonException ex)
             {
