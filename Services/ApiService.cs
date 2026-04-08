@@ -147,6 +147,24 @@ public class ApiService : IApiService
     public Task<ApiResult<MessageResponse>> RemoveRecipeFavoriteAsync(int recipeId) =>
         DeleteAsync<MessageResponse>($"recipes/{recipeId}/favorite");
 
+    public async Task<ApiResult<CreateRecipeResponse>> CreateRecipeAsync(CreateRecipeRequest request, Stream? imageStream = null, string? imageFileName = null)
+    {
+        // First, create the recipe with a JSON body
+        var createResult = await PostAsync<CreateRecipeResponse>("recipes", request);
+
+        if (!createResult.IsSuccess || createResult.Data?.Recipe == null)
+            return createResult;
+
+        // Then upload the image separately if provided
+        if (imageStream != null && !string.IsNullOrWhiteSpace(imageFileName))
+        {
+            var recipeId = createResult.Data.Recipe.Id;
+            await UploadRecipeImageAsync(recipeId, imageStream, imageFileName);
+        }
+
+        return createResult;
+    }
+
     public async Task<ApiResult<MessageResponse>> UploadRecipeImageAsync(int recipeId, Stream imageStream, string fileName)
     {
         return await UploadAsync<MessageResponse>($"recipes/{recipeId}/image", imageStream, fileName);

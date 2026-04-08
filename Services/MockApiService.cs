@@ -185,6 +185,24 @@ public class MockApiService : IApiService
         return Ok(new MessageResponse { Message = "Removed from favorites" });
     }
 
+    public Task<ApiResult<CreateRecipeResponse>> CreateRecipeAsync(CreateRecipeRequest request, Stream? imageStream = null, string? imageFileName = null)
+    {
+        var newId = _recipes.Count > 0 ? _recipes.Max(r => r.Id) + 1 : 1;
+        var newRecipe = new ApiRecipe
+        {
+            Id = newId,
+            Title = request.Title,
+            Description = request.Description,
+            PreparationTime = request.PreparationTime,
+            Difficulty = request.Difficulty,
+            ImageUrl = "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600",
+            CreatedAt = DateTime.UtcNow,
+            Author = new ApiUser { Id = 1, Username = "MockChef" }
+        };
+        _recipes.Add(newRecipe);
+        return Ok(new CreateRecipeResponse { Recipe = newRecipe, Message = "Recipe created" });
+    }
+
     public Task<ApiResult<MessageResponse>> UploadRecipeImageAsync(int recipeId, Stream imageStream, string fileName) =>
         Ok(new MessageResponse { Message = "Image uploaded" });
 

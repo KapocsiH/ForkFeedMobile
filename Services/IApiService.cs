@@ -40,6 +40,7 @@ public interface IApiService
     Task<ApiResult<MessageResponse>> RateRecipeAsync(int recipeId, CreateRatingRequest request);
     Task<ApiResult<FavoriteResponse>> AddRecipeFavoriteAsync(int recipeId);
     Task<ApiResult<MessageResponse>> RemoveRecipeFavoriteAsync(int recipeId);
+    Task<ApiResult<CreateRecipeResponse>> CreateRecipeAsync(CreateRecipeRequest request, Stream? imageStream = null, string? imageFileName = null);
     Task<ApiResult<MessageResponse>> UploadRecipeImageAsync(int recipeId, Stream imageStream, string fileName);
 
     // ?? Categories ???????????????????????????????????????????????

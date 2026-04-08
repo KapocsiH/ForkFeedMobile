@@ -9,6 +9,7 @@ namespace ForkFeedMobile.ViewModels;
 public partial class AddRecipeViewModel : BaseViewModel
 {
     private readonly RecipeService _recipeService;
+    private readonly AuthService _authService;
 
     [ObservableProperty]
     private string _recipeTitle = string.Empty;
@@ -18,6 +19,15 @@ public partial class AddRecipeViewModel : BaseViewModel
 
     [ObservableProperty]
     private string _selectedDifficulty = "Easy";
+
+    [ObservableProperty]
+    private string _cookingTimeMinutes = string.Empty;
+
+    [ObservableProperty]
+    private string _selectedCategory = "Main Course";
+
+    [ObservableProperty]
+    private string _newTag = string.Empty;
 
     [ObservableProperty]
     private string _newIngredientName = string.Empty;
@@ -39,12 +49,36 @@ public partial class AddRecipeViewModel : BaseViewModel
 
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
+    public ObservableCollection<string> Tags { get; } = new();
     public List<string> DifficultyOptions { get; } = new() { "Easy", "Medium", "Hard" };
+    public List<string> CategoryOptions { get; } = new() { "Dessert", "Main Course", "Soup", "Breakfast", "Salad" };
 
-    public AddRecipeViewModel(RecipeService recipeService)
+    public AddRecipeViewModel(RecipeService recipeService, AuthService authService)
     {
         _recipeService = recipeService;
+        _authService = authService;
         Title = "Add Recipe";
+    }
+
+    [RelayCommand]
+    private void AddTag()
+    {
+        if (string.IsNullOrWhiteSpace(NewTag)) return;
+
+        var tag = NewTag.Trim().TrimStart('#');
+        if (string.IsNullOrWhiteSpace(tag)) return;
+
+        var formatted = $"#{tag}";
+        if (!Tags.Contains(formatted))
+            Tags.Add(formatted);
+
+        NewTag = string.Empty;
+    }
+
+    [RelayCommand]
+    private void RemoveTag(string tag)
+    {
+        Tags.Remove(tag);
     }
 
     [RelayCommand]
@@ -144,12 +178,18 @@ public partial class AddRecipeViewModel : BaseViewModel
         }
     }
 
-    [RelayCommand]
+    [RelayCommand(CanExecute = nameof(CanSave))]
     private async Task SaveRecipeAsync()
     {
         if (string.IsNullOrWhiteSpace(RecipeTitle))
         {
             await Shell.Current.DisplayAlert("Validation", "Please enter a recipe title.", "OK");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SelectedImagePath))
+        {
+            await Shell.Current.DisplayAlert("Validation", "Please select an image for the recipe.", "OK");
             return;
         }
 
@@ -165,33 +205,73 @@ public partial class AddRecipeViewModel : BaseViewModel
             return;
         }
 
-        IsBusy = true;
-
-        var recipe = new Recipe
+        if (!int.TryParse(CookingTimeMinutes, out var cookingTime) || cookingTime <= 0)
         {
-            Title = RecipeTitle.Trim(),
-            Description = Description.Trim(),
-            Difficulty = SelectedDifficulty,
-            ImageUrl = SelectedImagePath ?? "https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=600",
-            TimeMinutes = Steps.Count * 10,
-            Ingredients = Ingredients.ToList(),
-            Steps = Steps.ToList()
-        };
+            await Shell.Current.DisplayAlert("Validation", "Please enter a valid cooking time in minutes.", "OK");
+            return;
+        }
 
-        await _recipeService.AddRecipeAsync(recipe);
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Error", "You must be logged in to create a recipe.", "OK");
+            return;
+        }
 
-        IsBusy = false;
-        IsSaved = true;
+        IsBusy = true;
+        SaveRecipeCommand.NotifyCanExecuteChanged();
 
-        await Shell.Current.DisplayAlert("Success", "Recipe saved!", "OK");
+        try
+        {
+            var preparationTime = int.Parse(CookingTimeMinutes);
 
-        RecipeTitle = string.Empty;
-        Description = string.Empty;
-        SelectedDifficulty = "Easy";
-        Ingredients.Clear();
-        Steps.Clear();
-        SelectedImageSource = null;
-        SelectedImagePath = null;
-        IsSaved = false;
+            var (success, recipeId, error) = await _recipeService.CreateRecipeAsync(
+                RecipeTitle.Trim(),
+                Description.Trim(),
+                SelectedDifficulty,
+                preparationTime,
+                Ingredients.ToList(),
+                Steps.ToList(),
+                SelectedImagePath);
+
+            if (!success)
+            {
+                await Shell.Current.DisplayAlert("Error", error ?? "Failed to create recipe.", "OK");
+                return;
+            }
+
+            IsSaved = true;
+            await Shell.Current.DisplayAlert("Success", "Recipe created successfully!", "OK");
+
+            // Clear form
+            RecipeTitle = string.Empty;
+            Description = string.Empty;
+            SelectedDifficulty = "Easy";
+            CookingTimeMinutes = string.Empty;
+            SelectedCategory = "Main Course";
+            NewTag = string.Empty;
+            Tags.Clear();
+            Ingredients.Clear();
+            Steps.Clear();
+            SelectedImageSource = null;
+            SelectedImagePath = null;
+            NewIngredientName = string.Empty;
+            NewIngredientQty = string.Empty;
+            NewStepDescription = string.Empty;
+            IsSaved = false;
+
+            // Navigate back to home
+            await Shell.Current.GoToAsync("//Home");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Error", $"An unexpected error occurred: {ex.Message}", "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+            SaveRecipeCommand.NotifyCanExecuteChanged();
+        }
     }
+
+    private bool CanSave() => !IsBusy;
 }

@@ -246,6 +246,7 @@ public class ApiRecipeSummary
 public class ApiIngredient
 {
     [JsonPropertyName("id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int Id { get; set; }
 
     [JsonPropertyName("name")]
@@ -269,6 +270,7 @@ public class IngredientsResponse
 public class ApiStep
 {
     [JsonPropertyName("id")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public int Id { get; set; }
 
     [JsonPropertyName("step_number")]
@@ -577,6 +579,32 @@ public class RolesResponse
 {
     [JsonPropertyName("roles")]
     public List<string> Roles { get; set; } = new();
+}
+
+// ?? Create Recipe ????????????????????????????????????????????????
+
+public class CreateRecipeRequest
+{
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("preparation_time")]
+    public int PreparationTime { get; set; }
+
+    [JsonPropertyName("difficulty")]
+    public string Difficulty { get; set; } = "easy";
+}
+
+public class CreateRecipeResponse
+{
+    [JsonPropertyName("recipe")]
+    public ApiRecipe? Recipe { get; set; }
+
+    [JsonPropertyName("message")]
+    public string? Message { get; set; }
 }
 
 // ?? Upload ???????????????????????????????????????????????????????

@@ -158,11 +158,75 @@ public class RecipeService
         return comments;
     }
 
-    public async Task AddRecipeAsync(Recipe recipe)
+    public async Task<(bool Success, int? RecipeId, string? Error)> CreateRecipeAsync(
+        string title, string description, string difficulty, int preparationTime,
+        List<Ingredient> ingredients, List<RecipeStep> steps,
+        string? imagePath)
     {
-        // For now, creating recipes via the API would require auth.
-        // This is a placeholder that matches the existing contract.
-        await Task.Delay(400);
+        // 1. Create the recipe (with optional image via multipart/form-data)
+        Stream? imageStream = null;
+        string? imageFileName = null;
+
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(imagePath) && File.Exists(imagePath))
+            {
+                imageStream = File.OpenRead(imagePath);
+                imageFileName = Path.GetFileName(imagePath);
+            }
+
+            var request = new CreateRecipeRequest
+            {
+                Title = title,
+                Description = description,
+                Difficulty = difficulty.ToLower(),
+                PreparationTime = preparationTime
+            };
+
+            var createResult = await _api.CreateRecipeAsync(request, imageStream, imageFileName);
+
+            if (!createResult.IsSuccess || createResult.Data?.Recipe == null)
+                return (false, null, createResult.ErrorMessage ?? "Failed to create recipe.");
+
+            var recipeId = createResult.Data.Recipe.Id;
+
+            // 2. Add ingredients one by one
+            foreach (var ing in ingredients)
+            {
+                double qty = 0;
+                string unit = ing.Quantity;
+
+                var parts = ing.Quantity.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length >= 1 && double.TryParse(parts[0], out var parsedQty))
+                {
+                    qty = parsedQty;
+                    unit = parts.Length >= 2 ? parts[1] : "pcs";
+                }
+
+                await _api.AddRecipeIngredientAsync(recipeId, new ApiIngredient
+                {
+                    Name = ing.Name,
+                    Quantity = qty,
+                    Unit = unit
+                });
+            }
+
+            // 3. Add steps one by one
+            foreach (var step in steps)
+            {
+                await _api.AddRecipeStepAsync(recipeId, new ApiStep
+                {
+                    StepNumber = step.StepNumber,
+                    Description = step.Description
+                });
+            }
+
+            return (true, recipeId, null);
+        }
+        finally
+        {
+            imageStream?.Dispose();
+        }
     }
 
     // ?? Mapping helpers ??????????????????????????????????????????
