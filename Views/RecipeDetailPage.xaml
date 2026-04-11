@@ -33,8 +33,7 @@
 
                 <!-- Hero Image -->
                 <Image Source="{Binding Recipe.ImageUrl}"
-                       Aspect="AspectFill"
-                       HeightRequest="260" />
+                       Aspect="AspectFit"/>
 
                 <VerticalStackLayout Padding="16" Spacing="12">
 
