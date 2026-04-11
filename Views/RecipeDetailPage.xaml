@@ -37,30 +37,41 @@
 
                 <VerticalStackLayout Padding="16" Spacing="12">
 
-                    <!-- Title Row -->
-                    <Grid ColumnDefinitions="*,Auto,Auto">
-                        <Label Grid.Column="0"
-                               Text="{Binding Recipe.Title}"
-                               FontSize="24" FontAttributes="Bold" />
+                    <!-- Title -->
+                    <Label Text="{Binding Recipe.Title}"
+                           FontSize="24" FontAttributes="Bold" />
 
+                    <!-- Action Buttons Row -->
+                    <HorizontalStackLayout Spacing="16">
                         <!-- Favorite -->
-                        <Label Grid.Column="1"
-                               Text="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteIcon}}"
-                               FontSize="28" VerticalOptions="Center"
-                               Margin="0,0,8,0">
+                        <Label Text="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteIcon}}"
+                               FontSize="26" VerticalOptions="Center">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
                             </Label.GestureRecognizers>
                         </Label>
 
                         <!-- Share -->
-                        <Label Grid.Column="2"
-                               Text="??" FontSize="24" VerticalOptions="Center">
+                        <Label Text="🔗" FontSize="24" VerticalOptions="Center">
                             <Label.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ShareRecipeCommand}" />
                             </Label.GestureRecognizers>
                         </Label>
-                    </Grid>
+
+                        <!-- Save to Cookbook -->
+                        <Label Text="📖" FontSize="24" VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding SaveToCookbookCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+
+                        <!-- Report -->
+                        <Label Text="⚠️" FontSize="24" VerticalOptions="Center">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ReportRecipeCommand}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </HorizontalStackLayout>
 
                     <!-- Meta info -->
                     <HorizontalStackLayout Spacing="16">
@@ -71,16 +82,24 @@
                         <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource Gray500}">
                             <Label.FormattedText>
                                 <FormattedString>
-                                    <Span Text="? " />
+                                    <Span Text="⏱ " />
                                     <Span Text="{Binding Recipe.TimeMinutes}" />
                                     <Span Text=" min" />
+                                </FormattedString>
+                            </Label.FormattedText>
+                        </Label>
+                        <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource StarFilled}">
+                            <Label.FormattedText>
+                                <FormattedString>
+                                    <Span Text="⭐ " />
+                                    <Span Text="{Binding Recipe.Rating, StringFormat='{0:F1}'}" />
                                 </FormattedString>
                             </Label.FormattedText>
                         </Label>
                     </HorizontalStackLayout>
 
                     <!-- Rating Stars -->
-                    <VerticalStackLayout Spacing="4">
+                    <VerticalStackLayout Spacing="4" Margin="0,4,0,0">
                         <Label Text="Your Rating" FontSize="14" TextColor="{StaticResource Gray500}" />
                         <HorizontalStackLayout Spacing="4">
                             <Label Text="?" FontSize="28"
@@ -122,7 +141,7 @@
                            LineBreakMode="WordWrap" />
 
                     <!-- Ingredients Section -->
-                    <Label Text="Ingredients" FontSize="20" FontAttributes="Bold" Margin="0,8,0,0" />
+                    <Label Text="Ingredients" FontSize="20" FontAttributes="Bold" Margin="0,4,0,0" />
 
                     <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
                         <CollectionView.ItemTemplate>

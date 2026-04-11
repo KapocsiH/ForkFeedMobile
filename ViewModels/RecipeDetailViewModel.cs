@@ -124,4 +124,16 @@ public partial class RecipeDetailViewModel : BaseViewModel
             Ingredients[idx] = ingredient;
         }
     }
+
+    [RelayCommand]
+    private async Task SaveToCookbookAsync()
+    {
+        await Shell.Current.DisplayAlert("Save to Cookbook", "This feature is coming soon!", "OK");
+    }
+
+    [RelayCommand]
+    private async Task ReportRecipeAsync()
+    {
+        await Shell.Current.DisplayAlert("Report", "This feature is coming soon!", "OK");
+    }
 }
