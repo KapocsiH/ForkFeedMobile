@@ -8,12 +8,19 @@ using ForkFeedMobile.Services;
 
 namespace ForkFeedMobile.ViewModels;
 
+[QueryProperty(nameof(UserId), "userId")]
 public partial class ProfileViewModel : BaseViewModel
 {
     private readonly AuthService _authService;
     private readonly IApiService _apiService;
     private readonly RecipeService _recipeService;
     private readonly FavoritesService _favoritesService;
+
+    [ObservableProperty]
+    private int _userId;
+
+    [ObservableProperty]
+    private bool _isOwnProfile = true;
 
     [ObservableProperty]
     private bool _isLoggedIn;
@@ -78,6 +85,79 @@ public partial class ProfileViewModel : BaseViewModel
         _recipeService = recipeService;
         _favoritesService = favoritesService;
         Title = "Profile";
+    }
+
+    partial void OnUserIdChanged(int value)
+    {
+        if (value > 0)
+        {
+            IsOwnProfile = false;
+            _ = LoadExternalProfileAsync(value);
+        }
+    }
+
+    private async Task LoadExternalProfileAsync(int userId)
+    {
+        try
+        {
+            IsBusy = true;
+            ClearError();
+            IsLoggedIn = true;
+
+            var userResult = await _apiService.GetUserAsync(userId);
+            if (userResult.IsSuccess && userResult.Data?.User != null)
+            {
+                var apiUser = userResult.Data.User;
+                User = new UserProfile
+                {
+                    Id = apiUser.Id,
+                    DisplayName = apiUser.Username,
+                    Email = string.Empty,
+                    AvatarUrl = apiUser.ProfileImageUrl ?? string.Empty,
+                    Bio = apiUser.Bio ?? string.Empty,
+                    MemberSince = apiUser.CreatedAt ?? DateTime.Now
+                };
+                Title = apiUser.Username;
+                Bio = User.Bio;
+                HasBio = !string.IsNullOrWhiteSpace(Bio);
+            }
+            else
+            {
+                SetError("Could not load user profile.");
+                return;
+            }
+
+            var statsResult = await _apiService.GetUserStatsAsync(userId);
+            if (statsResult.IsSuccess && statsResult.Data?.Stats != null)
+            {
+                var stats = statsResult.Data.Stats;
+                AverageRating = Math.Round(stats.AverageRecipeRating, 1);
+                RecipeCount = stats.RecipesCount;
+                CollectionCount = stats.RecipeBooksCount;
+            }
+
+            var recipes = await _recipeService.GetUserRecipesAsync(userId);
+            UserRecipes.Clear();
+            foreach (var r in recipes)
+            {
+                r.IsFavorite = await _favoritesService.IsFavoriteAsync(r.Id);
+                UserRecipes.Add(r);
+            }
+
+            var comments = await _recipeService.GetUserCommentsWithRecipeInfoAsync(userId);
+            UserComments.Clear();
+            foreach (var c in comments)
+                UserComments.Add(c);
+        }
+        catch
+        {
+            SetError("Failed to load user profile.");
+        }
+        finally
+        {
+            IsBusy = false;
+            IsProfileLoaded = true;
+        }
     }
 
     [RelayCommand]

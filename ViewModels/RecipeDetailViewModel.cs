@@ -126,9 +126,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void AuthorTapped()
+    private async Task AuthorTappedAsync()
     {
-        // TODO: Navigate to author profile page
+        if (Recipe == null || Recipe.AuthorId <= 0) return;
+        await Shell.Current.GoToAsync($"UserProfile?userId={Recipe.AuthorId}");
     }
 
     [RelayCommand]

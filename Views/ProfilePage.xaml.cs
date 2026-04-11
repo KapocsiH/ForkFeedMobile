@@ -17,6 +17,14 @@ public partial class ProfilePage : ContentPage
     {
         base.OnAppearing();
 
+        // External user profile is loaded via the UserId query property;
+        // only run the full refresh flow for the current user's own profile.
+        if (_vm.UserId > 0)
+        {
+            await AnimateHeaderAsync();
+            return;
+        }
+
         if (!_hasRestoredSession)
         {
             _hasRestoredSession = true;

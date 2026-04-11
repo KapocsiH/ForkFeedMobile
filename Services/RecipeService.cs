@@ -82,6 +82,7 @@ public class RecipeService
                 recipe.ImageUrl = match.ImageUrl ?? string.Empty;
                 recipe.Description = match.Description ?? string.Empty;
                 recipe.CreatedAt = match.CreatedAt;
+                recipe.AuthorId = match.Author?.Id ?? 0;
                 recipe.AuthorUsername = match.Author?.Username ?? string.Empty;
                 recipe.AuthorProfileImageUrl = ResolveImageUrl(match.Author?.ProfileImageUrl);
             }
@@ -247,6 +248,7 @@ public class RecipeService
         TimeMinutes = api.PreparationTime,
         Rating = api.AverageRating,
         CreatedAt = api.CreatedAt,
+        AuthorId = api.Author?.Id ?? 0,
         AuthorUsername = api.Author?.Username ?? string.Empty,
         AuthorProfileImageUrl = ResolveImageUrl(api.Author?.ProfileImageUrl),
     };

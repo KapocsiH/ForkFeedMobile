@@ -365,7 +365,8 @@
                 </VerticalStackLayout>
 
                 <!-- Login View -->
-                <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBool}}" Spacing="14">
+                <VerticalStackLayout IsVisible="{Binding IsOwnProfile}" Spacing="14">
+                    <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBool}}" Spacing="14">
 
                     <Label Text="🍴" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
                     <Label Text="Welcome to ForkFeed"
@@ -414,16 +415,22 @@
                             FontSize="14" FontAttributes="Bold"
                             Padding="0"
                             HeightRequest="40" />
+                    </VerticalStackLayout>
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </ScrollView>
 
         <!-- Action buttons pinned to bottom-right -->
-        <VerticalStackLayout IsVisible="{Binding IsLoggedIn}"
+        <VerticalStackLayout IsVisible="{Binding IsOwnProfile}"
                              Spacing="12"
                              HorizontalOptions="End"
                              VerticalOptions="End"
                              Margin="0,0,20,20">
+
+            <!-- Only show when logged in -->
+            <VerticalStackLayout IsVisible="{Binding IsLoggedIn}"
+                                 Spacing="12"
+                                 HorizontalOptions="End">
 
             <!-- Settings button -->
             <Border BackgroundColor="White"
@@ -464,6 +471,7 @@
                        VerticalOptions="Center"
                        Margin="3,0,0,0"/>
             </Border>
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>
