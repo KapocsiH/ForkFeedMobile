@@ -13,6 +13,8 @@ public class Recipe
     public List<Ingredient> Ingredients { get; set; } = new();
     public List<RecipeStep> Steps { get; set; } = new();
     public bool IsFavorite { get; set; }
+    public string AuthorUsername { get; set; } = string.Empty;
+    public string AuthorProfileImageUrl { get; set; } = string.Empty;
 }
 
 public class Ingredient

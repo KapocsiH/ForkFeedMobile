@@ -126,6 +126,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private void AuthorTapped()
+    {
+        // TODO: Navigate to author profile page
+    }
+
+    [RelayCommand]
     private async Task SaveToCookbookAsync()
     {
         await Shell.Current.DisplayAlert("Save to Cookbook", "This feature is coming soon!", "OK");

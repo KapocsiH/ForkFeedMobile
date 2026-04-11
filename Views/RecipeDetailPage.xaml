@@ -37,6 +37,25 @@
 
                 <VerticalStackLayout Padding="16" Spacing="12">
 
+                    <!-- Author -->
+                    <HorizontalStackLayout Spacing="10">
+                        <HorizontalStackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding AuthorTappedCommand}" />
+                        </HorizontalStackLayout.GestureRecognizers>
+
+                        <Image Source="{Binding Recipe.AuthorProfileImageUrl}"
+                               WidthRequest="36" HeightRequest="36"
+                               Aspect="AspectFill">
+                            <Image.Clip>
+                                <EllipseGeometry Center="18,18" RadiusX="18" RadiusY="18" />
+                            </Image.Clip>
+                        </Image>
+
+                        <Label Text="{Binding Recipe.AuthorUsername}"
+                               FontSize="15" FontAttributes="Bold"
+                               VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
                     <!-- Title -->
                     <Label Text="{Binding Recipe.Title}"
                            FontSize="24" FontAttributes="Bold" />
