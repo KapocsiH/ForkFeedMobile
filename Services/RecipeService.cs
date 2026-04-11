@@ -234,6 +234,22 @@ public class RecipeService
         }
     }
 
+    public async Task<List<Comment>> GetCommentsByRecipeIdAsync(int recipeId)
+    {
+        var result = await _api.GetRecipeCommentsAsync(recipeId, 1, 100);
+
+        if (!result.IsSuccess || result.Data == null)
+            return new List<Comment>();
+
+        return result.Data.Comments.Select(c => new Comment
+        {
+            Username = c.User?.Username ?? "Unknown",
+            ProfileImageUrl = ResolveImageUrl(c.User?.ProfileImageUrl),
+            CreatedAt = c.CreatedAt,
+            Text = c.Content
+        }).ToList();
+    }
+
     // ?? Mapping helpers ??????????????????????????????????????????
 
     private const string BaseUrl = "https://forkfeed.vercel.app";

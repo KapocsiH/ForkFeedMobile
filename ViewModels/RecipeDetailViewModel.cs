@@ -24,8 +24,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private int _userRating;
 
+    [ObservableProperty]
+    private bool _hasNoComments;
+
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
+    public ObservableCollection<Comment> Comments { get; } = new();
 
     public RecipeDetailViewModel(RecipeService recipeService, FavoritesService favoritesService)
     {
@@ -68,6 +72,13 @@ public partial class RecipeDetailViewModel : BaseViewModel
             Steps.Clear();
             foreach (var s in recipe.Steps)
                 Steps.Add(s);
+
+            Comments.Clear();
+            var comments = await _recipeService.GetCommentsByRecipeIdAsync(RecipeId);
+            foreach (var c in comments)
+                Comments.Add(c);
+
+            HasNoComments = Comments.Count == 0;
         }
         catch
         {
@@ -144,6 +155,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
 
     [RelayCommand]
     private async Task ReportRecipeAsync()
+    {
+        await Shell.Current.DisplayAlert("Report", "This feature is coming soon!", "OK");
+    }
+
+    [RelayCommand]
+    private async Task ReportCommentAsync()
     {
         await Shell.Current.DisplayAlert("Report", "This feature is coming soon!", "OK");
     }

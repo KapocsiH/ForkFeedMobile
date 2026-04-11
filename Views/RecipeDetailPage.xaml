@@ -215,7 +215,74 @@
                             FontSize="18" FontAttributes="Bold"
                             CornerRadius="12"
                             HeightRequest="56"
-                            Margin="0,16,0,24" />
+                            Margin="0,16,0,8" />
+
+                    <!-- Comments Section -->
+                    <Label Text="Comments" FontSize="20" FontAttributes="Bold" Margin="0,8,0,4" />
+
+                    <!-- Comment Input Placeholder -->
+                    <Entry Placeholder="Write a comment..."
+                           IsEnabled="False"
+                           FontSize="14"
+                           Margin="0,0,0,8" />
+
+                    <!-- No Comments Message -->
+                    <Label Text="No comments yet."
+                           IsVisible="{Binding HasNoComments}"
+                           FontSize="14"
+                           TextColor="{StaticResource Gray400}"
+                           HorizontalTextAlignment="Center"
+                           Margin="0,8" />
+
+                    <!-- Comments List -->
+                    <CollectionView ItemsSource="{Binding Comments}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="models:Comment">
+                                <VerticalStackLayout Padding="0,8" Spacing="4">
+                                    <Grid ColumnDefinitions="36,*,Auto" ColumnSpacing="10">
+                                        <!-- Profile Image -->
+                                        <Image Grid.Column="0"
+                                               Source="{Binding ProfileImageUrl}"
+                                               WidthRequest="36" HeightRequest="36"
+                                               Aspect="AspectFill"
+                                               VerticalOptions="Start">
+                                            <Image.Clip>
+                                                <EllipseGeometry Center="18,18" RadiusX="18" RadiusY="18" />
+                                            </Image.Clip>
+                                        </Image>
+
+                                        <!-- Username + Timestamp -->
+                                        <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
+                                            <Label Text="{Binding Username}"
+                                                   FontSize="14" FontAttributes="Bold"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="{Binding CreatedAt, Converter={StaticResource DateTimeToRelative}}"
+                                                   FontSize="12" TextColor="{StaticResource Gray400}"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+
+                                        <!-- Report Button -->
+                                        <icons:MauiIcon Grid.Column="2"
+                                                        Icon="Warning28Filled"
+                                                        IconSize="24"
+                                                        IconColor="{StaticResource Gray400}"
+                                                        VerticalOptions="Center">
+                                            <icons:MauiIcon.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=ReportCommentCommand}" />
+                                            </icons:MauiIcon.GestureRecognizers>
+                                        </icons:MauiIcon>
+                                    </Grid>
+
+                                    <!-- Comment Text -->
+                                    <Label Text="{Binding Text}"
+                                           FontSize="14"
+                                           LineBreakMode="WordWrap"
+                                           Margin="46,0,0,0" />
+                                </VerticalStackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+
                 </VerticalStackLayout>
             </VerticalStackLayout>
         </Grid>
