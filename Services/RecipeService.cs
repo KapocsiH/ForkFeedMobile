@@ -92,7 +92,9 @@ public class RecipeService
                 .Select(i => new Ingredient
                 {
                     Name = i.Name,
-                    Quantity = $"{i.Quantity} {i.Unit}".Trim()
+                    Quantity = string.IsNullOrWhiteSpace(i.Unit)
+                        ? i.Quantity
+                        : $"{i.Quantity} {i.Unit}".Trim()
                 }).ToList();
         }
 
@@ -193,20 +195,20 @@ public class RecipeService
             // 2. Add ingredients one by one
             foreach (var ing in ingredients)
             {
-                double qty = 0;
+                string qtyStr = "0";
                 string unit = ing.Quantity;
 
                 var parts = ing.Quantity.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length >= 1 && double.TryParse(parts[0], out var parsedQty))
                 {
-                    qty = parsedQty;
+                    qtyStr = parsedQty.ToString(System.Globalization.CultureInfo.InvariantCulture);
                     unit = parts.Length >= 2 ? parts[1] : "pcs";
                 }
 
                 await _api.AddRecipeIngredientAsync(recipeId, new ApiIngredient
                 {
                     Name = ing.Name,
-                    Quantity = qty,
+                    Quantity = qtyStr,
                     Unit = unit
                 });
             }

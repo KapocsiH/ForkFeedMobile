@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace ForkFeedMobile.Models;
@@ -253,10 +254,38 @@ public class ApiIngredient
     public string Name { get; set; } = string.Empty;
 
     [JsonPropertyName("quantity")]
-    public double Quantity { get; set; }
+    [JsonConverter(typeof(FlexibleQuantityConverter))]
+    public string Quantity { get; set; } = string.Empty;
 
     [JsonPropertyName("unit")]
     public string Unit { get; set; } = string.Empty;
+}
+
+/// <summary>
+/// Handles API quantity values that may arrive as a JSON number (int/double) or a string.
+/// Always stores the result as a string so no data is lost.
+/// </summary>
+public class FlexibleQuantityConverter : JsonConverter<string>
+{
+    public override string Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        return reader.TokenType switch
+        {
+            JsonTokenType.String => reader.GetString() ?? string.Empty,
+            JsonTokenType.Number => reader.TryGetInt64(out var l) ? l.ToString() : reader.GetDouble().ToString(System.Globalization.CultureInfo.InvariantCulture),
+            JsonTokenType.Null => string.Empty,
+            _ => string.Empty
+        };
+    }
+
+    public override void Write(Utf8JsonWriter writer, string value, JsonSerializerOptions options)
+    {
+        // Write back as a number if possible, otherwise as a string
+        if (double.TryParse(value, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out var d))
+            writer.WriteNumberValue(d);
+        else
+            writer.WriteStringValue(value);
+    }
 }
 
 public class IngredientsResponse

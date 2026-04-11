@@ -111,8 +111,8 @@ public class MockApiService : IApiService
         {
             Ingredients = new()
             {
-                new() { Id = 1, Name = "Mock ingredient 1", Quantity = 1, Unit = "cup" },
-                new() { Id = 2, Name = "Mock ingredient 2", Quantity = 200, Unit = "g" }
+                new() { Id = 1, Name = "Mock ingredient 1", Quantity = "1", Unit = "cup" },
+                new() { Id = 2, Name = "Mock ingredient 2", Quantity = "200", Unit = "g" }
             }
         });
 
