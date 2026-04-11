@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.RegisterPage"
              x:DataType="vm:RegisterViewModel"
              Title="{Binding Title}"
@@ -10,7 +11,7 @@
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="14">
 
-            <Label Text="??" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
+            <icons:MauiIcon Icon="PersonCircle24Filled" IconSize="60" HorizontalOptions="Center" Margin="0,20,0,0" />
             <Label Text="Join ForkFeed"
                    FontSize="24" FontAttributes="Bold"
                    HorizontalTextAlignment="Center" />

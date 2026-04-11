@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.RecipeDetailPage"
              x:DataType="vm:RecipeDetailViewModel"
              Title="{Binding Title}"
@@ -29,7 +30,8 @@
             </VerticalStackLayout>
 
             <!-- Content -->
-            <VerticalStackLayout Grid.Row="1" Spacing="0">
+            <VerticalStackLayout Grid.Row="1" Spacing="0"
+                                 IsVisible="{Binding IsRecipeLoaded}">
 
                 <!-- Hero Image -->
                 <Image Source="{Binding Recipe.ImageUrl}"
@@ -63,33 +65,34 @@
                     <!-- Action Buttons Row -->
                     <HorizontalStackLayout Spacing="16">
                         <!-- Favorite -->
-                        <Label Text="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteIcon}}"
-                               FontSize="26" VerticalOptions="Center">
-                            <Label.GestureRecognizers>
+                        <icons:MauiIcon Icon="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteIcon}}"
+                               IconColor="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteColor}}"
+                               IconSize="26" VerticalOptions="Center">
+                            <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ToggleFavoriteCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
+                            </icons:MauiIcon.GestureRecognizers>
+                        </icons:MauiIcon>
 
                         <!-- Share -->
-                        <Label Text="🔗" FontSize="24" VerticalOptions="Center">
-                            <Label.GestureRecognizers>
+                        <icons:MauiIcon Icon="ShareIos24Filled" IconSize="24" VerticalOptions="Center">
+                            <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ShareRecipeCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
+                            </icons:MauiIcon.GestureRecognizers>
+                        </icons:MauiIcon>
 
                         <!-- Save to Cookbook -->
-                        <Label Text="📖" FontSize="24" VerticalOptions="Center">
-                            <Label.GestureRecognizers>
+                        <icons:MauiIcon Icon="Book24Filled" IconSize="24" VerticalOptions="Center">
+                            <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SaveToCookbookCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
+                            </icons:MauiIcon.GestureRecognizers>
+                        </icons:MauiIcon>
 
                         <!-- Report -->
-                        <Label Text="⚠️" FontSize="24" VerticalOptions="Center">
-                            <Label.GestureRecognizers>
+                        <icons:MauiIcon Icon="Warning28Filled" IconSize="24" VerticalOptions="Center">
+                            <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReportRecipeCommand}" />
-                            </Label.GestureRecognizers>
-                        </Label>
+                            </icons:MauiIcon.GestureRecognizers>
+                        </icons:MauiIcon>
                     </HorizontalStackLayout>
 
                     <!-- Meta info -->
@@ -98,59 +101,63 @@
                                BackgroundColor="{StaticResource Secondary}" BorderColor="Transparent">
                             <Label Text="{Binding Recipe.Difficulty}" FontSize="13" />
                         </Frame>
-                        <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource Gray500}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="⏱ " />
-                                    <Span Text="{Binding Recipe.TimeMinutes}" />
-                                    <Span Text=" min" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
-                        <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource StarFilled}">
-                            <Label.FormattedText>
-                                <FormattedString>
-                                    <Span Text="⭐ " />
-                                    <Span Text="{Binding Recipe.Rating, StringFormat='{0:F1}'}" />
-                                </FormattedString>
-                            </Label.FormattedText>
-                        </Label>
+                        <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                            <icons:MauiIcon Icon="Timer24Filled" IconSize="14" IconColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                            <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource Gray500}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Recipe.TimeMinutes}" />
+                                        <Span Text=" min" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </HorizontalStackLayout>
+                        <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
+                            <icons:MauiIcon Icon="Star12Filled" IconSize="14" IconColor="{StaticResource StarFilled}" VerticalOptions="Center" />
+                            <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource StarFilled}">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Recipe.Rating, StringFormat='{0:F1}'}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </HorizontalStackLayout>
                     </HorizontalStackLayout>
 
                     <!-- Rating Stars -->
                     <VerticalStackLayout Spacing="4" Margin="0,4,0,0">
                         <Label Text="Your Rating" FontSize="14" TextColor="{StaticResource Gray500}" />
                         <HorizontalStackLayout Spacing="4">
-                            <Label Text="?" FontSize="28"
-                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=1}">
-                                <Label.GestureRecognizers>
+                            <icons:MauiIcon Icon="Star12Filled" IconSize="28"
+                                   IconColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=1}">
+                                <icons:MauiIcon.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="1" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="?" FontSize="28"
-                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=2}">
-                                <Label.GestureRecognizers>
+                                </icons:MauiIcon.GestureRecognizers>
+                            </icons:MauiIcon>
+                            <icons:MauiIcon Icon="Star12Filled" IconSize="28"
+                                   IconColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=2}">
+                                <icons:MauiIcon.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="2" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="?" FontSize="28"
-                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=3}">
-                                <Label.GestureRecognizers>
+                                </icons:MauiIcon.GestureRecognizers>
+                            </icons:MauiIcon>
+                            <icons:MauiIcon Icon="Star12Filled" IconSize="28"
+                                   IconColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=3}">
+                                <icons:MauiIcon.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="3" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="?" FontSize="28"
-                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=4}">
-                                <Label.GestureRecognizers>
+                                </icons:MauiIcon.GestureRecognizers>
+                            </icons:MauiIcon>
+                            <icons:MauiIcon Icon="Star12Filled" IconSize="28"
+                                   IconColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=4}">
+                                <icons:MauiIcon.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="4" />
-                                </Label.GestureRecognizers>
-                            </Label>
-                            <Label Text="?" FontSize="28"
-                                   TextColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=5}">
-                                <Label.GestureRecognizers>
+                                </icons:MauiIcon.GestureRecognizers>
+                            </icons:MauiIcon>
+                            <icons:MauiIcon Icon="Star12Filled" IconSize="28"
+                                   IconColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=5}">
+                                <icons:MauiIcon.GestureRecognizers>
                                     <TapGestureRecognizer Command="{Binding SetRatingCommand}" CommandParameter="5" />
-                                </Label.GestureRecognizers>
-                            </Label>
+                                </icons:MauiIcon.GestureRecognizers>
+                            </icons:MauiIcon>
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 
@@ -201,7 +208,7 @@
                     </CollectionView>
 
                     <!-- Start Cooking Button -->
-                    <Button Text="?? Start Cooking"
+                    <Button Text="Start Cooking"
                             Command="{Binding StartCookingCommand}"
                             BackgroundColor="{StaticResource Primary}"
                             TextColor="White"

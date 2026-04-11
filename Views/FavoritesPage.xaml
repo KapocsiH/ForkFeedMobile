@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.FavoritesPage"
              x:DataType="vm:FavoritesViewModel"
              Title="{Binding Title}"
@@ -31,7 +32,7 @@
 
             <CollectionView.EmptyView>
                 <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
-                    <Label Text="🤍" FontSize="48" HorizontalTextAlignment="Center" />
+                    <icons:MauiIcon Icon="Heart28Filled" IconSize="48" IconColor="{StaticResource Gray400}" HorizontalOptions="Center" />
                     <Label Text="No favorites yet" FontSize="18"
                            TextColor="{StaticResource Gray400}"
                            HorizontalTextAlignment="Center" />
@@ -47,7 +48,7 @@
                         <SwipeView.RightItems>
                             <SwipeItems>
                                 <SwipeItem Text="Remove"
-                                           IconImageSource="delete.png"
+                                           IconImageSource="{icons:Icon Icon=Delete48Filled}"
                                            BackgroundColor="{StaticResource ErrorRed}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FavoritesViewModel}}, Path=RemoveFavoriteCommand}"
                                            CommandParameter="{Binding}" />
@@ -78,16 +79,17 @@
                                                LineBreakMode="TailTruncation" />
 
                                         <!-- Favorite Heart (always filled on this page) -->
-                                        <Label Grid.Column="1"
-                                               Text="{Binding IsFavorite, Converter={StaticResource FavoriteIcon}}"
-                                               FontSize="24"
+                                        <icons:MauiIcon Grid.Column="1"
+                                               Icon="{Binding IsFavorite, Converter={StaticResource FavoriteIcon}}"
+                                               IconColor="{Binding IsFavorite, Converter={StaticResource FavoriteColor}}"
+                                               IconSize="24"
                                                VerticalOptions="Center">
-                                            <Label.GestureRecognizers>
+                                            <icons:MauiIcon.GestureRecognizers>
                                                 <TapGestureRecognizer
                                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FavoritesViewModel}}, Path=RemoveFavoriteCommand}"
                                                     CommandParameter="{Binding}" />
-                                            </Label.GestureRecognizers>
-                                        </Label>
+                                            </icons:MauiIcon.GestureRecognizers>
+                                        </icons:MauiIcon>
                                     </Grid>
 
                                     <HorizontalStackLayout Spacing="12">
@@ -96,23 +98,27 @@
                                                TextColor="{StaticResource Gray500}"
                                                Padding="6,2"
                                                BackgroundColor="{StaticResource Secondary}" />
-                                        <Label FontSize="13" TextColor="{StaticResource Gray500}">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="🕐 " />
-                                                    <Span Text="{Binding TimeMinutes}" />
-                                                    <Span Text=" min" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
-                                        <Label FontSize="13" TextColor="{StaticResource StarFilled}">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="⭐ " />
-                                                    <Span Text="{Binding Rating, StringFormat='{0:F1}'}" />
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                        <HorizontalStackLayout Spacing="4">
+                                            <icons:MauiIcon Icon="Timer24Filled" IconSize="13" IconColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                                            <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding TimeMinutes}" />
+                                                        <Span Text=" min" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </HorizontalStackLayout>
+                                        <HorizontalStackLayout Spacing="4">
+                                            <icons:MauiIcon Icon="Star12Filled" IconSize="13" IconColor="{StaticResource StarFilled}" VerticalOptions="Center" />
+                                            <Label FontSize="13" TextColor="{StaticResource StarFilled}" VerticalOptions="Center">
+                                                <Label.FormattedText>
+                                                    <FormattedString>
+                                                        <Span Text="{Binding Rating, StringFormat='{0:F1}'}" />
+                                                    </FormattedString>
+                                                </Label.FormattedText>
+                                            </Label>
+                                        </HorizontalStackLayout>
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </Grid>

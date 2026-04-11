@@ -16,6 +16,7 @@
             <helpers:StringNotEmptyConverter x:Key="StringNotEmpty" />
             <helpers:NotNullConverter x:Key="NotNull" />
             <helpers:FavoriteIconConverter x:Key="FavoriteIcon" />
+            <helpers:FavoriteColorConverter x:Key="FavoriteColor" />
             <helpers:RatingStarColorConverter x:Key="RatingStarColor" />
         </ResourceDictionary>
     </Application.Resources>

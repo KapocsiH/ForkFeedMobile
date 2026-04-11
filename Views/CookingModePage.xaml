@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.CookingModePage"
              x:DataType="vm:CookingModeViewModel"
              Title="{Binding Title}"
@@ -39,17 +40,20 @@
                        LineBreakMode="WordWrap"
                        HorizontalTextAlignment="Center" />
 
-                <Label Text="? Swipe to navigate ?"
-                       FontSize="13" TextColor="{StaticResource Gray300}"
-                       HorizontalTextAlignment="Center"
-                       Margin="0,24,0,0" />
+                <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" Margin="0,24,0,0">
+                    <icons:MauiIcon Icon="ArrowPrevious24Filled" IconSize="13" IconColor="{StaticResource Gray300}" VerticalOptions="Center" />
+                    <Label Text="Swipe to navigate"
+                           FontSize="13" TextColor="{StaticResource Gray300}"
+                           HorizontalTextAlignment="Center" VerticalOptions="Center" />
+                    <icons:MauiIcon Icon="ArrowNext24Filled" IconSize="13" IconColor="{StaticResource Gray300}" VerticalOptions="Center" />
+                </HorizontalStackLayout>
             </VerticalStackLayout>
         </Frame>
 
         <!-- Navigation Buttons -->
         <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,16,0,0">
             <Button Grid.Column="0"
-                    Text="? Previous"
+                    Text="Previous"
                     Command="{Binding PreviousStepCommand}"
                     IsEnabled="{Binding CanGoBack}"
                     BackgroundColor="{StaticResource Gray200}"
@@ -57,7 +61,7 @@
                     CornerRadius="12"
                     HeightRequest="50" />
             <Button Grid.Column="1"
-                    Text="Next ?"
+                    Text="Next"
                     Command="{Binding NextStepCommand}"
                     IsEnabled="{Binding CanGoForward}"
                     BackgroundColor="{StaticResource Primary}"
@@ -68,7 +72,7 @@
 
         <!-- Finish Button (visible on last step) -->
         <Button Grid.Row="3"
-                Text="? Finish Cooking"
+                Text="Finish Cooking"
                 Command="{Binding FinishCookingCommand}"
                 IsVisible="{Binding CanGoForward, Converter={StaticResource InvertBool}}"
                 BackgroundColor="{StaticResource SuccessGreen}"

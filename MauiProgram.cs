@@ -2,6 +2,7 @@
 using ForkFeedMobile.Services;
 using ForkFeedMobile.ViewModels;
 using ForkFeedMobile.Views;
+using MauiIcons.FluentFilled;
 using Microsoft.Extensions.Logging;
 
 namespace ForkFeedMobile
@@ -14,6 +15,7 @@ namespace ForkFeedMobile
             builder
                 .UseMauiApp<App>()
                 .UseMauiCommunityToolkit()
+                .UseFluentFilledMauiIcons()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");

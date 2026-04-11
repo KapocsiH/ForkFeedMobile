@@ -16,7 +16,10 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private int _recipeId;
 
     [ObservableProperty]
-    private Recipe? _recipe;
+    private Recipe _recipe = new();
+
+    [ObservableProperty]
+    private bool _isRecipeLoaded;
 
     [ObservableProperty]
     private int _userRating;
@@ -56,6 +59,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             Recipe = recipe;
             Title = recipe.Title;
             UserRating = (int)Math.Round(recipe.Rating);
+            IsRecipeLoaded = true;
 
             Ingredients.Clear();
             foreach (var i in recipe.Ingredients)
@@ -78,7 +82,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task ToggleFavoriteAsync()
     {
-        if (Recipe == null) return;
+        if (!IsRecipeLoaded) return;
         await _favoritesService.ToggleFavoriteAsync(Recipe);
         OnPropertyChanged(nameof(Recipe));
     }
@@ -89,7 +93,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
         if (int.TryParse(ratingStr, out var rating))
         {
             UserRating = rating;
-            if (Recipe != null)
+            if (IsRecipeLoaded)
                 Recipe.Rating = rating;
         }
     }
@@ -97,14 +101,14 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task StartCookingAsync()
     {
-        if (Recipe == null) return;
+        if (!IsRecipeLoaded) return;
         await Shell.Current.GoToAsync($"CookingMode?recipeId={Recipe.Id}");
     }
 
     [RelayCommand]
     private async Task ShareRecipeAsync()
     {
-        if (Recipe == null) return;
+        if (!IsRecipeLoaded) return;
 
         await Share.Default.RequestAsync(new ShareTextRequest
         {
@@ -128,7 +132,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task AuthorTappedAsync()
     {
-        if (Recipe == null || Recipe.AuthorId <= 0) return;
+        if (!IsRecipeLoaded || Recipe.AuthorId <= 0) return;
         await Shell.Current.GoToAsync($"UserProfile?userId={Recipe.AuthorId}");
     }
 

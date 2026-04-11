@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.AddRecipePage"
              x:DataType="vm:AddRecipeViewModel"
              Title="{Binding Title}"
@@ -20,7 +21,7 @@
                            Aspect="AspectFill"
                            IsVisible="{Binding SelectedImageSource, Converter={StaticResource NotNull}}" />
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
-                        <Label Text="??" FontSize="40" HorizontalTextAlignment="Center" />
+                        <icons:MauiIcon Icon="ImageAdd24Filled" IconSize="40" HorizontalOptions="Center" />
                         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
                             <Button Text="Gallery" Command="{Binding PickImageCommand}"
                                     BackgroundColor="{StaticResource Primary}" TextColor="White"
@@ -84,15 +85,15 @@
                                 <Label Text="{Binding .}" FontSize="14"
                                        TextColor="{StaticResource Primary}"
                                        VerticalOptions="Center" />
-                                <Label Text="✕" FontSize="12"
-                                       TextColor="{StaticResource Gray500}"
+                                <icons:MauiIcon Icon="DismissCircle20Filled" IconSize="12"
+                                       IconColor="{StaticResource Gray500}"
                                        VerticalOptions="Center">
-                                    <Label.GestureRecognizers>
+                                    <icons:MauiIcon.GestureRecognizers>
                                         <TapGestureRecognizer
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=RemoveTagCommand}"
                                             CommandParameter="{Binding .}" />
-                                    </Label.GestureRecognizers>
-                                </Label>
+                                    </icons:MauiIcon.GestureRecognizers>
+                                </icons:MauiIcon>
                             </HorizontalStackLayout>
                         </Frame>
                     </DataTemplate>
@@ -169,7 +170,7 @@
             </CollectionView>
 
             <!-- Save Button -->
-            <Button Text="?? Save Recipe"
+            <Button Text="Save Recipe"
                     Command="{Binding SaveRecipeCommand}"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"

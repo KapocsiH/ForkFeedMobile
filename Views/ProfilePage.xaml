@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.ProfilePage"
              x:DataType="vm:ProfileViewModel"
              Title="{Binding Title}"
@@ -229,7 +230,7 @@
 
                         <CollectionView.EmptyView>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
-                                <Label Text="🍽️" FontSize="48" HorizontalTextAlignment="Center" />
+                                <icons:MauiIcon Icon="Food24Filled" IconSize="48" HorizontalOptions="Center" />
                                 <Label Text="No recipes yet" FontSize="18"
                                        TextColor="{StaticResource Gray400}"
                                        HorizontalTextAlignment="Center" />
@@ -253,16 +254,17 @@
                                                        FontSize="18" FontAttributes="Bold"
                                                        LineBreakMode="TailTruncation" />
 
-                                                <Label Grid.Column="1"
-                                                       Text="{Binding IsFavorite, Converter={StaticResource FavoriteIcon}}"
-                                                       FontSize="24"
+                                                <icons:MauiIcon Grid.Column="1"
+                                                       Icon="{Binding IsFavorite, Converter={StaticResource FavoriteIcon}}"
+                                                       IconColor="{Binding IsFavorite, Converter={StaticResource FavoriteColor}}"
+                                                       IconSize="24"
                                                        VerticalOptions="Center">
-                                                    <Label.GestureRecognizers>
+                                                    <icons:MauiIcon.GestureRecognizers>
                                                         <TapGestureRecognizer
                                                             Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=ToggleUserRecipeFavoriteCommand}"
                                                             CommandParameter="{Binding}" />
-                                                    </Label.GestureRecognizers>
-                                                </Label>
+                                                    </icons:MauiIcon.GestureRecognizers>
+                                                </icons:MauiIcon>
                                             </Grid>
 
                                             <HorizontalStackLayout Spacing="12">
@@ -271,23 +273,27 @@
                                                        TextColor="{StaticResource Gray500}"
                                                        Padding="6,2"
                                                        BackgroundColor="{StaticResource Secondary}" />
-                                                <Label FontSize="13" TextColor="{StaticResource Gray500}">
-                                                    <Label.FormattedText>
-                                                        <FormattedString>
-                                                            <Span Text="⏱ " />
-                                                            <Span Text="{Binding TimeMinutes}" />
-                                                            <Span Text=" min" />
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
-                                                <Label FontSize="13" TextColor="{StaticResource StarFilled}">
-                                                    <Label.FormattedText>
-                                                        <FormattedString>
-                                                            <Span Text="⭐ " />
-                                                            <Span Text="{Binding Rating, StringFormat='{0:F1}'}" />
-                                                        </FormattedString>
-                                                    </Label.FormattedText>
-                                                </Label>
+                                                <HorizontalStackLayout Spacing="4">
+                                                    <icons:MauiIcon Icon="Timer24Filled" IconSize="13" IconColor="{StaticResource Gray500}" VerticalOptions="Center" />
+                                                    <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding TimeMinutes}" />
+                                                                <Span Text=" min" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </HorizontalStackLayout>
+                                                <HorizontalStackLayout Spacing="4">
+                                                    <icons:MauiIcon Icon="Star12Filled" IconSize="13" IconColor="{StaticResource StarFilled}" VerticalOptions="Center" />
+                                                    <Label FontSize="13" TextColor="{StaticResource StarFilled}" VerticalOptions="Center">
+                                                        <Label.FormattedText>
+                                                            <FormattedString>
+                                                                <Span Text="{Binding Rating, StringFormat='{0:F1}'}" />
+                                                            </FormattedString>
+                                                        </Label.FormattedText>
+                                                    </Label>
+                                                </HorizontalStackLayout>
                                             </HorizontalStackLayout>
                                         </VerticalStackLayout>
                                     </Grid>
@@ -311,7 +317,7 @@
 
                         <CollectionView.EmptyView>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
-                                <Label Text="💬" FontSize="48" HorizontalTextAlignment="Center" />
+                                <icons:MauiIcon Icon="ChatEmpty24Filled" IconSize="48" HorizontalOptions="Center" />
                                 <Label Text="No comments yet" FontSize="18"
                                        TextColor="{StaticResource Gray400}"
                                        HorizontalTextAlignment="Center" />
@@ -368,7 +374,7 @@
                 <VerticalStackLayout IsVisible="{Binding IsOwnProfile}" Spacing="14">
                     <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBool}}" Spacing="14">
 
-                    <Label Text="🍴" FontSize="60" HorizontalTextAlignment="Center" Margin="0,20,0,0" />
+                    <icons:MauiIcon Icon="Food24Filled" IconSize="60" HorizontalOptions="Center" Margin="0,20,0,0" />
                     <Label Text="Welcome to ForkFeed"
                            FontSize="24" FontAttributes="Bold"
                            HorizontalTextAlignment="Center" />
@@ -445,8 +451,8 @@
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoToEditProfileCommand}" />
                 </Border.GestureRecognizers>
-                <Label Text="⚙️"
-                       FontSize="22"
+                <icons:MauiIcon Icon="Options24Filled"
+                       IconSize="22"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
             </Border>
@@ -464,12 +470,11 @@
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding LogoutCommand}" />
                 </Border.GestureRecognizers>
-                <Image Source="logout.png"
-                       WidthRequest="22"
-                       HeightRequest="22"
+                <icons:MauiIcon Icon="SignOut24Filled"
+                       IconSize="22"
+                       IconColor="White"
                        HorizontalOptions="Center"
-                       VerticalOptions="Center"
-                       Margin="3,0,0,0"/>
+                       VerticalOptions="Center" />
             </Border>
             </VerticalStackLayout>
         </VerticalStackLayout>

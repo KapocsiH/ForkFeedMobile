@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.EditProfilePage"
              x:DataType="vm:EditProfileViewModel"
              Title="{Binding Title}"
@@ -27,7 +28,7 @@
 
             <!-- Image Action Buttons -->
             <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
-                <Button Text="?? Gallery"
+                <Button Text="Gallery"
                         Command="{Binding PickImageCommand}"
                         BackgroundColor="{StaticResource Secondary}"
                         TextColor="{StaticResource Primary}"
@@ -35,7 +36,7 @@
                         CornerRadius="8"
                         HeightRequest="38"
                         Padding="12,0" />
-                <Button Text="?? Camera"
+                <Button Text="Camera"
                         Command="{Binding TakePhotoCommand}"
                         BackgroundColor="{StaticResource Secondary}"
                         TextColor="{StaticResource Primary}"

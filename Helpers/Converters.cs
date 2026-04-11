@@ -32,7 +32,20 @@ public class NotNullConverter : IValueConverter
 public class FavoriteIconConverter : IValueConverter
 {
     public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
-        => value is bool b && b ? "??" : "??";
+        => value is bool b && b
+            ? MauiIcons.FluentFilled.FluentFilledIcons.Heart28Filled
+            : MauiIcons.FluentFilled.FluentFilledIcons.Heart28Filled;
+
+    public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => throw new NotSupportedException();
+}
+
+public class FavoriteColorConverter : IValueConverter
+{
+    public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        => value is bool b && b
+            ? Color.FromArgb("#FF0000")
+            : Color.FromArgb("#C8C8C8");
 
     public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         => throw new NotSupportedException();
