@@ -166,7 +166,9 @@ public class RecipeService
     public async Task<(bool Success, int? RecipeId, string? Error)> CreateRecipeAsync(
         string title, string description, string difficulty, int preparationTime,
         List<Ingredient> ingredients, List<RecipeStep> steps,
-        string? imagePath)
+        string? imagePath,
+        List<int>? categoryIds = null,
+        List<int>? tagIds = null)
     {
         // 1. Create the recipe (with optional image via multipart/form-data)
         Stream? imageStream = null;
@@ -185,7 +187,9 @@ public class RecipeService
                 Title = title,
                 Description = description,
                 Difficulty = difficulty.ToLower(),
-                PreparationTime = preparationTime
+                PreparationTime = preparationTime,
+                CategoryIds = categoryIds,
+                TagIds = tagIds
             };
 
             var createResult = await _api.CreateRecipeAsync(request, imageStream, imageFileName);

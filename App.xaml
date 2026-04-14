@@ -19,6 +19,8 @@
             <helpers:FavoriteColorConverter x:Key="FavoriteColor" />
             <helpers:RatingStarColorConverter x:Key="RatingStarColor" />
             <helpers:DateTimeToRelativeConverter x:Key="DateTimeToRelative" />
+            <helpers:TagBackgroundConverter x:Key="TagBackgroundConverter" />
+            <helpers:TagTextColorConverter x:Key="TagTextColorConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

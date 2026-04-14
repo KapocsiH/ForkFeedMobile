@@ -625,6 +625,14 @@ public class CreateRecipeRequest
 
     [JsonPropertyName("difficulty")]
     public string Difficulty { get; set; } = "easy";
+
+    [JsonPropertyName("category_ids")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<int>? CategoryIds { get; set; }
+
+    [JsonPropertyName("tag_ids")]
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<int>? TagIds { get; set; }
 }
 
 public class CreateRecipeResponse

@@ -64,38 +64,24 @@
 
             <!-- Tags -->
             <Label Text="Tags" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
-            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                <Entry Grid.Column="0" Placeholder="#healthy, #quick, #vegan..."
-                       Text="{Binding NewTag}" />
-                <Button Grid.Column="1" Text="+" WidthRequest="44" HeightRequest="44"
-                        Command="{Binding AddTagCommand}"
-                        BackgroundColor="{StaticResource Primary}" TextColor="White"
-                        CornerRadius="22" FontSize="20" Padding="0" />
-            </Grid>
-
-            <FlexLayout BindableLayout.ItemsSource="{Binding Tags}"
+            <FlexLayout BindableLayout.ItemsSource="{Binding AvailableTags}"
                         Wrap="Wrap" Direction="Row"
                         AlignItems="Center" JustifyContent="Start">
                 <BindableLayout.ItemTemplate>
-                    <DataTemplate x:DataType="x:String">
-                        <Frame Padding="8,4" Margin="4" CornerRadius="12"
-                               BackgroundColor="{StaticResource Secondary}"
-                               BorderColor="Transparent" HasShadow="False">
-                            <HorizontalStackLayout Spacing="6">
-                                <Label Text="{Binding .}" FontSize="14"
-                                       TextColor="{StaticResource Primary}"
-                                       VerticalOptions="Center" />
-                                <icons:MauiIcon Icon="DismissCircle20Filled" IconSize="12"
-                                       IconColor="{StaticResource Gray500}"
-                                       VerticalOptions="Center">
-                                    <icons:MauiIcon.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=RemoveTagCommand}"
-                                            CommandParameter="{Binding .}" />
-                                    </icons:MauiIcon.GestureRecognizers>
-                                </icons:MauiIcon>
-                            </HorizontalStackLayout>
-                        </Frame>
+                    <DataTemplate x:DataType="models:SelectableTag">
+                        <Border Padding="10,6" Margin="4" StrokeShape="RoundRectangle 12"
+                                Stroke="{StaticResource Primary}"
+                                BackgroundColor="{Binding IsSelected, Converter={StaticResource TagBackgroundConverter}}"
+                                StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=ToggleTagCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="{Binding Name}" FontSize="14"
+                                   TextColor="{Binding IsSelected, Converter={StaticResource TagTextColorConverter}}"
+                                   VerticalOptions="Center" />
+                        </Border>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
             </FlexLayout>

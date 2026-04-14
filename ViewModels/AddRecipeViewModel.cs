@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ForkFeedMobile.Models;
@@ -24,10 +24,7 @@ public partial class AddRecipeViewModel : BaseViewModel
     private string _cookingTimeMinutes = string.Empty;
 
     [ObservableProperty]
-    private string _selectedCategory = "Main Course";
-
-    [ObservableProperty]
-    private string _newTag = string.Empty;
+    private string _selectedCategory = "Főétel";
 
     [ObservableProperty]
     private string _newIngredientName = string.Empty;
@@ -49,9 +46,35 @@ public partial class AddRecipeViewModel : BaseViewModel
 
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
-    public ObservableCollection<string> Tags { get; } = new();
     public List<string> DifficultyOptions { get; } = new() { "Easy", "Medium", "Hard" };
-    public List<string> CategoryOptions { get; } = new() { "Dessert", "Main Course", "Soup", "Breakfast", "Salad" };
+    public List<string> CategoryOptions { get; } = new() { "Desszert", "Főétel", "Leves", "Reggeli", "Saláta" };
+
+    public ObservableCollection<SelectableTag> AvailableTags { get; } = new()
+    {
+        new() { Name = "gyors" },
+        new() { Name = "hagyományos" },
+        new() { Name = "magyar" },
+        new() { Name = "sültmentes" },
+        new() { Name = "vegetáriánus" },
+    };
+
+    private static readonly Dictionary<string, int> CategoryIdMap = new()
+    {
+        ["Desszert"] = 3,
+        ["Főétel"] = 2,
+        ["Leves"] = 1,
+        ["Reggeli"] = 4,
+        ["Saláta"] = 5,
+    };
+
+    private static readonly Dictionary<string, int> TagIdMap = new()
+    {
+        ["gyors"] = 3,
+        ["hagyományos"] = 4,
+        ["magyar"] = 1,
+        ["sültmentes"] = 5,
+        ["vegetáriánus"] = 2,
+    };
 
     public AddRecipeViewModel(RecipeService recipeService, AuthService authService)
     {
@@ -61,24 +84,9 @@ public partial class AddRecipeViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void AddTag()
+    private void ToggleTag(SelectableTag tag)
     {
-        if (string.IsNullOrWhiteSpace(NewTag)) return;
-
-        var tag = NewTag.Trim().TrimStart('#');
-        if (string.IsNullOrWhiteSpace(tag)) return;
-
-        var formatted = $"#{tag}";
-        if (!Tags.Contains(formatted))
-            Tags.Add(formatted);
-
-        NewTag = string.Empty;
-    }
-
-    [RelayCommand]
-    private void RemoveTag(string tag)
-    {
-        Tags.Remove(tag);
+        tag.IsSelected = !tag.IsSelected;
     }
 
     [RelayCommand]
@@ -224,6 +232,14 @@ public partial class AddRecipeViewModel : BaseViewModel
         {
             var preparationTime = int.Parse(CookingTimeMinutes);
 
+            var selectedCategoryId = CategoryIdMap.GetValueOrDefault(SelectedCategory, 0);
+            var categoryIds = selectedCategoryId > 0 ? new List<int> { selectedCategoryId } : null;
+
+            var tagIds = AvailableTags
+                .Where(t => t.IsSelected && TagIdMap.ContainsKey(t.Name))
+                .Select(t => TagIdMap[t.Name])
+                .ToList();
+
             var (success, recipeId, error) = await _recipeService.CreateRecipeAsync(
                 RecipeTitle.Trim(),
                 Description.Trim(),
@@ -231,7 +247,9 @@ public partial class AddRecipeViewModel : BaseViewModel
                 preparationTime,
                 Ingredients.ToList(),
                 Steps.ToList(),
-                SelectedImagePath);
+                SelectedImagePath,
+                categoryIds,
+                tagIds.Count > 0 ? tagIds : null);
 
             if (!success)
             {
@@ -247,9 +265,9 @@ public partial class AddRecipeViewModel : BaseViewModel
             Description = string.Empty;
             SelectedDifficulty = "Easy";
             CookingTimeMinutes = string.Empty;
-            SelectedCategory = "Main Course";
-            NewTag = string.Empty;
-            Tags.Clear();
+            SelectedCategory = "Főétel";
+            foreach (var tag in AvailableTags)
+                tag.IsSelected = false;
             Ingredients.Clear();
             Steps.Clear();
             SelectedImageSource = null;
