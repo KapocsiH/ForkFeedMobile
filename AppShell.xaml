@@ -15,12 +15,15 @@
         <ShellContent Title="Home" Icon="{icons:Icon Icon=Home28Filled}"
                       ContentTemplate="{DataTemplate views:HomePage}"
                       Route="Home" />
-        <ShellContent Title="Favorites" Icon="{icons:Icon Icon=Heart28Filled}"
-                      ContentTemplate="{DataTemplate views:FavoritesPage}"
-                      Route="Favorites" />
+        <ShellContent Title="Shopping" Icon="{icons:Icon Icon=Cart24Filled}"
+                      ContentTemplate="{DataTemplate views:ShoppingListPage}"
+                      Route="ShoppingList" />
         <ShellContent Title="Add" Icon="{icons:Icon Icon=AddCircle24Filled}"
                       ContentTemplate="{DataTemplate views:AddRecipePage}"
                       Route="AddRecipe" />
+        <ShellContent Title="Favorites" Icon="{icons:Icon Icon=Heart28Filled}"
+                      ContentTemplate="{DataTemplate views:FavoritesPage}"
+                      Route="Favorites" />
         <ShellContent Title="Profile" Icon="{icons:Icon Icon=PersonCircle24Filled}"
                       ContentTemplate="{DataTemplate views:ProfilePage}"
                       Route="Profile" />

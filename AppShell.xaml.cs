@@ -15,7 +15,6 @@ namespace ForkFeedMobile
             Routing.RegisterRoute("ForgotPassword", typeof(ForgotPasswordPage));
             Routing.RegisterRoute("EditProfile", typeof(EditProfilePage));
             Routing.RegisterRoute("UserProfile", typeof(ProfilePage));
-            Routing.RegisterRoute("ShoppingList", typeof(ShoppingListPage));
         }
     }
 }

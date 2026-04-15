@@ -235,7 +235,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             await _shoppingListService.AddIngredientsAsync(userId, selected);
         }
 
-        await Shell.Current.GoToAsync("ShoppingList");
+        await Shell.Current.GoToAsync("//ShoppingList");
     }
 
     [RelayCommand]
