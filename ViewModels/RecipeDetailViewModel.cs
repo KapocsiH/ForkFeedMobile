@@ -12,6 +12,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private readonly RecipeService _recipeService;
     private readonly FavoritesService _favoritesService;
     private readonly AuthService _authService;
+    private readonly ShoppingListService _shoppingListService;
 
     [ObservableProperty]
     private int _recipeId;
@@ -45,11 +46,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public ObservableCollection<Comment> Comments { get; } = new();
 
-    public RecipeDetailViewModel(RecipeService recipeService, FavoritesService favoritesService, AuthService authService)
+    public RecipeDetailViewModel(RecipeService recipeService, FavoritesService favoritesService, AuthService authService, ShoppingListService shoppingListService)
     {
         _recipeService = recipeService;
         _favoritesService = favoritesService;
         _authService = authService;
+        _shoppingListService = shoppingListService;
     }
 
     partial void OnRecipeIdChanged(int value)
@@ -94,7 +96,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
             HasSelectedIngredients = false;
             foreach (var i in recipe.Ingredients)
             {
-                var ingredient = new Ingredient { Name = i.Name, Quantity = i.Quantity };
+                var ingredient = new Ingredient { Name = i.Name, Quantity = i.Quantity, Unit = i.Unit };
                 ingredient.PropertyChanged += OnIngredientPropertyChanged;
                 Ingredients.Add(ingredient);
             }
@@ -218,6 +220,21 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task GoToShoppingListAsync()
     {
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Login Required", "Please log in to use the shopping list.", "OK");
+            return;
+        }
+
+        var userId = _authService.CurrentUser?.Id ?? 0;
+        if (userId == 0) return;
+
+        var selected = SelectedIngredients.ToList();
+        if (selected.Count > 0)
+        {
+            await _shoppingListService.AddIngredientsAsync(userId, selected);
+        }
+
         await Shell.Current.GoToAsync("ShoppingList");
     }
 

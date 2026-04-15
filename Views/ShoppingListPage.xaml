@@ -2,18 +2,97 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
+             xmlns:models="clr-namespace:ForkFeedMobile.Models"
+             xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.ShoppingListPage"
              x:DataType="vm:ShoppingListViewModel"
              Title="{Binding Title}"
              Shell.NavBarIsVisible="True">
 
-    <VerticalStackLayout Padding="24" Spacing="16" VerticalOptions="Center">
-        <Label Text="Shopping List"
-               FontSize="24" FontAttributes="Bold"
-               HorizontalTextAlignment="Center" />
-        <Label Text="Your shopping list will appear here."
-               FontSize="16" TextColor="{StaticResource Gray400}"
-               HorizontalTextAlignment="Center" />
-    </VerticalStackLayout>
+    <Grid RowDefinitions="*,Auto">
+
+        <!-- Empty state -->
+        <VerticalStackLayout Grid.Row="0"
+                             Padding="24" Spacing="16"
+                             VerticalOptions="Center"
+                             IsVisible="{Binding IsEmpty}">
+            <Label Text="Shopping List"
+                   FontSize="24" FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+            <Label Text="Your shopping list is empty. Add ingredients from a recipe!"
+                   FontSize="16" TextColor="{StaticResource Gray400}"
+                   HorizontalTextAlignment="Center" />
+        </VerticalStackLayout>
+
+        <!-- Items list -->
+        <CollectionView Grid.Row="0"
+                         ItemsSource="{Binding Items}"
+                         SelectionMode="None"
+                         IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBool}}">
+            <CollectionView.Header>
+                <VerticalStackLayout Padding="16,16,16,0">
+                    <Label Text="Shopping List"
+                           FontSize="24" FontAttributes="Bold" />
+                </VerticalStackLayout>
+            </CollectionView.Header>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ShoppingListItem">
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="{StaticResource ErrorRed}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListViewModel}}, Path=RemoveItemCommand}"
+                                           CommandParameter="{Binding}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+
+                        <Grid ColumnDefinitions="Auto,*,Auto" Padding="16,8" ColumnSpacing="12">
+                            <CheckBox Grid.Column="0"
+                                      IsChecked="{Binding IsChecked}"
+                                      Color="{StaticResource Primary}">
+                                <CheckBox.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListViewModel}}, Path=ToggleCheckedCommand}"
+                                        CommandParameter="{Binding}" />
+                                </CheckBox.GestureRecognizers>
+                            </CheckBox>
+
+                            <Label Grid.Column="1"
+                                   Text="{Binding Name}"
+                                   FontSize="16"
+                                   VerticalOptions="Center"
+                                   LineBreakMode="TailTruncation" />
+
+                            <Label Grid.Column="2"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Gray400}"
+                                   VerticalOptions="Center">
+                                <Label.FormattedText>
+                                    <FormattedString>
+                                        <Span Text="{Binding Quantity}" />
+                                        <Span Text=" " />
+                                        <Span Text="{Binding Unit}" />
+                                    </FormattedString>
+                                </Label.FormattedText>
+                            </Label>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Clear All Button -->
+        <Button Grid.Row="1"
+                Text="Clear All"
+                Command="{Binding ClearAllCommand}"
+                IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBool}}"
+                BackgroundColor="{StaticResource ErrorRed}"
+                TextColor="White"
+                FontSize="16" FontAttributes="Bold"
+                CornerRadius="12"
+                HeightRequest="48"
+                Margin="16,8,16,16" />
+    </Grid>
 
 </ContentPage>
