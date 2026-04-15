@@ -262,6 +262,44 @@ public class RecipeService
         return result.IsSuccess;
     }
 
+    public async Task<int> GetMyRatingAsync(int recipeId)
+    {
+        var result = await _api.GetMyRecipeRatingAsync(recipeId);
+        if (result.IsSuccess && result.Data?.Rating != null)
+            return result.Data.Rating.Rating;
+
+        return 0;
+    }
+
+    public async Task<(bool Success, double? UpdatedAverageRating)> RateRecipeAsync(int recipeId, int rating)
+    {
+        var request = new CreateRatingRequest { Rating = rating };
+
+        // The backend uses PUT /recipes/{id}/ratings/me for both create and update
+        var result = await _api.RateRecipeAsync(recipeId, request);
+
+        if (!result.IsSuccess)
+            return (false, null);
+
+        // Fetch the updated average rating after successful submission
+        var average = await GetRecipeAverageRatingAsync(recipeId);
+        return (true, average);
+    }
+
+    public async Task<double?> GetRecipeAverageRatingAsync(int recipeId)
+    {
+        var ratingsResult = await _api.GetRecipeRatingsAsync(recipeId, 1, 1);
+        if (ratingsResult.IsSuccess && ratingsResult.Data?.Summary != null)
+            return ratingsResult.Data.Summary.AverageRating;
+
+        // Fallback to summary endpoint
+        var summaryResult = await _api.GetRecipeSummaryAsync(recipeId);
+        if (summaryResult.IsSuccess && summaryResult.Data?.Summary != null)
+            return summaryResult.Data.Summary.AverageRating;
+
+        return null;
+    }
+
     public async Task<Comment?> CreateCommentAsync(int recipeId, string text)
     {
         var request = new CreateCommentRequest { Content = text };

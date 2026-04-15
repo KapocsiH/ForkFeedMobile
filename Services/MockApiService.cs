@@ -173,6 +173,9 @@ public class MockApiService : IApiService
     public Task<ApiResult<MessageResponse>> RateRecipeAsync(int recipeId, CreateRatingRequest request) =>
         Ok(new MessageResponse { Message = "Rated" });
 
+    public Task<ApiResult<MessageResponse>> UpdateRatingAsync(int recipeId, CreateRatingRequest request) =>
+        Ok(new MessageResponse { Message = "Rating updated" });
+
     public Task<ApiResult<FavoriteResponse>> AddRecipeFavoriteAsync(int recipeId)
     {
         _favoriteIds.Add(recipeId);

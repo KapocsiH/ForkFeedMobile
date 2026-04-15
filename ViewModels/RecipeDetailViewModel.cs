@@ -34,6 +34,9 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isPostingComment;
 
+    [ObservableProperty]
+    private bool _isSubmittingRating;
+
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public ObservableCollection<Comment> Comments { get; } = new();
@@ -70,8 +73,17 @@ public partial class RecipeDetailViewModel : BaseViewModel
             recipe.IsFavorite = await _favoritesService.IsFavoriteAsync(recipe.Id);
             Recipe = recipe;
             Title = recipe.Title;
-            UserRating = (int)Math.Round(recipe.Rating);
             IsRecipeLoaded = true;
+
+            // Load the current user's own rating (0 if not rated)
+            if (_authService.IsLoggedIn)
+            {
+                UserRating = await _recipeService.GetMyRatingAsync(RecipeId);
+            }
+            else
+            {
+                UserRating = 0;
+            }
 
             Ingredients.Clear();
             foreach (var i in recipe.Ingredients)
@@ -108,13 +120,50 @@ public partial class RecipeDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void SetRating(string ratingStr)
+    private async Task SetRatingAsync(string ratingStr)
     {
-        if (int.TryParse(ratingStr, out var rating))
+        if (!int.TryParse(ratingStr, out var rating))
+            return;
+
+        if (!_authService.IsLoggedIn)
         {
-            UserRating = rating;
-            if (IsRecipeLoaded)
-                Recipe.Rating = rating;
+            await Shell.Current.DisplayAlert("Login Required", "Please log in to rate recipes.", "OK");
+            return;
+        }
+
+        if (!IsRecipeLoaded || IsSubmittingRating)
+            return;
+
+        var previousRating = UserRating;
+        UserRating = rating;
+
+        try
+        {
+            IsSubmittingRating = true;
+
+            var (success, updatedAverage) = await _recipeService.RateRecipeAsync(RecipeId, rating);
+
+            if (!success)
+            {
+                UserRating = previousRating;
+                await Shell.Current.DisplayAlert("Error", "Failed to submit rating. Please try again.", "OK");
+                return;
+            }
+
+            if (updatedAverage.HasValue)
+            {
+                Recipe.Rating = updatedAverage.Value;
+                OnPropertyChanged(nameof(Recipe));
+            }
+        }
+        catch
+        {
+            UserRating = previousRating;
+            await Shell.Current.DisplayAlert("Error", "Something went wrong. Please try again.", "OK");
+        }
+        finally
+        {
+            IsSubmittingRating = false;
         }
     }
 

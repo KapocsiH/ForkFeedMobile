@@ -38,6 +38,7 @@ public interface IApiService
     Task<ApiResult<RatingsResponse>> GetRecipeRatingsAsync(int recipeId, int page = 1, int limit = 20);
     Task<ApiResult<MyRatingResponse>> GetMyRecipeRatingAsync(int recipeId);
     Task<ApiResult<MessageResponse>> RateRecipeAsync(int recipeId, CreateRatingRequest request);
+    Task<ApiResult<MessageResponse>> UpdateRatingAsync(int recipeId, CreateRatingRequest request);
     Task<ApiResult<FavoriteResponse>> AddRecipeFavoriteAsync(int recipeId);
     Task<ApiResult<MessageResponse>> RemoveRecipeFavoriteAsync(int recipeId);
     Task<ApiResult<CreateRecipeResponse>> CreateRecipeAsync(CreateRecipeRequest request, Stream? imageStream = null, string? imageFileName = null);

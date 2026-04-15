@@ -140,7 +140,10 @@ public class ApiService : IApiService
         GetAsync<MyRatingResponse>($"recipes/{recipeId}/ratings/me");
 
     public Task<ApiResult<MessageResponse>> RateRecipeAsync(int recipeId, CreateRatingRequest request) =>
-        PostAsync<MessageResponse>($"recipes/{recipeId}/ratings", request);
+        PutAsync<MessageResponse>($"recipes/{recipeId}/ratings/me", request);
+
+    public Task<ApiResult<MessageResponse>> UpdateRatingAsync(int recipeId, CreateRatingRequest request) =>
+        PutAsync<MessageResponse>($"recipes/{recipeId}/ratings/me", request);
 
     public Task<ApiResult<FavoriteResponse>> AddRecipeFavoriteAsync(int recipeId) =>
         PostAsync<FavoriteResponse>($"recipes/{recipeId}/favorite", null);

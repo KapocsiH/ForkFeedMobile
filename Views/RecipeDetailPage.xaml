@@ -125,7 +125,8 @@
                     </HorizontalStackLayout>
 
                     <!-- Rating Stars -->
-                    <VerticalStackLayout Spacing="4" Margin="0,4,0,0">
+                    <VerticalStackLayout Spacing="4" Margin="0,4,0,0"
+                                         IsEnabled="{Binding IsSubmittingRating, Converter={StaticResource InvertBool}}">
                         <Label Text="Your Rating" FontSize="14" TextColor="{StaticResource Gray500}" />
                         <HorizontalStackLayout Spacing="4">
                             <icons:MauiIcon Icon="Star12Filled" IconSize="28"
