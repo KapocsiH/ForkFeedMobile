@@ -33,6 +33,9 @@ public partial class AddRecipeViewModel : BaseViewModel
     private string _newIngredientQty = string.Empty;
 
     [ObservableProperty]
+    private string _newIngredientUnit = string.Empty;
+
+    [ObservableProperty]
     private string _newStepDescription = string.Empty;
 
     [ObservableProperty]
@@ -94,14 +97,28 @@ public partial class AddRecipeViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(NewIngredientName)) return;
 
+        double? parsedQty = null;
+        if (!string.IsNullOrWhiteSpace(NewIngredientQty))
+        {
+            if (!double.TryParse(NewIngredientQty.Trim(), System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out var qty))
+            {
+                Shell.Current.DisplayAlert("Validation", "Quantity must be a valid number (e.g. 200, 0.5).", "OK");
+                return;
+            }
+            parsedQty = qty;
+        }
+
         Ingredients.Add(new Ingredient
         {
             Name = NewIngredientName.Trim(),
-            Quantity = NewIngredientQty.Trim()
+            Quantity = parsedQty,
+            Unit = NewIngredientUnit.Trim()
         });
 
         NewIngredientName = string.Empty;
         NewIngredientQty = string.Empty;
+        NewIngredientUnit = string.Empty;
     }
 
     [RelayCommand]
@@ -274,6 +291,7 @@ public partial class AddRecipeViewModel : BaseViewModel
             SelectedImagePath = null;
             NewIngredientName = string.Empty;
             NewIngredientQty = string.Empty;
+            NewIngredientUnit = string.Empty;
             NewStepDescription = string.Empty;
             IsSaved = false;
 

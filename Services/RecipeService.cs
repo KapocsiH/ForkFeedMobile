@@ -92,12 +92,20 @@ public class RecipeService
         if (ingredientsTask.Result.IsSuccess && ingredientsTask.Result.Data != null)
         {
             recipe.Ingredients = ingredientsTask.Result.Data.Ingredients
-                .Select(i => new Ingredient
+                .Select(i =>
                 {
-                    Name = i.Name,
-                    Quantity = string.IsNullOrWhiteSpace(i.Unit)
-                        ? i.Quantity
-                        : $"{i.Quantity} {i.Unit}".Trim()
+                    double? qty = double.TryParse(i.Quantity,
+                        System.Globalization.NumberStyles.Any,
+                        System.Globalization.CultureInfo.InvariantCulture, out var parsed)
+                        ? parsed
+                        : null;
+
+                    return new Ingredient
+                    {
+                        Name = i.Name,
+                        Quantity = qty,
+                        Unit = i.Unit ?? string.Empty
+                    };
                 }).ToList();
         }
 
@@ -202,21 +210,15 @@ public class RecipeService
             // 2. Add ingredients one by one
             foreach (var ing in ingredients)
             {
-                string qtyStr = "0";
-                string unit = ing.Quantity;
-
-                var parts = ing.Quantity.Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length >= 1 && double.TryParse(parts[0], out var parsedQty))
-                {
-                    qtyStr = parsedQty.ToString(System.Globalization.CultureInfo.InvariantCulture);
-                    unit = parts.Length >= 2 ? parts[1] : "pcs";
-                }
+                var qtyStr = ing.Quantity.HasValue
+                    ? ing.Quantity.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                    : "0";
 
                 await _api.AddRecipeIngredientAsync(recipeId, new ApiIngredient
                 {
                     Name = ing.Name,
                     Quantity = qtyStr,
-                    Unit = unit
+                    Unit = string.IsNullOrWhiteSpace(ing.Unit) ? "pcs" : ing.Unit
                 });
             }
 

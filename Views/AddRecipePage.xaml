@@ -88,12 +88,15 @@
 
             <!-- Ingredients -->
             <Label Text="Ingredients" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
-            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+            <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
                 <Entry Grid.Column="0" Placeholder="Ingredient name"
                        Text="{Binding NewIngredientName}" />
-                <Entry Grid.Column="1" Placeholder="Qty" WidthRequest="80"
-                       Text="{Binding NewIngredientQty}" />
-                <Button Grid.Column="2" Text="+" WidthRequest="44" HeightRequest="44"
+                <Entry Grid.Column="1" Placeholder="Qty" WidthRequest="70"
+                       Text="{Binding NewIngredientQty}"
+                       Keyboard="Numeric" />
+                <Entry Grid.Column="2" Placeholder="Unit" WidthRequest="60"
+                       Text="{Binding NewIngredientUnit}" />
+                <Button Grid.Column="3" Text="+" WidthRequest="44" HeightRequest="44"
                         Command="{Binding AddIngredientCommand}"
                         BackgroundColor="{StaticResource Primary}" TextColor="White"
                         CornerRadius="22" FontSize="20" Padding="0" />
@@ -113,7 +116,7 @@
                             </SwipeView.RightItems>
                             <Grid ColumnDefinitions="*,Auto" Padding="8,4" BackgroundColor="Transparent">
                                 <Label Grid.Column="0" Text="{Binding Name}" FontSize="15" VerticalOptions="Center" />
-                                <Label Grid.Column="1" Text="{Binding Quantity}" FontSize="14"
+                                <Label Grid.Column="1" Text="{Binding DisplayQuantity}" FontSize="14"
                                        TextColor="{StaticResource Gray400}" VerticalOptions="Center" />
                             </Grid>
                         </SwipeView>

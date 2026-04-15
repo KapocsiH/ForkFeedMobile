@@ -21,7 +21,18 @@ public class Recipe
 public partial class Ingredient : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
 {
     public string Name { get; set; } = string.Empty;
-    public string Quantity { get; set; } = string.Empty;
+    public double? Quantity { get; set; }
+    public string Unit { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Formatted string for UI display (e.g. "200 g", "0.5 ml", or empty).
+    /// </summary>
+    public string DisplayQuantity =>
+        Quantity.HasValue
+            ? string.IsNullOrWhiteSpace(Unit)
+                ? Quantity.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)
+                : $"{Quantity.Value.ToString(System.Globalization.CultureInfo.InvariantCulture)} {Unit}"
+            : Unit ?? string.Empty;
 
     [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
     private bool _isChecked;

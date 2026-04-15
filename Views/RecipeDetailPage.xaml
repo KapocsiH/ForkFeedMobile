@@ -178,7 +178,7 @@
                                               Color="{StaticResource Primary}" />
                                     <Label Grid.Column="1" Text="{Binding Name}"
                                            VerticalOptions="Center" FontSize="15" />
-                                    <Label Grid.Column="2" Text="{Binding Quantity}"
+                                    <Label Grid.Column="2" Text="{Binding DisplayQuantity}"
                                            VerticalOptions="Center" FontSize="14"
                                            TextColor="{StaticResource Gray400}" />
                                 </Grid>
