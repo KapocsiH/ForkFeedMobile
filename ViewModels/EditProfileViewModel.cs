@@ -33,6 +33,13 @@ public partial class EditProfileViewModel : BaseViewModel
     [ObservableProperty]
     private ImageSource? _avatarImageSource;
 
+    public bool HasAvatarImage => AvatarImageSource != null;
+
+    partial void OnAvatarImageSourceChanged(ImageSource? value)
+    {
+        OnPropertyChanged(nameof(HasAvatarImage));
+    }
+
     [ObservableProperty]
     private string _formError = string.Empty;
 

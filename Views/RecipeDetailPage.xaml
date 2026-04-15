@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.RecipeDetailPage"
              x:DataType="vm:RecipeDetailViewModel"
              Title="{Binding Title}"
@@ -45,13 +46,9 @@
                             <TapGestureRecognizer Command="{Binding AuthorTappedCommand}" />
                         </HorizontalStackLayout.GestureRecognizers>
 
-                        <Image Source="{Binding Recipe.AuthorProfileImageUrl}"
-                               WidthRequest="36" HeightRequest="36"
-                               Aspect="AspectFill">
-                            <Image.Clip>
-                                <EllipseGeometry Center="18,18" RadiusX="18" RadiusY="18" />
-                            </Image.Clip>
-                        </Image>
+                        <controls:AvatarView ImageUrl="{Binding Recipe.AuthorProfileImageUrl}"
+                                              UserName="{Binding Recipe.AuthorUsername}"
+                                              Size="36" />
 
                         <Label Text="{Binding Recipe.AuthorUsername}"
                                FontSize="15" FontAttributes="Bold"
@@ -268,15 +265,11 @@
                                 <VerticalStackLayout Padding="0,8" Spacing="4">
                                     <Grid ColumnDefinitions="36,*,Auto" ColumnSpacing="10">
                                         <!-- Profile Image -->
-                                        <Image Grid.Column="0"
-                                               Source="{Binding ProfileImageUrl}"
-                                               WidthRequest="36" HeightRequest="36"
-                                               Aspect="AspectFill"
-                                               VerticalOptions="Start">
-                                            <Image.Clip>
-                                                <EllipseGeometry Center="18,18" RadiusX="18" RadiusY="18" />
-                                            </Image.Clip>
-                                        </Image>
+                                        <controls:AvatarView Grid.Column="0"
+                                                              ImageUrl="{Binding ProfileImageUrl}"
+                                                              UserName="{Binding Username}"
+                                                              Size="36"
+                                                              VerticalOptions="Start" />
 
                                         <!-- Username + Timestamp -->
                                         <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">

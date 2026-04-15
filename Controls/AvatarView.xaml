@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ForkFeedMobile.Controls.AvatarView"
+             x:Name="root">
+
+    <Grid WidthRequest="{Binding Size, Source={x:Reference root}}"
+          HeightRequest="{Binding Size, Source={x:Reference root}}">
+
+        <!-- Placeholder: colored circle with initial -->
+        <Border BackgroundColor="{Binding AvatarBackgroundColor, Source={x:Reference root}}"
+                StrokeThickness="0"
+                IsVisible="{Binding ShowPlaceholder, Source={x:Reference root}}"
+                WidthRequest="{Binding Size, Source={x:Reference root}}"
+                HeightRequest="{Binding Size, Source={x:Reference root}}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="{Binding HalfSize, Source={x:Reference root}}" />
+            </Border.StrokeShape>
+            <Label Text="{Binding Initial, Source={x:Reference root}}"
+                   TextColor="White"
+                   FontAttributes="Bold"
+                   FontSize="{Binding FontSize, Source={x:Reference root}}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   HorizontalTextAlignment="Center"
+                   VerticalTextAlignment="Center" />
+        </Border>
+
+        <!-- Real image -->
+        <Border StrokeThickness="0"
+                IsVisible="{Binding ShowImage, Source={x:Reference root}}"
+                WidthRequest="{Binding Size, Source={x:Reference root}}"
+                HeightRequest="{Binding Size, Source={x:Reference root}}"
+                HorizontalOptions="Center"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="{Binding HalfSize, Source={x:Reference root}}" />
+            </Border.StrokeShape>
+            <Image Source="{Binding ImageUrl, Source={x:Reference root}}"
+                   Aspect="AspectFill"
+                   WidthRequest="{Binding Size, Source={x:Reference root}}"
+                   HeightRequest="{Binding Size, Source={x:Reference root}}" />
+        </Border>
+    </Grid>
+</ContentView>

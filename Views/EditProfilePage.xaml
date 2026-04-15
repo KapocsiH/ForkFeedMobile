@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.EditProfilePage"
              x:DataType="vm:EditProfileViewModel"
              Title="{Binding Title}"
@@ -12,19 +13,30 @@
         <VerticalStackLayout Padding="24" Spacing="16">
 
             <!-- Profile Image -->
-            <Border WidthRequest="120" HeightRequest="120"
-                    StrokeShape="RoundRectangle 60"
-                    StrokeThickness="0"
-                    HorizontalOptions="Center"
-                    Margin="0,12,0,0">
-                <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.25" />
-                </Border.Shadow>
-                <Image Source="{Binding AvatarImageSource}"
-                       Aspect="AspectFill"
-                       WidthRequest="120"
-                       HeightRequest="120" />
-            </Border>
+            <Grid WidthRequest="120" HeightRequest="120"
+                  HorizontalOptions="Center"
+                  Margin="0,12,0,0">
+
+                <!-- Placeholder avatar when no image is set -->
+                <controls:AvatarView ImageUrl=""
+                                     UserName="{Binding Username}"
+                                     Size="120"
+                                     IsVisible="{Binding HasAvatarImage, Converter={StaticResource InvertBool}}" />
+
+                <!-- Real image -->
+                <Border StrokeShape="RoundRectangle 60"
+                        StrokeThickness="0"
+                        IsVisible="{Binding HasAvatarImage}"
+                        WidthRequest="120" HeightRequest="120">
+                    <Border.Shadow>
+                        <Shadow Brush="Black" Offset="0,2" Radius="8" Opacity="0.25" />
+                    </Border.Shadow>
+                    <Image Source="{Binding AvatarImageSource}"
+                           Aspect="AspectFill"
+                           WidthRequest="120"
+                           HeightRequest="120" />
+                </Border>
+            </Grid>
 
             <!-- Image Action Buttons -->
             <HorizontalStackLayout Spacing="12" HorizontalOptions="Center">
