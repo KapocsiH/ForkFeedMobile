@@ -186,6 +186,17 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
+                    <!-- Add to Shopping List Button -->
+                    <Button Text="Add to Shopping List"
+                            Command="{Binding GoToShoppingListCommand}"
+                            IsVisible="{Binding HasSelectedIngredients}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            FontSize="16" FontAttributes="Bold"
+                            CornerRadius="12"
+                            HeightRequest="48"
+                            Margin="0,8,0,0" />
+
                     <!-- Steps Section -->
                     <Label Text="Steps" FontSize="20" FontAttributes="Bold" Margin="0,8,0,0" />
 

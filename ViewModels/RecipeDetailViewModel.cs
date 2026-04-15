@@ -37,7 +37,11 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isSubmittingRating;
 
+    [ObservableProperty]
+    private bool _hasSelectedIngredients;
+
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
+    public ObservableCollection<Ingredient> SelectedIngredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public ObservableCollection<Comment> Comments { get; } = new();
 
@@ -86,8 +90,14 @@ public partial class RecipeDetailViewModel : BaseViewModel
             }
 
             Ingredients.Clear();
+            SelectedIngredients.Clear();
+            HasSelectedIngredients = false;
             foreach (var i in recipe.Ingredients)
-                Ingredients.Add(new Ingredient { Name = i.Name, Quantity = i.Quantity });
+            {
+                var ingredient = new Ingredient { Name = i.Name, Quantity = i.Quantity };
+                ingredient.PropertyChanged += OnIngredientPropertyChanged;
+                Ingredients.Add(ingredient);
+            }
 
             Steps.Clear();
             foreach (var s in recipe.Steps)
@@ -190,12 +200,25 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private void ToggleIngredient(Ingredient ingredient)
     {
         ingredient.IsChecked = !ingredient.IsChecked;
+    }
 
-        var idx = Ingredients.IndexOf(ingredient);
-        if (idx >= 0)
+    private void OnIngredientPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(Ingredient.IsChecked) && sender is Ingredient ingredient)
         {
-            Ingredients[idx] = ingredient;
+            if (ingredient.IsChecked && !SelectedIngredients.Contains(ingredient))
+                SelectedIngredients.Add(ingredient);
+            else if (!ingredient.IsChecked)
+                SelectedIngredients.Remove(ingredient);
+
+            HasSelectedIngredients = SelectedIngredients.Count > 0;
         }
+    }
+
+    [RelayCommand]
+    private async Task GoToShoppingListAsync()
+    {
+        await Shell.Current.GoToAsync("ShoppingList");
     }
 
     [RelayCommand]

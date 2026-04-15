@@ -18,11 +18,13 @@ public class Recipe
     public string AuthorProfileImageUrl { get; set; } = string.Empty;
 }
 
-public class Ingredient
+public partial class Ingredient : CommunityToolkit.Mvvm.ComponentModel.ObservableObject
 {
     public string Name { get; set; } = string.Empty;
     public string Quantity { get; set; } = string.Empty;
-    public bool IsChecked { get; set; }
+
+    [CommunityToolkit.Mvvm.ComponentModel.ObservableProperty]
+    private bool _isChecked;
 }
 
 public class RecipeStep
