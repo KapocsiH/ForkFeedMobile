@@ -238,7 +238,7 @@ public class RecipeService
         }
     }
 
-    public async Task<List<Comment>> GetCommentsByRecipeIdAsync(int recipeId)
+    public async Task<List<Comment>> GetCommentsByRecipeIdAsync(int recipeId, int? currentUserId = null)
     {
         var result = await _api.GetRecipeCommentsAsync(recipeId, 1, 100);
 
@@ -247,11 +247,48 @@ public class RecipeService
 
         return result.Data.Comments.Select(c => new Comment
         {
+            Id = c.Id,
             Username = c.User?.Username ?? "Unknown",
             ProfileImageUrl = ResolveImageUrl(c.User?.ProfileImageUrl),
             CreatedAt = c.CreatedAt,
-            Text = c.Content
+            Text = c.Content,
+            IsOwnComment = currentUserId.HasValue && c.User?.Id == currentUserId.Value
         }).ToList();
+    }
+
+    public async Task<bool> DeleteCommentAsync(int commentId)
+    {
+        var result = await _api.DeleteCommentAsync(commentId);
+        return result.IsSuccess;
+    }
+
+    public async Task<Comment?> CreateCommentAsync(int recipeId, string text)
+    {
+        var request = new CreateCommentRequest { Content = text };
+        var result = await _api.AddRecipeCommentAsync(recipeId, request);
+
+        if (!result.IsSuccess)
+            return null;
+
+        // Fetch the current user info so the comment shows the correct name/avatar
+        var meResult = await _api.GetMeAsync();
+        var user = meResult.Data?.User;
+
+        // Re-fetch comments to get the server-assigned ID for the new comment
+        var commentsResult = await _api.GetRecipeCommentsAsync(recipeId, 1, 100);
+        var newComment = commentsResult.Data?.Comments
+            .OrderByDescending(c => c.CreatedAt)
+            .FirstOrDefault(c => c.User?.Id == user?.Id && c.Content == text);
+
+        return new Comment
+        {
+            Id = newComment?.Id ?? 0,
+            Username = user?.Username ?? "You",
+            ProfileImageUrl = ResolveImageUrl(user?.ProfileImageUrl),
+            CreatedAt = DateTime.UtcNow,
+            Text = text,
+            IsOwnComment = true
+        };
     }
 
     // ?? Mapping helpers ??????????????????????????????????????????

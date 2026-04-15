@@ -220,11 +220,26 @@
                     <!-- Comments Section -->
                     <Label Text="Comments" FontSize="20" FontAttributes="Bold" Margin="0,8,0,4" />
 
-                    <!-- Comment Input Placeholder -->
-                    <Entry Placeholder="Write a comment..."
-                           IsEnabled="False"
-                           FontSize="14"
-                           Margin="0,0,0,8" />
+                    <!-- Comment Input -->
+                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,0,0,8">
+                        <Entry Grid.Column="0"
+                               Placeholder="Write a comment..."
+                               Text="{Binding NewCommentText}"
+                               FontSize="14"
+                               ReturnType="Send"
+                               ReturnCommand="{Binding PostCommentCommand}"
+                               IsEnabled="{Binding IsPostingComment, Converter={StaticResource InvertBool}}" />
+                        <Button Grid.Column="1"
+                                Text="Post"
+                                Command="{Binding PostCommentCommand}"
+                                IsEnabled="{Binding IsPostingComment, Converter={StaticResource InvertBool}}"
+                                BackgroundColor="{StaticResource Primary}"
+                                TextColor="White"
+                                FontSize="14"
+                                CornerRadius="8"
+                                Padding="12,0"
+                                HeightRequest="44" />
+                    </Grid>
 
                     <!-- No Comments Message -->
                     <Label Text="No comments yet."
@@ -261,16 +276,28 @@
                                                    VerticalOptions="Center" />
                                         </HorizontalStackLayout>
 
-                                        <!-- Report Button -->
-                                        <icons:MauiIcon Grid.Column="2"
-                                                        Icon="Warning28Filled"
-                                                        IconSize="24"
-                                                        IconColor="{StaticResource Gray400}"
-                                                        VerticalOptions="Center">
-                                            <icons:MauiIcon.GestureRecognizers>
-                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=ReportCommentCommand}" />
-                                            </icons:MauiIcon.GestureRecognizers>
-                                        </icons:MauiIcon>
+                                        <!-- Delete & Report Buttons -->
+                                        <HorizontalStackLayout Grid.Column="2" Spacing="8" VerticalOptions="Center">
+                                            <!-- Delete Button (own comments only) -->
+                                            <icons:MauiIcon Icon="Delete28Filled"
+                                                            IconSize="24"
+                                                            IconColor="{StaticResource ErrorRed}"
+                                                            IsVisible="{Binding IsOwnComment}">
+                                                <icons:MauiIcon.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=DeleteCommentCommand}"
+                                                                          CommandParameter="{Binding}" />
+                                                </icons:MauiIcon.GestureRecognizers>
+                                            </icons:MauiIcon>
+
+                                            <!-- Report Button -->
+                                            <icons:MauiIcon Icon="Warning28Filled"
+                                                            IconSize="24"
+                                                            IconColor="{StaticResource Gray400}">
+                                                <icons:MauiIcon.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=ReportCommentCommand}" />
+                                                </icons:MauiIcon.GestureRecognizers>
+                                            </icons:MauiIcon>
+                                        </HorizontalStackLayout>
                                     </Grid>
 
                                     <!-- Comment Text -->
