@@ -18,6 +18,7 @@ namespace ForkFeedMobile.Services
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTheme)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ThemeIcon)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ThemeLabel)));
+                UpdateStatusBar();
             }
         }
 
@@ -35,8 +36,20 @@ namespace ForkFeedMobile.Services
             _ => "System"
         };
 
+        private readonly IStatusBarService? _statusBarService;
+
         public ThemeService()
         {
+        }
+
+        public ThemeService(IStatusBarService statusBarService)
+        {
+            _statusBarService = statusBarService;
+        }
+
+        public void UpdateStatusBar()
+        {
+            _statusBarService?.SetStatusBarColor(CurrentTheme);
         }
 
         public void Initialize()

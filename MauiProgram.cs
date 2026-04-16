@@ -37,6 +37,10 @@ namespace ForkFeedMobile
             // MOCK API – uncomment the line below (and comment the block above) to use mock data
             // builder.Services.AddSingleton<IApiService, MockApiService>();
 
+#if ANDROID
+            builder.Services.AddSingleton<IStatusBarService, ForkFeedMobile.Services.StatusBarService>();
+#endif
+
             // Services (singleton so state persists across pages)
             builder.Services.AddSingleton<ThemeService>();
             builder.Services.AddSingleton<RecipeService>();

@@ -15,11 +15,18 @@ namespace ForkFeedMobile
             _themeService = themeService;
             _themeService.Initialize();
             MainPage = new AppShell();
+
+            RequestedThemeChanged += (s, e) =>
+            {
+                if (_themeService.CurrentTheme == AppTheme.Unspecified)
+                    _themeService.UpdateStatusBar();
+            };
         }
 
         protected override async void OnStart()
         {
             base.OnStart();
+            _themeService.UpdateStatusBar();
             await _authService.TryRestoreSessionAsync();
         }
     }
