@@ -46,8 +46,22 @@ public partial class FloatingNavBar : ContentView
         {
             Shell.Current.Navigated -= OnShellNavigated;
             Shell.Current.Navigated += OnShellNavigated;
+
+            if (Application.Current != null)
+                Application.Current.RequestedThemeChanged -= OnThemeChanged;
+            if (Application.Current != null)
+                Application.Current.RequestedThemeChanged += OnThemeChanged;
+
             UpdateFromRoute();
         }
+    }
+
+    private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e)
+    {
+        // Force re-apply icon colors for the new theme
+        var prev = _selectedIndex;
+        _selectedIndex = -1;
+        SetSelected(prev);
     }
 
     private void OnShellNavigated(object? sender, ShellNavigatedEventArgs e)
@@ -78,8 +92,13 @@ public partial class FloatingNavBar : ContentView
         EnsureElements();
         if (_glows == null || _icons == null) return;
 
-        var activeBrush = new SolidColorBrush(Colors.White);
-        var inactiveBrush = new SolidColorBrush(Color.FromArgb("#55FFFFFF"));
+        var appTheme = Application.Current?.UserAppTheme ?? AppTheme.Unspecified;
+        if (appTheme == AppTheme.Unspecified)
+            appTheme = Application.Current?.RequestedTheme ?? AppTheme.Light;
+        bool isDark = appTheme == AppTheme.Dark;
+
+        var activeBrush = new SolidColorBrush(isDark ? Colors.White : Color.FromArgb("#1A1A2E"));
+        var inactiveBrush = new SolidColorBrush(isDark ? Color.FromArgb("#55FFFFFF") : Color.FromArgb("#55000000"));
 
         for (int i = 0; i < 5; i++)
         {
