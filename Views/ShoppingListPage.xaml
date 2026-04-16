@@ -12,7 +12,7 @@
              Shell.TabBarIsVisible="False">
 
     <Grid>
-    <Grid RowDefinitions="*,Auto" Padding="0,0,0,90">
+    <Grid RowDefinitions="*,Auto">
 
         <!-- Empty state -->
         <VerticalStackLayout Grid.Row="0"
@@ -32,6 +32,9 @@
                          ItemsSource="{Binding Items}"
                          SelectionMode="None"
                          IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBool}}">
+            <CollectionView.Footer>
+                <ContentView HeightRequest="100" />
+            </CollectionView.Footer>
             <CollectionView.Header>
                 <VerticalStackLayout Padding="16,16,16,0">
                     <Label Text="Shopping List"
@@ -95,7 +98,7 @@
                 FontSize="16" FontAttributes="Bold"
                 CornerRadius="12"
                 HeightRequest="48"
-                Margin="16,8,16,16" />
+                Margin="16,8,16,100" />
     </Grid>
     <controls:FloatingNavBar />
     </Grid>

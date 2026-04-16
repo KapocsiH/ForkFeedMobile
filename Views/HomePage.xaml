@@ -16,7 +16,7 @@
     </ContentPage.ToolbarItems>
 
     <Grid>
-    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="0,0,0,90">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
 
         <!-- Search & Filter Bar -->
         <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="10"
@@ -61,6 +61,10 @@
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
                             SelectionMode="None">
+
+                <CollectionView.Footer>
+                    <ContentView HeightRequest="100" />
+                </CollectionView.Footer>
 
                 <CollectionView.EmptyView>
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">

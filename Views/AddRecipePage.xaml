@@ -13,7 +13,7 @@
 
     <Grid>
     <ScrollView>
-        <VerticalStackLayout Padding="16" Spacing="12">
+        <VerticalStackLayout Padding="16,16,16,100" Spacing="12">
 
             <!-- Image Picker -->
             <Frame CornerRadius="12" Padding="0" HeightRequest="200"
