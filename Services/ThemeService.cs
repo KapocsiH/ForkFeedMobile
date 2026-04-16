@@ -6,14 +6,15 @@ namespace ForkFeedMobile.Services
     {
         private const string ThemePreferenceKey = "app_theme";
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         public AppTheme CurrentTheme
         {
-            get => Application.Current.UserAppTheme;
+            get => Application.Current?.UserAppTheme ?? AppTheme.Unspecified;
             private set
             {
-                Application.Current.UserAppTheme = value;
+                if (Application.Current != null)
+                    Application.Current.UserAppTheme = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CurrentTheme)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ThemeIcon)));
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(ThemeLabel)));
@@ -65,7 +66,8 @@ namespace ForkFeedMobile.Services
         private void LoadSavedTheme()
         {
             var saved = Preferences.Get(ThemePreferenceKey, (int)AppTheme.Unspecified);
-            Application.Current.UserAppTheme = (AppTheme)saved;
+            if (Application.Current != null)
+                Application.Current.UserAppTheme = (AppTheme)saved;
         }
     }
 }

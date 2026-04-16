@@ -6,8 +6,6 @@ public class FavoritesService
 {
     private readonly IApiService _api;
     private readonly HashSet<int> _favoriteIds = new();
-    private bool _cacheLoaded;
-
     private const string BaseUrl = "https://forkfeed.vercel.app";
 
     public FavoritesService(IApiService api)
@@ -59,8 +57,6 @@ public class FavoritesService
             r.IsFavorite = true;
             _favoriteIds.Add(r.Id);
         }
-        _cacheLoaded = true;
-
         return recipes;
     }
 

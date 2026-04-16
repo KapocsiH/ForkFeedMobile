@@ -15,19 +15,19 @@ public partial class HomePage : ContentPage
 
     private async void OnThemeToggleClicked(object sender, EventArgs e)
     {
-        var themeService = IPlatformApplication.Current.Services.GetRequiredService<ThemeService>();
+        var themeService = IPlatformApplication.Current!.Services.GetRequiredService<ThemeService>();
 
         var result = await DisplayActionSheet("Choose Theme", "Cancel", null, "☀️ Light", "🌙 Dark", "⚙️ System");
 
         switch (result)
         {
-            case "Light":
+            case "☀️ Light":
                 themeService.SetTheme(AppTheme.Light);
                 break;
-            case "Dark":
+            case "🌙 Dark":
                 themeService.SetTheme(AppTheme.Dark);
                 break;
-            case "System default":
+            case "⚙️ System":
                 themeService.SetTheme(AppTheme.Unspecified);
                 break;
         }
