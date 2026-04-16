@@ -61,7 +61,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Controls\AvatarView.xaml">
+  <MauiXaml Update="Controls\AvatarView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+  <MauiXaml Update="Controls\FloatingNavBar.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\AddRecipePage.xaml">

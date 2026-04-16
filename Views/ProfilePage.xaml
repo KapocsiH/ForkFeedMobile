@@ -8,12 +8,13 @@
              x:Class="ForkFeedMobile.Views.ProfilePage"
              x:DataType="vm:ProfileViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="True">
+             Shell.NavBarIsVisible="True"
+             Shell.TabBarIsVisible="False">
 
     <Grid>
         <!-- Main scrollable content -->
         <ScrollView>
-            <VerticalStackLayout Padding="24,8,24,80" Spacing="12">
+            <VerticalStackLayout Padding="24,8,24,110" Spacing="12">
 
                 <!-- Loading Indicator -->
                 <ActivityIndicator IsRunning="{Binding IsBusy}"
@@ -419,7 +420,7 @@
                              Spacing="12"
                              HorizontalOptions="End"
                              VerticalOptions="End"
-                             Margin="0,0,20,20">
+                             Margin="0,0,20,110">
 
             <!-- Only show when logged in -->
             <VerticalStackLayout IsVisible="{Binding IsLoggedIn}"
@@ -466,5 +467,6 @@
             </Border>
             </VerticalStackLayout>
         </VerticalStackLayout>
+        <controls:FloatingNavBar />
     </Grid>
 </ContentPage>

@@ -4,11 +4,14 @@
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.AddRecipePage"
              x:DataType="vm:AddRecipeViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="True">
+             Shell.NavBarIsVisible="True"
+             Shell.TabBarIsVisible="False">
 
+    <Grid>
     <ScrollView>
         <VerticalStackLayout Padding="16" Spacing="12">
 
@@ -174,4 +177,6 @@
                                Color="{StaticResource Primary}" />
         </VerticalStackLayout>
     </ScrollView>
+    <controls:FloatingNavBar />
+    </Grid>
 </ContentPage>

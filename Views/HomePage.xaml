@@ -4,16 +4,19 @@
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.HomePage"
              x:DataType="vm:HomeViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="True">
+             Shell.NavBarIsVisible="True"
+             Shell.TabBarIsVisible="False">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="🌗" Clicked="OnThemeToggleClicked" Order="Primary" />
     </ContentPage.ToolbarItems>
 
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid>
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="0,0,0,90">
 
         <!-- Search & Filter Bar -->
         <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="10"
@@ -148,5 +151,7 @@
                            IsVisible="{Binding IsBusy}"
                            Color="{StaticResource Primary}"
                            Margin="0,8" />
+    </Grid>
+    <controls:FloatingNavBar />
     </Grid>
 </ContentPage>

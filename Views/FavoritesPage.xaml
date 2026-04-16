@@ -4,12 +4,15 @@
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.FavoritesPage"
              x:DataType="vm:FavoritesViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="True">
+             Shell.NavBarIsVisible="True"
+             Shell.TabBarIsVisible="False">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid>
+    <Grid RowDefinitions="Auto,*,Auto" Padding="0,0,0,90">
 
         <!-- Error State -->
         <VerticalStackLayout Grid.Row="0"
@@ -132,5 +135,7 @@
                            IsRunning="{Binding IsBusy}"
                            IsVisible="{Binding IsBusy}"
                            Color="{StaticResource Primary}" Margin="0,8" />
+    </Grid>
+    <controls:FloatingNavBar />
     </Grid>
 </ContentPage>

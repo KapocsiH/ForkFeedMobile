@@ -49,6 +49,10 @@
     <Color x:Key="SecondaryTextColorDark">#ACACAC</Color>
     <Color x:Key="AccentColor">#2EC4B6</Color>
 
+    <!-- Floating NavBar -->
+    <Color x:Key="NavBarBackground">#1A1A2E</Color>
+    <Color x:Key="NavBarAccent">#422AD5</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
