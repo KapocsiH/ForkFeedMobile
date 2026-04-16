@@ -33,6 +33,23 @@ public partial class HomePage : ContentPage
         }
     }
 
+    private async void OnFilterTapped(object sender, EventArgs e)
+    {
+        var sortResult = await DisplayActionSheet("Sort by", "Cancel", null,
+            _vm.SortOptions?.ToArray() ?? ["Newest", "Oldest", "Most Liked"]);
+
+        if (sortResult != null && sortResult != "Cancel")
+            _vm.SelectedSort = sortResult;
+
+        var difficultyResult = await DisplayActionSheet("Filter by Difficulty", "Cancel", "Reset",
+            _vm.DifficultyOptions?.ToArray() ?? ["Easy", "Medium", "Hard"]);
+
+        if (difficultyResult == "Reset")
+            _vm.SelectedDifficulty = null;
+        else if (difficultyResult != null && difficultyResult != "Cancel")
+            _vm.SelectedDifficulty = difficultyResult;
+    }
+
     protected override async void OnAppearing()
     {
         base.OnAppearing();

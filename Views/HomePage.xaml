@@ -19,24 +19,55 @@
     <Grid RowDefinitions="Auto,Auto,*,Auto">
 
         <!-- Search & Filter Bar -->
-        <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="10"
-                             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
+        <Border Grid.Row="0" Margin="16,12" Padding="6"
+                StrokeShape="RoundRectangle 35"
+                StrokeThickness="0"
+                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
+            <Border.Shadow>
+                <Shadow Brush="Black" Offset="0,4" Radius="16" Opacity="{AppThemeBinding Light=0.1, Dark=0.4}" />
+            </Border.Shadow>
+            <Grid ColumnDefinitions="4*,*" ColumnSpacing="6">
+                <!-- Search Input (pill) -->
+                <Border Grid.Column="0"
+                        StrokeShape="RoundRectangle 24"
+                        StrokeThickness="0"
+                        Padding="14,0"
+                        HeightRequest="48"
+                        BackgroundColor="{AppThemeBinding Light=#10000000, Dark=#15FFFFFF}">
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Path Grid.Column="0"
+                              Data="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"
+                              Fill="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray300}}"
+                              Aspect="Uniform" WidthRequest="20" HeightRequest="20"
+                              VerticalOptions="Center" />
+                        <Entry Grid.Column="1"
+                               Placeholder="Search recipes"
+                               Text="{Binding SearchText}"
+                               FontSize="15"
+                               Margin="10,0,0,0"
+                               VerticalOptions="Center"
+                               BackgroundColor="Transparent"
+                               PlaceholderColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"
+                               TextColor="{AppThemeBinding Light={StaticResource PrimaryTextColorLight}, Dark={StaticResource PrimaryTextColorDark}}" />
+                    </Grid>
+                </Border>
 
-            <SearchBar Placeholder="Search recipes..."
-                       Text="{Binding SearchText}"
-                       CancelButtonColor="{StaticResource Primary}" />
-
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                <Picker Grid.Column="0"
-                        Title="Difficulty"
-                        ItemsSource="{Binding DifficultyOptions}"
-                        SelectedItem="{Binding SelectedDifficulty}" />
-                <Picker Grid.Column="1"
-                        Title="Sort by"
-                        ItemsSource="{Binding SortOptions}"
-                        SelectedItem="{Binding SelectedSort}" />
+                <!-- Filter Button (pill) -->
+                <Border Grid.Column="1"
+                        StrokeShape="RoundRectangle 24"
+                        StrokeThickness="0"
+                        HeightRequest="48"
+                        BackgroundColor="{StaticResource NavBarAccent}">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFilterTapped" />
+                    </Border.GestureRecognizers>
+                    <Path Data="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"
+                          Fill="White"
+                          Aspect="Uniform" WidthRequest="22" HeightRequest="22"
+                          HorizontalOptions="Center" VerticalOptions="Center" />
+                </Border>
             </Grid>
-        </VerticalStackLayout>
+        </Border>
 
         <!-- Error State -->
         <VerticalStackLayout Grid.Row="1"
@@ -77,20 +108,29 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Recipe">
-                        <Frame Margin="16,8" Padding="0" CornerRadius="12" HasShadow="True" BorderColor="Transparent"
-                               BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                            <Frame.GestureRecognizers>
+                        <Border Margin="16,8" Padding="0"
+                                StrokeShape="RoundRectangle 16"
+                                StrokeThickness="0"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
+                            <Border.Shadow>
+                                <Shadow Brush="Black" Offset="0,2" Radius="12" Opacity="{AppThemeBinding Light=0.12, Dark=0.45}" />
+                            </Border.Shadow>
+                            <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=GoToDetailCommand}"
                                     CommandParameter="{Binding}" />
-                            </Frame.GestureRecognizers>
+                            </Border.GestureRecognizers>
 
                             <Grid RowDefinitions="180,Auto">
                                 <!-- Recipe Image -->
                                 <Image Grid.Row="0"
                                        Source="{Binding ImageUrl}"
                                        Aspect="AspectFill"
-                                       HeightRequest="180" />
+                                       HeightRequest="180">
+                                    <Image.Clip>
+                                        <RoundRectangleGeometry CornerRadius="16,16,0,0" Rect="0,0,400,180" />
+                                    </Image.Clip>
+                                </Image>
 
                                 <!-- Recipe Info -->
                                 <VerticalStackLayout Grid.Row="1" Padding="12" Spacing="4">
@@ -114,11 +154,12 @@
                                     </Grid>
 
                                     <HorizontalStackLayout Spacing="12">
-                                        <Label Text="{Binding Difficulty}"
-                                               FontSize="13"
-                                               TextColor="{StaticResource Gray500}"
-                                               Padding="6,2"
-                                               BackgroundColor="{StaticResource Secondary}" />
+                                        <Border StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="8,2"
+                                                BackgroundColor="{StaticResource Secondary}">
+                                            <Label Text="{Binding Difficulty}"
+                                                   FontSize="13"
+                                                   TextColor="{StaticResource Gray500}" />
+                                        </Border>
                                         <HorizontalStackLayout Spacing="4">
                                             <icons:MauiIcon Icon="Timer24Filled" IconSize="13" IconColor="{StaticResource Gray500}" VerticalOptions="Center" />
                                             <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
@@ -143,7 +184,7 @@
                                     </HorizontalStackLayout>
                                 </VerticalStackLayout>
                             </Grid>
-                        </Frame>
+                        </Border>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
