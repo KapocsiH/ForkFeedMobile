@@ -5,12 +5,15 @@ namespace ForkFeedMobile
     public partial class App : Application
     {
         private readonly AuthService _authService;
+        private readonly ThemeService _themeService;
 
-        public App(AuthService authService)
+        public App(AuthService authService, ThemeService themeService)
         {
             InitializeComponent();
 
             _authService = authService;
+            _themeService = themeService;
+            _themeService.Initialize();
             MainPage = new AppShell();
         }
 

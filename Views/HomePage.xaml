@@ -9,11 +9,15 @@
              Title="{Binding Title}"
              Shell.NavBarIsVisible="True">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="🌗" Clicked="OnThemeToggleClicked" Order="Primary" />
+    </ContentPage.ToolbarItems>
+
     <Grid RowDefinitions="Auto,Auto,*,Auto">
 
         <!-- Search & Filter Bar -->
         <VerticalStackLayout Grid.Row="0" Padding="16,12" Spacing="10"
-                             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}">
+                             BackgroundColor="{AppThemeBinding Light={StaticResource BackgroundColorLight}, Dark={StaticResource BackgroundColorDark}}">
 
             <SearchBar Placeholder="Search recipes..."
                        Text="{Binding SearchText}"
@@ -42,7 +46,7 @@
             <Button Text="Retry"
                     Command="{Binding RetryCommand}"
                     BackgroundColor="{StaticResource Primary}"
-                    TextColor="White"
+                    TextColor="{AppThemeBinding Light={StaticResource PrimaryTextColorDark}, Dark={StaticResource PrimaryTextColorDark}}"
                     HorizontalOptions="Center" />
         </VerticalStackLayout>
 

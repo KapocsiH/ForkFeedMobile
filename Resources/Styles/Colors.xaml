@@ -38,6 +38,17 @@
     <Color x:Key="Gray900">#212121</Color>
     <Color x:Key="Gray950">#141414</Color>
 
+    <!-- Semantic Theme Colors – Light variants -->
+    <Color x:Key="BackgroundColorLight">#FAFAFA</Color>
+    <Color x:Key="BackgroundColorDark">#121212</Color>
+    <Color x:Key="SecondaryBackgroundColorLight">#FFFFFF</Color>
+    <Color x:Key="SecondaryBackgroundColorDark">#1E1E1E</Color>
+    <Color x:Key="PrimaryTextColorLight">#1f1f1f</Color>
+    <Color x:Key="PrimaryTextColorDark">#FFFFFF</Color>
+    <Color x:Key="SecondaryTextColorLight">#6E6E6E</Color>
+    <Color x:Key="SecondaryTextColorDark">#ACACAC</Color>
+    <Color x:Key="AccentColor">#2EC4B6</Color>
+
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
     <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>

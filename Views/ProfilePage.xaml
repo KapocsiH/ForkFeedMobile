@@ -427,7 +427,7 @@
                                  HorizontalOptions="End">
 
             <!-- Settings button -->
-            <Border BackgroundColor="White"
+            <Border BackgroundColor="{AppThemeBinding Light={StaticResource SecondaryBackgroundColorLight}, Dark={StaticResource SecondaryBackgroundColorDark}}"
                     StrokeShape="RoundRectangle 14"
                     StrokeThickness="0"
                     WidthRequest="48"

@@ -38,6 +38,7 @@ namespace ForkFeedMobile
             // builder.Services.AddSingleton<IApiService, MockApiService>();
 
             // Services (singleton so state persists across pages)
+            builder.Services.AddSingleton<ThemeService>();
             builder.Services.AddSingleton<RecipeService>();
             builder.Services.AddSingleton<FavoritesService>();
             builder.Services.AddSingleton<AuthService>();
