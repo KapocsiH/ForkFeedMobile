@@ -5,8 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <!-- ForkFeed Brand Colors -->
-    <Color x:Key="Primary">#FF6B35</Color>
-    <Color x:Key="PrimaryDark">#FF8C5A</Color>
+    <Color x:Key="Primary">#605dff</Color>
+    <Color x:Key="PrimaryDark">#2133d6</Color>
     <Color x:Key="PrimaryDarkText">#242424</Color>
     <Color x:Key="Secondary">#FFE0CC</Color>
     <Color x:Key="SecondaryDarkText">#FF6B35</Color>
@@ -40,18 +40,18 @@
 
     <!-- Semantic Theme Colors – Light variants -->
     <Color x:Key="BackgroundColorLight">#FAFAFA</Color>
-    <Color x:Key="BackgroundColorDark">#121212</Color>
+    <Color x:Key="BackgroundColorDark">#191e24</Color>
     <Color x:Key="SecondaryBackgroundColorLight">#FFFFFF</Color>
     <Color x:Key="SecondaryBackgroundColorDark">#1E1E1E</Color>
     <Color x:Key="PrimaryTextColorLight">#1f1f1f</Color>
     <Color x:Key="PrimaryTextColorDark">#FFFFFF</Color>
     <Color x:Key="SecondaryTextColorLight">#6E6E6E</Color>
     <Color x:Key="SecondaryTextColorDark">#ACACAC</Color>
-    <Color x:Key="AccentColor">#2EC4B6</Color>
+    <Color x:Key="AccentColor">#605dff</Color>
 
     <!-- Floating NavBar -->
-    <Color x:Key="NavBarBackground">#1A1A2E</Color>
-    <Color x:Key="NavBarAccent">#422AD5</Color>
+    <Color x:Key="NavBarBackground">#191e24</Color>
+    <Color x:Key="NavBarAccent">#605dff</Color>
 
     <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
     <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
