@@ -6,7 +6,8 @@
              x:Class="ForkFeedMobile.Views.RegisterPage"
              x:DataType="vm:RegisterViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="True">
+             Shell.NavBarIsVisible="True"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="14">

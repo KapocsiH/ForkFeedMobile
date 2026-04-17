@@ -20,7 +20,7 @@ namespace ForkFeedMobile.Services
 
             if (resolvedTheme == AppTheme.Dark)
             {
-                window.SetStatusBarColor(Android.Graphics.Color.ParseColor("#1a1a1a"));
+                window.SetStatusBarColor(Android.Graphics.Color.ParseColor("#191e24"));
                 SetStatusBarIconsDark(window, false);
             }
             else

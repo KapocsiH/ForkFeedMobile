@@ -8,7 +8,8 @@
              x:Class="ForkFeedMobile.Views.RecipeDetailPage"
              x:DataType="vm:RecipeDetailViewModel"
              Title="{Binding Title}"
-             Shell.NavBarIsVisible="True">
+             Shell.NavBarIsVisible="True"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <ScrollView>
         <Grid RowDefinitions="Auto,*">

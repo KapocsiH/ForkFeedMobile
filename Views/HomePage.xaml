@@ -7,16 +7,17 @@
              xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.HomePage"
              x:DataType="vm:HomeViewModel"
-             Title="ForkFeeeeeeed"
+             Title="🍴 ForkFeed"
              Shell.NavBarIsVisible="True"
-             Shell.TabBarIsVisible="False">
+             Shell.TabBarIsVisible="False"
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="🌗" Clicked="OnThemeToggleClicked" Order="Primary" />
     </ContentPage.ToolbarItems>
 
     <Grid>
-        <Grid RowDefinitions="Auto,Auto,*,Auto" BackgroundColor="{StaticResource NavBarBackground}">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
         <!-- Search & Filter Bar -->
         <Border Grid.Row="0" Margin="16,12" Padding="6"
@@ -92,7 +93,7 @@
                             RemainingItemsThreshold="2"
                             RemainingItemsThresholdReachedCommand="{Binding LoadMoreCommand}"
                             SelectionMode="None"
-                            BackgroundColor="{StaticResource NavBarBackground}">
+                            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
                 <CollectionView.Footer>
                     <ContentView HeightRequest="100" />
@@ -109,13 +110,10 @@
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="models:Recipe">
-                        <Border Margin="16,8" Padding="0"
+                            <Border Margin="16,8" Padding="0"
                                 StrokeShape="RoundRectangle 16"
                                 StrokeThickness="0"
                                 BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                            <Border.Shadow>
-                                <Shadow Brush="Black" Offset="0,2" Radius="12" Opacity="{AppThemeBinding Light=0.12, Dark=0.45}" />
-                            </Border.Shadow>
                             <Border.GestureRecognizers>
                                 <TapGestureRecognizer
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:HomeViewModel}}, Path=GoToDetailCommand}"

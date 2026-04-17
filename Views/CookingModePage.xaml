@@ -7,7 +7,7 @@
              x:DataType="vm:CookingModeViewModel"
              Title="{Binding Title}"
              Shell.NavBarIsVisible="True"
-             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}">
+             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="24">
 

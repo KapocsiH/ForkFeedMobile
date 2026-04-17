@@ -6,7 +6,10 @@
     xmlns:views="clr-namespace:ForkFeedMobile.Views"
     xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
     Shell.FlyoutBehavior="Disabled"
-    Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource DarkBackground}}"
+    Shell.BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}"
+    Shell.TitleColor="{AppThemeBinding Light={StaticResource PrimaryTextColorLight}, Dark=White}"
+    Shell.ForegroundColor="{AppThemeBinding Light={StaticResource PrimaryTextColorLight}, Dark=White}"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}"
     Shell.TabBarTitleColor="{StaticResource Primary}"
     Shell.TabBarUnselectedColor="{StaticResource Gray400}"
     Title="ForkFeed">
