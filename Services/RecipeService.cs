@@ -41,12 +41,29 @@ public class RecipeService
             ? null
             : difficulty.ToLower();
 
-        var result = await _api.GetRecipesAsync(apiPage, pageSize, search, diff, sort, order);
+        // The API does not support server-side text search, so when a search
+        // term is provided we fetch a larger batch and filter client-side.
+        var hasSearch = !string.IsNullOrWhiteSpace(search);
+        var fetchLimit = hasSearch ? 200 : pageSize;
+        var fetchPage = hasSearch ? 1 : apiPage;
+
+        var result = await _api.GetRecipesAsync(fetchPage, fetchLimit, null, diff, sort, order);
 
         if (!result.IsSuccess || result.Data == null)
             return new List<Recipe>();
 
-        return result.Data.Recipes.Select(MapToRecipe).ToList();
+        IEnumerable<Recipe> recipes = result.Data.Recipes.Select(MapToRecipe);
+
+        if (hasSearch)
+        {
+            recipes = recipes.Where(r =>
+                r.Title.Contains(search!, StringComparison.OrdinalIgnoreCase));
+
+            // Apply manual pagination over the filtered set
+            recipes = recipes.Skip(page * pageSize).Take(pageSize);
+        }
+
+        return recipes.ToList();
     }
 
     public async Task<Recipe?> GetRecipeByIdAsync(int id)
