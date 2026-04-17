@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.AddRecipePage"
              x:DataType="vm:AddRecipeViewModel"
-             Title="{Binding Title}"
+             Title="Új recept"
              Shell.NavBarIsVisible="True"
              Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
@@ -27,10 +27,10 @@
                     <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="8">
                         <icons:MauiIcon Icon="ImageAdd24Filled" IconSize="40" HorizontalOptions="Center" />
                         <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Button Text="Gallery" Command="{Binding PickImageCommand}"
+                            <Button Text="Galéria" Command="{Binding PickImageCommand}"
                                     BackgroundColor="{StaticResource Primary}" TextColor="White"
                                     CornerRadius="8" FontSize="13" HeightRequest="36" />
-                            <Button Text="Camera" Command="{Binding TakePhotoCommand}"
+                            <Button Text="Kamera" Command="{Binding TakePhotoCommand}"
                                     BackgroundColor="{StaticResource Accent}" TextColor="White"
                                     CornerRadius="8" FontSize="13" HeightRequest="36" />
                         </HorizontalStackLayout>
@@ -39,35 +39,35 @@
             </Frame>
 
             <!-- Title -->
-            <Label Text="Recipe Title" FontSize="14" FontAttributes="Bold" />
-            <Entry Placeholder="e.g. Grandma's Apple Pie"
+            <Label Text="Recept neve" FontSize="14" FontAttributes="Bold" />
+            <Entry Placeholder="pl. Nagymama almás pitéje"
                    Text="{Binding RecipeTitle}" />
 
             <!-- Description -->
-            <Label Text="Description" FontSize="14" FontAttributes="Bold" />
-            <Editor Placeholder="Describe your recipe..."
+            <Label Text="Leírás" FontSize="14" FontAttributes="Bold" />
+            <Editor Placeholder="Írj röviden a receptről..."
                     Text="{Binding Description}"
                     HeightRequest="80"
                     AutoSize="TextChanges" />
 
             <!-- Difficulty -->
-            <Label Text="Difficulty" FontSize="14" FontAttributes="Bold" />
+            <Label Text="Nehézség" FontSize="14" FontAttributes="Bold" />
             <Picker ItemsSource="{Binding DifficultyOptions}"
                     SelectedItem="{Binding SelectedDifficulty}" />
 
             <!-- Cooking Time -->
-            <Label Text="Cooking Time (minutes)" FontSize="14" FontAttributes="Bold" />
-            <Entry Placeholder="e.g. 30"
+            <Label Text="Elkészítési idő (perc)" FontSize="14" FontAttributes="Bold" />
+            <Entry Placeholder="pl. 30"
                    Text="{Binding CookingTimeMinutes}"
                    Keyboard="Numeric" />
 
             <!-- Category -->
-            <Label Text="Category" FontSize="14" FontAttributes="Bold" />
+            <Label Text="Kategóriák" FontSize="14" FontAttributes="Bold" />
             <Picker ItemsSource="{Binding CategoryOptions}"
                     SelectedItem="{Binding SelectedCategory}" />
 
             <!-- Tags -->
-            <Label Text="Tags" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Label Text="Címkék" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
             <FlexLayout BindableLayout.ItemsSource="{Binding AvailableTags}"
                         Wrap="Wrap" Direction="Row"
                         AlignItems="Center" JustifyContent="Start">
@@ -91,14 +91,14 @@
             </FlexLayout>
 
             <!-- Ingredients -->
-            <Label Text="Ingredients" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Label Text="Hozzávalók" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
             <Grid ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="8">
-                <Entry Grid.Column="0" Placeholder="Ingredient name"
+                <Entry Grid.Column="0" Placeholder="Hozzávaló neve"
                        Text="{Binding NewIngredientName}" />
-                <Entry Grid.Column="1" Placeholder="Qty" WidthRequest="70"
+                <Entry Grid.Column="1" Placeholder="Menny." WidthRequest="70"
                        Text="{Binding NewIngredientQty}"
                        Keyboard="Numeric" />
-                <Entry Grid.Column="2" Placeholder="Unit" WidthRequest="60"
+                <Entry Grid.Column="2" Placeholder="M.e." WidthRequest="60"
                        Text="{Binding NewIngredientUnit}" />
                 <Button Grid.Column="3" Text="+" WidthRequest="44" HeightRequest="44"
                         Command="{Binding AddIngredientCommand}"
@@ -112,7 +112,7 @@
                         <SwipeView>
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete"
+                                    <SwipeItem Text="Törlés"
                                                BackgroundColor="{StaticResource ErrorRed}"
                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=RemoveIngredientCommand}"
                                                CommandParameter="{Binding}" />
@@ -129,9 +129,9 @@
             </CollectionView>
 
             <!-- Steps -->
-            <Label Text="Steps" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+            <Label Text="Elkészítés lépései" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
             <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8">
-                <Entry Grid.Column="0" Placeholder="Describe this step..."
+                <Entry Grid.Column="0" Placeholder="Írd le a lépést..."
                        Text="{Binding NewStepDescription}" />
                 <Button Grid.Column="1" Text="+" WidthRequest="44" HeightRequest="44"
                         Command="{Binding AddStepCommand}"
@@ -145,7 +145,7 @@
                         <SwipeView>
                             <SwipeView.RightItems>
                                 <SwipeItems>
-                                    <SwipeItem Text="Delete"
+                                    <SwipeItem Text="Törlés"
                                                BackgroundColor="{StaticResource ErrorRed}"
                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=RemoveStepCommand}"
                                                CommandParameter="{Binding}" />
@@ -163,7 +163,7 @@
             </CollectionView>
 
             <!-- Save Button -->
-            <Button Text="Save Recipe"
+            <Button Text="Feltöltés"
                     Command="{Binding SaveRecipeCommand}"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"
