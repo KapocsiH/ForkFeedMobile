@@ -1,9 +1,11 @@
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ForkFeedMobile.Models;
 using ForkFeedMobile.Services;
+using ForkFeedMobile.Views;
 
 namespace ForkFeedMobile.ViewModels;
 
@@ -208,5 +210,24 @@ public partial class EditProfileViewModel : BaseViewModel
         }
 
         await Shell.Current.GoToAsync("..");
+    }
+
+    [RelayCommand]
+    private async Task DeactivateAccountAsync()
+    {
+        var popup = new DeactivateAccountPopup(_apiService, _authService);
+        var result = await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+
+        if (result is true)
+        {
+            // Logout and clear session
+            await _authService.LogoutAsync();
+
+            // Navigate to the profile/login page and clear the navigation stack
+            await Shell.Current.GoToAsync("//Profile");
+
+            var toast = Toast.Make("Your profile has been deactivated.", ToastDuration.Long, 14);
+            await toast.Show();
+        }
     }
 }

@@ -262,8 +262,8 @@ public class ApiService : IApiService
         return await UploadAsync<UploadResponse>("uploads", imageStream, fileName);
     }
 
-    public Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync() =>
-        PostAsync<MessageResponse>("users/me/deactivate", null);
+    public Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync(string password) =>
+        PatchAsync<MessageResponse>("users/me/deactivate", new { password });
 
     // ?? Reports ??????????????????????????????????????????????????
 

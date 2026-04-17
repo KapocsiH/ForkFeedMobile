@@ -310,7 +310,7 @@ public class MockApiService : IApiService
     public Task<ApiResult<UploadResponse>> UploadProfileImageAsync(Stream imageStream, string fileName) =>
         Ok(new UploadResponse { Url = "https://mock.url/profile.jpg", Message = "Profile image uploaded" });
 
-    public Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync() =>
+    public Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync(string password) =>
         Ok(new MessageResponse { Message = "Deactivated" });
 
     // ?? Reports ??????????????????????????????????????????????????

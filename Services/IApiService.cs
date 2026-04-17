@@ -81,7 +81,7 @@ public interface IApiService
     Task<ApiResult<UserStatsResponse>> GetMyStatsAsync();
     Task<ApiResult<MessageResponse>> UpdateMyProfileAsync(UpdateProfileRequest request);
     Task<ApiResult<UploadResponse>> UploadProfileImageAsync(Stream imageStream, string fileName);
-    Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync();
+    Task<ApiResult<MessageResponse>> DeactivateMyAccountAsync(string password);
 
     // ?? Reports ??????????????????????????????????????????????????
     Task<ApiResult<MessageResponse>> CreateReportAsync(CreateReportRequest request);
