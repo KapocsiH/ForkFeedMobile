@@ -25,9 +25,6 @@ public partial class AddRecipeViewModel : BaseViewModel
     private string _cookingTimeMinutes = string.Empty;
 
     [ObservableProperty]
-    private ApiCategory? _selectedCategory;
-
-    [ObservableProperty]
     private string _newIngredientName = string.Empty;
 
     [ObservableProperty]
@@ -54,7 +51,7 @@ public partial class AddRecipeViewModel : BaseViewModel
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public List<string> DifficultyOptions { get; } = new() { "Easy", "Medium", "Hard" };
-    public ObservableCollection<ApiCategory> CategoryOptions { get; } = new();
+    public ObservableCollection<SelectableCategory> AvailableCategories { get; } = new();
     public ObservableCollection<SelectableTag> AvailableTags { get; } = new();
 
     public AddRecipeViewModel(RecipeService recipeService, AuthService authService, IApiService apiService)
@@ -68,7 +65,7 @@ public partial class AddRecipeViewModel : BaseViewModel
     [RelayCommand]
     private async Task LoadDataAsync()
     {
-        if (CategoryOptions.Count > 0 && AvailableTags.Count > 0)
+        if (AvailableCategories.Count > 0 && AvailableTags.Count > 0)
             return;
 
         IsLoadingData = true;
@@ -84,12 +81,9 @@ public partial class AddRecipeViewModel : BaseViewModel
 
             if (categoriesResult.IsSuccess && categoriesResult.Data?.Categories != null)
             {
-                CategoryOptions.Clear();
+                AvailableCategories.Clear();
                 foreach (var cat in categoriesResult.Data.Categories)
-                    CategoryOptions.Add(cat);
-
-                if (CategoryOptions.Count > 0 && SelectedCategory == null)
-                    SelectedCategory = CategoryOptions[0];
+                    AvailableCategories.Add(new SelectableCategory { Id = cat.Id, Name = cat.Name });
             }
             else
             {
@@ -121,6 +115,12 @@ public partial class AddRecipeViewModel : BaseViewModel
     private void ToggleTag(SelectableTag tag)
     {
         tag.IsSelected = !tag.IsSelected;
+    }
+
+    [RelayCommand]
+    private void ToggleCategory(SelectableCategory category)
+    {
+        category.IsSelected = !category.IsSelected;
     }
 
     [RelayCommand]
@@ -280,7 +280,11 @@ public partial class AddRecipeViewModel : BaseViewModel
         {
             var preparationTime = int.Parse(CookingTimeMinutes);
 
-            var categoryIds = SelectedCategory != null ? new List<int> { SelectedCategory.Id } : null;
+            var categoryIds = AvailableCategories
+                .Where(c => c.IsSelected)
+                .Select(c => c.Id)
+                .ToList();
+            if (categoryIds.Count == 0) categoryIds = null;
 
             var tagIds = AvailableTags
                 .Where(t => t.IsSelected)
@@ -312,7 +316,8 @@ public partial class AddRecipeViewModel : BaseViewModel
             Description = string.Empty;
             SelectedDifficulty = "Easy";
             CookingTimeMinutes = string.Empty;
-            SelectedCategory = CategoryOptions.Count > 0 ? CategoryOptions[0] : null;
+            foreach (var cat in AvailableCategories)
+                cat.IsSelected = false;
             foreach (var tag in AvailableTags)
                 tag.IsSelected = false;
             Ingredients.Clear();

@@ -67,10 +67,28 @@
                    Keyboard="Numeric" />
 
             <!-- Category -->
-            <Label Text="Kategóriák" FontSize="14" FontAttributes="Bold" />
-            <Picker ItemsSource="{Binding CategoryOptions}"
-                    ItemDisplayBinding="{Binding Name}"
-                    SelectedItem="{Binding SelectedCategory}" />
+            <Label Text="Kategóriák" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
+            <FlexLayout BindableLayout.ItemsSource="{Binding AvailableCategories}"
+                        Wrap="Wrap" Direction="Row"
+                        AlignItems="Center" JustifyContent="Start">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="models:SelectableCategory">
+                        <Border Padding="10,6" Margin="4" StrokeShape="RoundRectangle 30"
+                                Stroke="{StaticResource Primary}"
+                                BackgroundColor="{Binding IsSelected, Converter={StaticResource TagBackgroundConverter}}"
+                                StrokeThickness="1">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=ToggleCategoryCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+                            <Label Text="{Binding Name}" FontSize="14"
+                                   TextColor="{Binding IsSelected, Converter={StaticResource TagTextColorConverter}}"
+                                   VerticalOptions="Center" HorizontalOptions="Center"/>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
 
             <!-- Tags -->
             <Label Text="Címkék" FontSize="18" FontAttributes="Bold" Margin="0,8,0,0" />
@@ -79,7 +97,7 @@
                         AlignItems="Center" JustifyContent="Start">
                 <BindableLayout.ItemTemplate>
                     <DataTemplate x:DataType="models:SelectableTag">
-                        <Border Padding="10,6" Margin="4" StrokeShape="RoundRectangle 12"
+                        <Border Padding="10, 6" Margin="4" StrokeShape="RoundRectangle 30"
                                 Stroke="{StaticResource Primary}"
                                 BackgroundColor="{Binding IsSelected, Converter={StaticResource TagBackgroundConverter}}"
                                 StrokeThickness="1">
@@ -88,9 +106,9 @@
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:AddRecipeViewModel}}, Path=ToggleTagCommand}"
                                     CommandParameter="{Binding .}" />
                             </Border.GestureRecognizers>
-                            <Label Text="{Binding Name}" FontSize="14"
+                            <Label Text="{Binding Name, StringFormat='#{0}'}" FontSize="14"
                                    TextColor="{Binding IsSelected, Converter={StaticResource TagTextColorConverter}}"
-                                   VerticalOptions="Center" />
+                                   VerticalOptions="Center" HorizontalOptions="Center"/>
                         </Border>
                     </DataTemplate>
                 </BindableLayout.ItemTemplate>
