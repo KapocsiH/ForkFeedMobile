@@ -72,21 +72,24 @@
                         </icons:MauiIcon>
 
                         <!-- Share -->
-                        <icons:MauiIcon Icon="ShareIos24Filled" IconSize="24" VerticalOptions="Center">
+                        <icons:MauiIcon Icon="ShareIos24Filled" IconSize="24" VerticalOptions="Center"
+                                        IconColor="{AppThemeBinding Light={StaticResource PrimaryTextColorLight}, Dark={StaticResource PrimaryTextColorDark}}">
                             <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ShareRecipeCommand}" />
                             </icons:MauiIcon.GestureRecognizers>
                         </icons:MauiIcon>
 
                         <!-- Save to Cookbook -->
-                        <icons:MauiIcon Icon="Book24Filled" IconSize="24" VerticalOptions="Center">
+                        <icons:MauiIcon Icon="Book24Filled" IconSize="24" VerticalOptions="Center"
+                                        IconColor="{AppThemeBinding Light={StaticResource PrimaryTextColorLight}, Dark={StaticResource PrimaryTextColorDark}}">
                             <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SaveToCookbookCommand}" />
                             </icons:MauiIcon.GestureRecognizers>
                         </icons:MauiIcon>
 
                         <!-- Report -->
-                        <icons:MauiIcon Icon="Warning28Filled" IconSize="24" VerticalOptions="Center">
+                        <icons:MauiIcon Icon="Warning28Filled" IconSize="24" VerticalOptions="Center"
+                                        IconColor="{AppThemeBinding Light={StaticResource PrimaryTextColorLight}, Dark={StaticResource PrimaryTextColorDark}}">
                             <icons:MauiIcon.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding ReportRecipeCommand}" />
                             </icons:MauiIcon.GestureRecognizers>

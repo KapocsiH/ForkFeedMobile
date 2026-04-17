@@ -191,10 +191,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
     {
         if (!IsRecipeLoaded) return;
 
+        var recipeUrl = $"https://forkfeed.vercel.app/pages/recipe/{Recipe.Id}";
+
         await Share.Default.RequestAsync(new ShareTextRequest
         {
             Title = Recipe.Title,
-            Text = $"Check out this recipe: {Recipe.Title}\n{Recipe.Description}"
+            Text = $"Check out this recipe: {recipeUrl}"
         });
     }
 
