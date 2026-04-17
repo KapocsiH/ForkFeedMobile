@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.ProfilePage"
              x:DataType="vm:ProfileViewModel"
-             Title="{Binding Title}"
+             Title="Profil"
              Shell.NavBarIsVisible="True"
              Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
@@ -61,7 +61,7 @@
                                     <Label Text="{Binding AverageRating, StringFormat='{0:F1}'}"
                                            FontSize="22" FontAttributes="Bold"
                                            HorizontalTextAlignment="Center" />
-                                    <Label Text="Rating"
+                                    <Label Text="Értékelés"
                                            FontSize="12"
                                            TextColor="{StaticResource Gray400}"
                                            HorizontalTextAlignment="Center" />
@@ -72,7 +72,7 @@
                                     <Label Text="{Binding RecipeCount}"
                                            FontSize="22" FontAttributes="Bold"
                                            HorizontalTextAlignment="Center" />
-                                    <Label Text="Recipes"
+                                    <Label Text="Recept"
                                            FontSize="12"
                                            TextColor="{StaticResource Gray400}"
                                            HorizontalTextAlignment="Center" />
@@ -83,7 +83,7 @@
                                     <Label Text="{Binding CollectionCount}"
                                            FontSize="22" FontAttributes="Bold"
                                            HorizontalTextAlignment="Center" />
-                                    <Label Text="Books"
+                                    <Label Text="Füzet"
                                            FontSize="12"
                                            TextColor="{StaticResource Gray400}"
                                            HorizontalTextAlignment="Center" />
@@ -93,7 +93,7 @@
                     </Grid>
 
                     <!-- Report Profile Button (other users only) -->
-                    <Button Text="Report Profile"
+                    <Button Text="Profil jelentése"
                             Command="{Binding ReportProfileCommand}"
                             IsVisible="{Binding IsOwnProfile, Converter={StaticResource InvertBool}}"
                             BackgroundColor="Transparent"
@@ -150,7 +150,7 @@
                         <VerticalStackLayout Grid.Column="0"
                                              Spacing="6"
                                              HorizontalOptions="Fill">
-                            <Label Text="Recipes"
+                            <Label Text="Receptek"
                                    FontSize="15"
                                    HorizontalTextAlignment="Center">
                                 <Label.Triggers>
@@ -175,7 +175,7 @@
                         <VerticalStackLayout Grid.Column="1"
                                              Spacing="6"
                                              HorizontalOptions="Fill">
-                            <Label Text="Books"
+                            <Label Text="Füzetek"
                                    FontSize="15"
                                    HorizontalTextAlignment="Center">
                                 <Label.Triggers>
@@ -200,7 +200,7 @@
                         <VerticalStackLayout Grid.Column="2"
                                              Spacing="6"
                                              HorizontalOptions="Fill">
-                            <Label Text="Comments"
+                            <Label Text="Kommentek"
                                    FontSize="15"
                                    HorizontalTextAlignment="Center">
                                 <Label.Triggers>
@@ -236,7 +236,7 @@
                         <CollectionView.EmptyView>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
                                 <icons:MauiIcon Icon="Food24Filled" IconSize="48" HorizontalOptions="Center" />
-                                <Label Text="No recipes yet" FontSize="18"
+                                <Label Text="Nincsenek receptek." FontSize="18"
                                        TextColor="{StaticResource Gray400}"
                                        HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
@@ -314,7 +314,7 @@
                         <CollectionView.EmptyView>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
                                 <icons:MauiIcon Icon="BookOpen24Filled" IconSize="48" HorizontalOptions="Center" />
-                                <Label Text="No recipe books yet" FontSize="18"
+                                <Label Text="Nincsenek receptfüzetek." FontSize="18"
                                        TextColor="{StaticResource Gray400}"
                                        HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
@@ -376,7 +376,7 @@
                         <CollectionView.EmptyView>
                             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
                                 <icons:MauiIcon Icon="ChatEmpty24Filled" IconSize="48" HorizontalOptions="Center" />
-                                <Label Text="No comments yet" FontSize="18"
+                                <Label Text="Nincsenek kommentek." FontSize="18"
                                        TextColor="{StaticResource Gray400}"
                                        HorizontalTextAlignment="Center" />
                             </VerticalStackLayout>
@@ -428,16 +428,16 @@
                     <VerticalStackLayout IsVisible="{Binding IsLoggedIn, Converter={StaticResource InvertBool}}" Spacing="14">
 
                     <icons:MauiIcon Icon="Food24Filled" IconSize="60" HorizontalOptions="Center" Margin="0,20,0,0" />
-                    <Label Text="Welcome to ForkFeed"
+                    <Label Text="Üdvüzlünk a ForkFeeden!"
                            FontSize="24" FontAttributes="Bold"
                            HorizontalTextAlignment="Center" />
-                    <Label Text="Sign in to save your recipes and favorites"
+                    <Label Text="Jelentkezz be a funkciók használatához."
                            FontSize="14" TextColor="{StaticResource Gray400}"
                            HorizontalTextAlignment="Center" />
 
-                    <Entry Placeholder="Email or Username" Text="{Binding Email}"
+                    <Entry Placeholder="Felhasználónév vagy email" Text="{Binding Email}"
                            Keyboard="Email" Margin="0,12,0,0" />
-                    <Entry Placeholder="Password" Text="{Binding Password}"
+                    <Entry Placeholder="Jelszó" Text="{Binding Password}"
                            IsPassword="True" />
 
                     <Label Text="{Binding LoginError}"
@@ -446,7 +446,7 @@
                            IsVisible="{Binding LoginError, Converter={StaticResource StringNotEmpty}}"
                            HorizontalTextAlignment="Center" />
 
-                    <Button Text="Login"
+                    <Button Text="Bejelentkezés"
                             Command="{Binding LoginCommand}"
                             BackgroundColor="{StaticResource Primary}"
                             TextColor="White"
@@ -458,7 +458,7 @@
                                        Color="{StaticResource Primary}" />
 
                     <!-- Forgot Password -->
-                    <Button Text="I forgot my password"
+                    <Button Text="Elfelejtettem a jelszavam"
                             Command="{Binding GoToForgotPasswordCommand}"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Primary}"
@@ -467,7 +467,7 @@
                             HeightRequest="40" />
 
                     <!-- Register -->
-                    <Button Text="I don't have an account"
+                    <Button Text="Nincs még profilom"
                             Command="{Binding GoToRegisterCommand}"
                             BackgroundColor="Transparent"
                             TextColor="{StaticResource Accent}"
