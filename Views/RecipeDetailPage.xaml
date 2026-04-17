@@ -303,7 +303,8 @@
                                                             IconSize="24"
                                                             IconColor="{StaticResource Gray400}">
                                                 <icons:MauiIcon.GestureRecognizers>
-                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=ReportCommentCommand}" />
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=ReportCommentCommand}"
+                                                                          CommandParameter="{Binding}" />
                                                 </icons:MauiIcon.GestureRecognizers>
                                             </icons:MauiIcon>
                                         </HorizontalStackLayout>

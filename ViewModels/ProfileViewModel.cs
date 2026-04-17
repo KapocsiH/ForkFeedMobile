@@ -1,10 +1,12 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ForkFeedMobile.Models;
 using ForkFeedMobile.Services;
+using ForkFeedMobile.Views;
 
 namespace ForkFeedMobile.ViewModels;
 
@@ -434,6 +436,27 @@ public partial class ProfileViewModel : BaseViewModel
     {
         IsBioExpanded = !IsBioExpanded;
         BioMaxLines = IsBioExpanded ? int.MaxValue : 3;
+    }
+
+    [RelayCommand]
+    private async Task ReportProfileAsync()
+    {
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Login Required", "Please log in to report.", "OK");
+            return;
+        }
+
+        if (User == null || User.Id <= 0) return;
+
+        var popup = new ReportPopup(_apiService, "user", User.Id);
+        var result = await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+
+        if (result is true)
+        {
+            var toast = Toast.Make("Report submitted", ToastDuration.Short, 14);
+            await toast.Show();
+        }
     }
 
     private void RefreshState()

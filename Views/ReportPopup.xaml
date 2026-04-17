@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="ForkFeedMobile.Views.ReportPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               Color="Transparent">
+
+    <Border StrokeShape="RoundRectangle 16"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource CardDark}}"
+            Padding="24"
+            WidthRequest="320">
+        <Border.Shadow>
+            <Shadow Brush="Black" Offset="0,4" Radius="12" Opacity="0.3" />
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="16">
+
+            <!-- Icon -->
+            <Label Text="⚠️"
+                   FontSize="36"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Title -->
+            <Label Text="Report"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Instruction -->
+            <Label Text="Describe the issue"
+                   FontSize="14"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Reason Editor -->
+            <Editor x:Name="ReasonEditor"
+                    Placeholder="Enter your report..."
+                    MaxLength="500"
+                    HeightRequest="80"
+                    AutoSize="TextChanges" />
+
+            <!-- Validation Error -->
+            <Label x:Name="ErrorLabel"
+                   TextColor="{StaticResource ErrorRed}"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False" />
+
+            <!-- Loading -->
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="False"
+                               IsVisible="False"
+                               Color="{StaticResource Primary}" />
+
+            <!-- Submit Button -->
+            <Button x:Name="SubmitButton"
+                    Text="Submit"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="48"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    Clicked="OnSubmitClicked" />
+
+            <!-- Cancel Button -->
+            <Button Text="Cancel"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                    FontSize="14"
+                    Padding="0"
+                    HeightRequest="40"
+                    Clicked="OnCancelClicked" />
+
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

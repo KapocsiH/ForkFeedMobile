@@ -1,8 +1,12 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using ForkFeedMobile.Models;
 using ForkFeedMobile.Services;
+using ForkFeedMobile.Views;
 
 namespace ForkFeedMobile.ViewModels;
 
@@ -13,6 +17,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
     private readonly FavoritesService _favoritesService;
     private readonly AuthService _authService;
     private readonly ShoppingListService _shoppingListService;
+    private readonly IApiService _apiService;
 
     [ObservableProperty]
     private int _recipeId;
@@ -46,12 +51,13 @@ public partial class RecipeDetailViewModel : BaseViewModel
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public ObservableCollection<Comment> Comments { get; } = new();
 
-    public RecipeDetailViewModel(RecipeService recipeService, FavoritesService favoritesService, AuthService authService, ShoppingListService shoppingListService)
+    public RecipeDetailViewModel(RecipeService recipeService, FavoritesService favoritesService, AuthService authService, ShoppingListService shoppingListService, IApiService apiService)
     {
         _recipeService = recipeService;
         _favoritesService = favoritesService;
         _authService = authService;
         _shoppingListService = shoppingListService;
+        _apiService = apiService;
     }
 
     partial void OnRecipeIdChanged(int value)
@@ -256,13 +262,41 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task ReportRecipeAsync()
     {
-        await Shell.Current.DisplayAlert("Report", "This feature is coming soon!", "OK");
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Login Required", "Please log in to report.", "OK");
+            return;
+        }
+
+        var popup = new ReportPopup(_apiService, "recipe", RecipeId);
+        var result = await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+
+        if (result is true)
+        {
+            var toast = Toast.Make("Report submitted", ToastDuration.Short, 14);
+            await toast.Show();
+        }
     }
 
     [RelayCommand]
-    private async Task ReportCommentAsync()
+    private async Task ReportCommentAsync(Comment comment)
     {
-        await Shell.Current.DisplayAlert("Report", "This feature is coming soon!", "OK");
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Login Required", "Please log in to report.", "OK");
+            return;
+        }
+
+        if (comment == null || comment.Id <= 0) return;
+
+        var popup = new ReportPopup(_apiService, "comment", comment.Id);
+        var result = await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+
+        if (result is true)
+        {
+            var toast = Toast.Make("Report submitted", ToastDuration.Short, 14);
+            await toast.Show();
+        }
     }
 
     [RelayCommand]

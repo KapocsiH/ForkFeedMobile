@@ -92,6 +92,16 @@
                         </VerticalStackLayout>
                     </Grid>
 
+                    <!-- Report Profile Button (other users only) -->
+                    <Button Text="Report Profile"
+                            Command="{Binding ReportProfileCommand}"
+                            IsVisible="{Binding IsOwnProfile, Converter={StaticResource InvertBool}}"
+                            BackgroundColor="Transparent"
+                            TextColor="{StaticResource ErrorRed}"
+                            FontSize="14"
+                            Padding="8,4"
+                            HorizontalOptions="End" />
+
                     <!-- Bio Section -->
                     <VerticalStackLayout IsVisible="{Binding HasBio}"
                                          Spacing="4"
