@@ -6,7 +6,7 @@
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.RecipeBookDetailsPage"
              x:DataType="vm:RecipeBookDetailsViewModel"
-             Title="Recept"
+             Title="{Binding Title}"
              Shell.NavBarIsVisible="True"
              Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">

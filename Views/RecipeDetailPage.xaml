@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.RecipeDetailPage"
              x:DataType="vm:RecipeDetailViewModel"
-             Title="{Binding Title}"
+             Title="Recept"
              Shell.NavBarIsVisible="True"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
@@ -108,7 +108,7 @@
                                 <Label.FormattedText>
                                     <FormattedString>
                                         <Span Text="{Binding Recipe.TimeMinutes}" />
-                                        <Span Text=" min" />
+                                        <Span Text=" perc" />
                                     </FormattedString>
                                 </Label.FormattedText>
                             </Label>
@@ -128,7 +128,7 @@
                     <!-- Rating Stars -->
                     <VerticalStackLayout Spacing="4" Margin="0,4,0,0"
                                          IsEnabled="{Binding IsSubmittingRating, Converter={StaticResource InvertBool}}">
-                        <Label Text="Your Rating" FontSize="14" TextColor="{StaticResource Gray500}" />
+                        <Label Text="Te értékelésed" FontSize="14" TextColor="{StaticResource Gray500}" />
                         <HorizontalStackLayout Spacing="4">
                             <icons:MauiIcon Icon="Star12Filled" IconSize="28"
                                    IconColor="{Binding UserRating, Converter={StaticResource RatingStarColor}, ConverterParameter=1}">
@@ -169,7 +169,7 @@
                            LineBreakMode="WordWrap" />
 
                     <!-- Ingredients Section -->
-                    <Label Text="Ingredients" FontSize="20" FontAttributes="Bold" Margin="0,4,0,0" />
+                    <Label Text="Hozzávalók" FontSize="20" FontAttributes="Bold" Margin="0,4,0,0" />
 
                     <CollectionView ItemsSource="{Binding Ingredients}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
@@ -188,7 +188,7 @@
                     </CollectionView>
 
                     <!-- Add to Shopping List Button -->
-                    <Button Text="Add to Shopping List"
+                    <Button Text="Hozzáadás bevásárlólistához"
                             Command="{Binding GoToShoppingListCommand}"
                             IsVisible="{Binding HasSelectedIngredients}"
                             BackgroundColor="{StaticResource Primary}"
@@ -199,7 +199,7 @@
                             Margin="0,8,0,0" />
 
                     <!-- Steps Section -->
-                    <Label Text="Steps" FontSize="20" FontAttributes="Bold" Margin="0,8,0,0" />
+                    <Label Text="Elkészítés" FontSize="20" FontAttributes="Bold" Margin="0,8,0,0" />
 
                     <CollectionView ItemsSource="{Binding Steps}" SelectionMode="None">
                         <CollectionView.ItemTemplate>
@@ -221,7 +221,7 @@
                     </CollectionView>
 
                     <!-- Start Cooking Button -->
-                    <Button Text="Start Cooking"
+                    <Button Text="Főzés kezdése"
                             Command="{Binding StartCookingCommand}"
                             BackgroundColor="{StaticResource Primary}"
                             TextColor="White"
@@ -231,19 +231,19 @@
                             Margin="0,16,0,8" />
 
                     <!-- Comments Section -->
-                    <Label Text="Comments" FontSize="20" FontAttributes="Bold" Margin="0,8,0,4" />
+                    <Label Text="Hozzászólások" FontSize="20" FontAttributes="Bold" Margin="0,8,0,4" />
 
                     <!-- Comment Input -->
                     <Grid ColumnDefinitions="*,Auto" ColumnSpacing="8" Margin="0,0,0,8">
                         <Entry Grid.Column="0"
-                               Placeholder="Write a comment..."
+                               Placeholder="Írj egy kommentet..."
                                Text="{Binding NewCommentText}"
                                FontSize="14"
                                ReturnType="Send"
                                ReturnCommand="{Binding PostCommentCommand}"
                                IsEnabled="{Binding IsPostingComment, Converter={StaticResource InvertBool}}" />
                         <Button Grid.Column="1"
-                                Text="Post"
+                                Text="Küld"
                                 Command="{Binding PostCommentCommand}"
                                 IsEnabled="{Binding IsPostingComment, Converter={StaticResource InvertBool}}"
                                 BackgroundColor="{StaticResource Primary}"
@@ -255,7 +255,7 @@
                     </Grid>
 
                     <!-- No Comments Message -->
-                    <Label Text="No comments yet."
+                    <Label Text="Nincsenek hozzászólások."
                            IsVisible="{Binding HasNoComments}"
                            FontSize="14"
                            TextColor="{StaticResource Gray400}"
