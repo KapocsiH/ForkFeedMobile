@@ -27,6 +27,33 @@
                        IsVisible="{Binding HasError}"
                        HorizontalTextAlignment="Center" />
 
+                <!-- Visibility tag + Edit button for own books -->
+                <Grid IsVisible="{Binding IsOwn}"
+                      ColumnDefinitions="Auto,*,Auto"
+                      Margin="0,4,0,0">
+                    <Border Grid.Column="0"
+                            StrokeShape="RoundRectangle 12"
+                            Stroke="{Binding VisibilityBorderColor}"
+                            BackgroundColor="{Binding VisibilityBackgroundColor}"
+                            Padding="10,4"
+                            StrokeThickness="1.5"
+                            VerticalOptions="Center">
+                        <Label Text="{Binding VisibilityText}"
+                               FontSize="12"
+                               FontAttributes="Bold"
+                               TextColor="White" />
+                    </Border>
+                    <Button Grid.Column="2"
+                            Text="Edit"
+                            Command="{Binding EditBookCommand}"
+                            BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            CornerRadius="12"
+                            FontSize="13"
+                            HeightRequest="36"
+                            Padding="16,0" />
+                </Grid>
+
                 <CollectionView ItemsSource="{Binding Recipes}"
                                 SelectionMode="None">
 

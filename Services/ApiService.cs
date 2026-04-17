@@ -223,6 +223,9 @@ public class ApiService : IApiService
     public Task<ApiResult<RecipesResponse>> GetRecipeBookRecipesAsync(int bookId, int page = 1, int limit = 20) =>
         GetAsync<RecipesResponse>($"recipe-books/{bookId}/recipes?page={page}&limit={limit}");
 
+    public Task<ApiResult<MessageResponse>> UpdateRecipeBookAsync(int bookId, UpdateRecipeBookRequest request) =>
+        PatchAsync<MessageResponse>($"recipe-books/{bookId}", request);
+
     // ?? Users ????????????????????????????????????????????????????
 
     public Task<ApiResult<UserResponse>> GetUserAsync(int userId) =>

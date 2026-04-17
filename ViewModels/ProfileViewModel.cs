@@ -161,7 +161,9 @@ public partial class ProfileViewModel : BaseViewModel
                         Title = b.Name,
                         Description = b.Description ?? string.Empty,
                         RecipeCount = b.RecipeCount,
-                        CreatedAt = b.CreatedAt
+                        CreatedAt = b.CreatedAt,
+                        IsPublic = b.IsPublic,
+                        IsOwn = false
                     });
             }
         }
@@ -341,7 +343,9 @@ public partial class ProfileViewModel : BaseViewModel
                         Title = b.Name,
                         Description = b.Description ?? string.Empty,
                         RecipeCount = b.RecipeCount,
-                        CreatedAt = b.CreatedAt
+                        CreatedAt = b.CreatedAt,
+                        IsPublic = b.IsPublic,
+                        IsOwn = true
                     });
             }
         }
@@ -407,7 +411,7 @@ public partial class ProfileViewModel : BaseViewModel
     private async Task GoToRecipeBookDetailAsync(RecipeBook book)
     {
         if (book == null) return;
-        await Shell.Current.GoToAsync($"RecipeBookDetails?bookId={book.Id}&bookTitle={Uri.EscapeDataString(book.Title)}");
+        await Shell.Current.GoToAsync($"RecipeBookDetails?bookId={book.Id}&bookTitle={Uri.EscapeDataString(book.Title)}&bookDescription={Uri.EscapeDataString(book.Description)}&isPublic={book.IsPublic}&isOwn={book.IsOwn}");
     }
 
     [RelayCommand]

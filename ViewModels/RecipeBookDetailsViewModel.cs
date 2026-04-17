@@ -8,6 +8,9 @@ namespace ForkFeedMobile.ViewModels;
 
 [QueryProperty(nameof(BookId), "bookId")]
 [QueryProperty(nameof(BookTitle), "bookTitle")]
+[QueryProperty(nameof(BookDescription), "bookDescription")]
+[QueryProperty(nameof(IsPublic), "isPublic")]
+[QueryProperty(nameof(IsOwn), "isOwn")]
 public partial class RecipeBookDetailsViewModel : BaseViewModel
 {
     private readonly IApiService _apiService;
@@ -19,6 +22,22 @@ public partial class RecipeBookDetailsViewModel : BaseViewModel
 
     [ObservableProperty]
     private string _bookTitle = string.Empty;
+
+    [ObservableProperty]
+    private string _bookDescription = string.Empty;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(VisibilityText))]
+    [NotifyPropertyChangedFor(nameof(VisibilityBorderColor))]
+    [NotifyPropertyChangedFor(nameof(VisibilityBackgroundColor))]
+    private bool _isPublic;
+
+    [ObservableProperty]
+    private bool _isOwn;
+
+    public string VisibilityText => IsPublic ? "Public" : "Private";
+    public Color VisibilityBorderColor => IsPublic ? Color.FromArgb("#2E7D32") : Color.FromArgb("#C62828");
+    public Color VisibilityBackgroundColor => IsPublic ? Color.FromArgb("#1B5E20") : Color.FromArgb("#B71C1C");
 
     public ObservableCollection<Recipe> Recipes { get; } = new();
 
@@ -93,6 +112,56 @@ public partial class RecipeBookDetailsViewModel : BaseViewModel
         var index = Recipes.IndexOf(recipe);
         if (index >= 0)
             Recipes[index] = recipe;
+    }
+
+    [RelayCommand]
+    private async Task EditBookAsync()
+    {
+        var newTitle = await Shell.Current.DisplayPromptAsync("Edit Title", "Enter new title:", initialValue: BookTitle);
+        if (newTitle == null) return;
+
+        var newDescription = await Shell.Current.DisplayPromptAsync("Edit Description", "Enter new description:", initialValue: BookDescription);
+        if (newDescription == null) return;
+
+        var visibilityChoice = await Shell.Current.DisplayActionSheet("Visibility", "Cancel", null, "Public", "Private");
+        if (visibilityChoice == null || visibilityChoice == "Cancel") return;
+
+        var newIsPublic = visibilityChoice == "Public";
+
+        try
+        {
+            IsBusy = true;
+            ClearError();
+
+            var request = new UpdateRecipeBookRequest
+            {
+                Name = newTitle.Trim(),
+                Description = newDescription.Trim(),
+                IsPublic = newIsPublic
+            };
+
+            var result = await _apiService.UpdateRecipeBookAsync(BookId, request);
+
+            if (result.IsSuccess)
+            {
+                BookTitle = newTitle.Trim();
+                Title = BookTitle;
+                BookDescription = newDescription.Trim();
+                IsPublic = newIsPublic;
+            }
+            else
+            {
+                SetError(result.ErrorMessage ?? "Failed to update recipe book.");
+            }
+        }
+        catch
+        {
+            SetError("Failed to update recipe book.");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private const string BaseUrl = "https://forkfeed.vercel.app";

@@ -273,6 +273,9 @@ public class MockApiService : IApiService
     public Task<ApiResult<RecipesResponse>> GetRecipeBookRecipesAsync(int bookId, int page = 1, int limit = 20) =>
         Ok(new RecipesResponse { Recipes = new(), Pagination = EmptyPagination(page, limit) });
 
+    public Task<ApiResult<MessageResponse>> UpdateRecipeBookAsync(int bookId, UpdateRecipeBookRequest request) =>
+        Ok(new MessageResponse { Message = "Updated" });
+
     // ?? Users ????????????????????????????????????????????????????
 
     public Task<ApiResult<UserResponse>> GetUserAsync(int userId) =>
