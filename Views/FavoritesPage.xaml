@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.FavoritesPage"
              x:DataType="vm:FavoritesViewModel"
-             Title="{Binding Title}"
+             Title="Kedvencek"
              Shell.NavBarIsVisible="True"
              Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
@@ -23,7 +23,7 @@
             <Label Text="{Binding ErrorMessage}"
                    TextColor="{StaticResource ErrorRed}"
                    HorizontalTextAlignment="Center" />
-            <Button Text="Retry"
+            <Button Text="Újra"
                     Command="{Binding LoadFavoritesCommand}"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"
@@ -41,10 +41,10 @@
             <CollectionView.EmptyView>
                 <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
                     <icons:MauiIcon Icon="Heart28Filled" IconSize="48" IconColor="{StaticResource Gray400}" HorizontalOptions="Center" />
-                    <Label Text="No favorites yet" FontSize="18"
+                    <Label Text="Nincsenek kedvenceid." FontSize="18"
                            TextColor="{StaticResource Gray400}"
                            HorizontalTextAlignment="Center" />
-                    <Label Text="Tap the heart on any recipe to save it here."
+                    <Label Text="Koppints a szívre egy recepten a mentéshez."
                            FontSize="14" TextColor="{StaticResource Gray300}"
                            HorizontalTextAlignment="Center" />
                 </VerticalStackLayout>
@@ -55,7 +55,7 @@
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems>
-                                <SwipeItem Text="Remove"
+                                <SwipeItem Text=""
                                            IconImageSource="{icons:Icon Icon=Delete48Filled}"
                                            BackgroundColor="{StaticResource ErrorRed}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FavoritesViewModel}}, Path=RemoveFavoriteCommand}"
