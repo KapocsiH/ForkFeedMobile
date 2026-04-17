@@ -18,7 +18,7 @@
     <Color x:Key="OffBlack">#1f1f1f</Color>
     <Color x:Key="LightBackground">#FAFAFA</Color>
     <Color x:Key="DarkBackground">#121212</Color>
-    <Color x:Key="CardLight">#FFFFFF</Color>
+    <Color x:Key="CardLight">#F2F2F2</Color>
     <Color x:Key="CardDark">#1E1E1E</Color>
     <Color x:Key="StarFilled">#FFD700</Color>
     <Color x:Key="StarEmpty">#C8C8C8</Color>
