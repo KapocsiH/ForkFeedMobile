@@ -5,7 +5,7 @@
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.RegisterPage"
              x:DataType="vm:RegisterViewModel"
-             Title="{Binding Title}"
+             Title="Regisztráció"
              Shell.NavBarIsVisible="True"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
@@ -13,17 +13,17 @@
         <VerticalStackLayout Padding="24" Spacing="14">
 
             <icons:MauiIcon Icon="PersonCircle24Filled" IconSize="60" HorizontalOptions="Center" Margin="0,20,0,0" />
-            <Label Text="Join ForkFeed"
+            <Label Text="Csatlakozz a ForkFeedhez!"
                    FontSize="24" FontAttributes="Bold"
                    HorizontalTextAlignment="Center" />
-            <Label Text="Create an account to share your recipes"
+            <Label Text="Hozz létre egy profilt és oszd meg receptjeidet!"
                    FontSize="14" TextColor="{StaticResource Gray400}"
                    HorizontalTextAlignment="Center" Margin="0,0,0,8" />
 
-            <Entry Placeholder="Username" Text="{Binding Username}" />
+            <Entry Placeholder="Felhasználónév" Text="{Binding Username}" />
             <Entry Placeholder="Email" Text="{Binding Email}" Keyboard="Email" />
-            <Entry Placeholder="Password" Text="{Binding Password}" IsPassword="True" />
-            <Entry Placeholder="Confirm Password" Text="{Binding ConfirmPassword}" IsPassword="True" />
+            <Entry Placeholder="Jelszó" Text="{Binding Password}" IsPassword="True" />
+            <Entry Placeholder="Jelszó megerősítése" Text="{Binding ConfirmPassword}" IsPassword="True" />
 
             <Label Text="{Binding RegisterError}"
                    TextColor="{StaticResource ErrorRed}"
@@ -31,7 +31,7 @@
                    IsVisible="{Binding RegisterError, Converter={StaticResource StringNotEmpty}}"
                    HorizontalTextAlignment="Center" />
 
-            <Button Text="Create Account"
+            <Button Text="Profil létrehozása"
                     Command="{Binding RegisterCommand}"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"
@@ -42,7 +42,7 @@
                                IsVisible="{Binding IsBusy}"
                                Color="{StaticResource Primary}" />
 
-            <Button Text="Already have an account? Sign in"
+            <Button Text="Van már fiókod? Jelentkezz be itt."
                     Command="{Binding GoBackCommand}"
                     BackgroundColor="Transparent"
                     TextColor="{StaticResource Primary}"
