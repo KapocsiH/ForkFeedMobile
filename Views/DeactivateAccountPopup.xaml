@@ -23,13 +23,13 @@
                    HorizontalTextAlignment="Center" />
 
             <!-- Title -->
-            <Label Text="Deactivate Profile"
+            <Label Text="Fiók deaktiválása"
                    FontSize="20"
                    FontAttributes="Bold"
                    HorizontalTextAlignment="Center" />
 
             <!-- Warning Message -->
-            <Label Text="Are you sure you want to deactivate your profile? This action can only be reversed by an admin."
+            <Label Text="A fiókod deaktiválása után nem tudsz bejelentkezni. Ez a művelet visszafordítható egy admin által."
                    FontSize="14"
                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
                    HorizontalTextAlignment="Center"
@@ -37,7 +37,7 @@
 
             <!-- Password Entry -->
             <Entry x:Name="PasswordEntry"
-                   Placeholder="Enter your password"
+                   Placeholder="A megerősítéshez add meg a jelszavad:"
                    IsPassword="True"
                    ReturnType="Done" />
 
@@ -56,7 +56,7 @@
 
             <!-- Confirm Button -->
             <Button x:Name="ConfirmButton"
-                    Text="Confirm Deactivation"
+                    Text="Megerősítés"
                     BackgroundColor="{StaticResource ErrorRed}"
                     TextColor="White"
                     CornerRadius="12"
@@ -66,7 +66,7 @@
                     Clicked="OnConfirmClicked" />
 
             <!-- Cancel Button -->
-            <Button Text="Cancel"
+            <Button Text="Mégsem"
                     BackgroundColor="Transparent"
                     TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
                     FontSize="14"
