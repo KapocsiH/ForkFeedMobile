@@ -483,38 +483,40 @@
 
             <!-- Settings button -->
             <Border BackgroundColor="{AppThemeBinding Light={StaticResource SecondaryBackgroundColorLight}, Dark={StaticResource SecondaryBackgroundColorDark}}"
-                    StrokeShape="RoundRectangle 14"
+                    StrokeShape="Ellipse 40, 40"
                     StrokeThickness="0"
                     WidthRequest="48"
                     HeightRequest="48"
-                    HorizontalOptions="End">
+                    HorizontalOptions="End"
+                    Margin="0, 0, 13, 0">
                 <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.3" />
+                    <Shadow Brush="Black" Offset="0,2" Radius="20" Opacity="0.3" />
                 </Border.Shadow>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding GoToEditProfileCommand}" />
                 </Border.GestureRecognizers>
                 <icons:MauiIcon Icon="Options24Filled"
-                       IconSize="22"
+                       IconSize="24"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
             </Border>
 
             <!-- Logout button -->
             <Border BackgroundColor="{StaticResource ErrorRed}"
-                    StrokeShape="RoundRectangle 14"
+                    StrokeShape="Ellipse 40, 40"
                     StrokeThickness="0"
                     WidthRequest="48"
                     HeightRequest="48"
-                    HorizontalOptions="End">
+                    HorizontalOptions="End"
+                    Margin="0, 0, 13, 0">
                 <Border.Shadow>
-                    <Shadow Brush="Black" Offset="0,2" Radius="6" Opacity="0.3" />
+                    <Shadow Brush="Black" Offset="0,2" Radius="20" Opacity="0.3" />
                 </Border.Shadow>
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Command="{Binding LogoutCommand}" />
                 </Border.GestureRecognizers>
                 <icons:MauiIcon Icon="SignOut24Filled"
-                       IconSize="22"
+                       IconSize="24"
                        IconColor="White"
                        HorizontalOptions="Center"
                        VerticalOptions="Center" />
