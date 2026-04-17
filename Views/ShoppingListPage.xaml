@@ -7,7 +7,7 @@
              xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.ShoppingListPage"
              x:DataType="vm:ShoppingListViewModel"
-             Title="{Binding Title}"
+             Title="Bevásárlólista"
              Shell.NavBarIsVisible="True"
              Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
@@ -20,13 +20,16 @@
                              Padding="24" Spacing="16"
                              VerticalOptions="Center"
                              IsVisible="{Binding IsEmpty}">
-            <Label Text="Shopping List"
+            <Label Text="Bevásárlólistád"
                    FontSize="24" FontAttributes="Bold"
                    HorizontalTextAlignment="Center" />
-            <Label Text="Your shopping list is empty. Add ingredients from a recipe!"
+            <Label Text="A listád jelenleg üres."
                    FontSize="16" TextColor="{StaticResource Gray400}"
                    HorizontalTextAlignment="Center" />
-        </VerticalStackLayout>
+            <Label Text="Adj hozzá hozzávalókat egy receptből!"
+                   FontSize="16" TextColor="{StaticResource Gray400}"
+                   HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
 
         <!-- Items list -->
         <CollectionView Grid.Row="0"
@@ -38,7 +41,7 @@
             </CollectionView.Footer>
             <CollectionView.Header>
                 <VerticalStackLayout Padding="16,16,16,0">
-                    <Label Text="Shopping List"
+                    <Label Text="Hozzávalók"
                            FontSize="24" FontAttributes="Bold" />
                 </VerticalStackLayout>
             </CollectionView.Header>
@@ -47,7 +50,7 @@
                     <SwipeView>
                         <SwipeView.RightItems>
                             <SwipeItems>
-                                <SwipeItem Text="Delete"
+                                <SwipeItem Text="Törlés"
                                            BackgroundColor="{StaticResource ErrorRed}"
                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ShoppingListViewModel}}, Path=RemoveItemCommand}"
                                            CommandParameter="{Binding}" />
@@ -91,7 +94,7 @@
 
         <!-- Clear All Button -->
         <Button Grid.Row="1"
-                Text="Clear All"
+                Text="Összes törlése"
                 Command="{Binding ClearAllCommand}"
                 IsVisible="{Binding IsEmpty, Converter={StaticResource InvertBool}}"
                 BackgroundColor="{StaticResource ErrorRed}"
