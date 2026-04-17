@@ -23,20 +23,20 @@
                    HorizontalTextAlignment="Center" />
 
             <!-- Title -->
-            <Label Text="Report"
+            <Label Text="Jelentés"
                    FontSize="20"
                    FontAttributes="Bold"
                    HorizontalTextAlignment="Center" />
 
             <!-- Instruction -->
-            <Label Text="Describe the issue"
+            <Label Text="Írd le a problémádat."
                    FontSize="14"
                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
                    HorizontalTextAlignment="Center" />
 
             <!-- Reason Editor -->
             <Editor x:Name="ReasonEditor"
-                    Placeholder="Enter your report..."
+                    Placeholder="..."
                     MaxLength="500"
                     HeightRequest="80"
                     AutoSize="TextChanges" />
@@ -56,7 +56,7 @@
 
             <!-- Submit Button -->
             <Button x:Name="SubmitButton"
-                    Text="Submit"
+                    Text="Beküldés"
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"
                     CornerRadius="12"
@@ -66,7 +66,7 @@
                     Clicked="OnSubmitClicked" />
 
             <!-- Cancel Button -->
-            <Button Text="Cancel"
+            <Button Text="Mégsem"
                     BackgroundColor="Transparent"
                     TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
                     FontSize="14"
