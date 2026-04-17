@@ -5,7 +5,7 @@
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
              x:Class="ForkFeedMobile.Views.CookingModePage"
              x:DataType="vm:CookingModeViewModel"
-             Title="{Binding Title}"
+             Title="Főzés mód"
              Shell.NavBarIsVisible="True"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
@@ -30,7 +30,7 @@
             </Frame.GestureRecognizers>
 
             <VerticalStackLayout Spacing="16" VerticalOptions="Center">
-                <Label Text="{Binding CurrentStep.StepNumber, StringFormat='Step {0}'}"
+                <Label Text="{Binding CurrentStep.StepNumber, StringFormat='{0}. lépés'}"
                        FontSize="40" FontAttributes="Bold"
                        TextColor="{StaticResource Primary}"
                        HorizontalTextAlignment="Center" />
@@ -42,7 +42,7 @@
 
                 <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" Margin="0,24,0,0">
                     <icons:MauiIcon Icon="ArrowPrevious24Filled" IconSize="13" IconColor="{StaticResource Gray300}" VerticalOptions="Center" />
-                    <Label Text="Swipe to navigate"
+                    <Label Text="Lapozz a navigációhoz"
                            FontSize="13" TextColor="{StaticResource Gray300}"
                            HorizontalTextAlignment="Center" VerticalOptions="Center" />
                     <icons:MauiIcon Icon="ArrowNext24Filled" IconSize="13" IconColor="{StaticResource Gray300}" VerticalOptions="Center" />
@@ -53,7 +53,7 @@
         <!-- Navigation Buttons -->
         <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,16,0,0">
             <Button Grid.Column="0"
-                    Text="Previous"
+                    Text="Előző"
                     Command="{Binding PreviousStepCommand}"
                     IsEnabled="{Binding CanGoBack}"
                     BackgroundColor="{StaticResource Gray200}"
@@ -61,7 +61,7 @@
                     CornerRadius="12"
                     HeightRequest="50" />
             <Button Grid.Column="1"
-                    Text="Next"
+                    Text="Következő"
                     Command="{Binding NextStepCommand}"
                     IsEnabled="{Binding CanGoForward}"
                     BackgroundColor="{StaticResource Primary}"
@@ -72,7 +72,7 @@
 
         <!-- Finish Button (visible on last step) -->
         <Button Grid.Row="3"
-                Text="Finish Cooking"
+                Text="Kész"
                 Command="{Binding FinishCookingCommand}"
                 IsVisible="{Binding CanGoForward, Converter={StaticResource InvertBool}}"
                 BackgroundColor="{StaticResource SuccessGreen}"
