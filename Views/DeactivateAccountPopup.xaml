@@ -37,7 +37,7 @@
 
             <!-- Password Entry -->
             <Entry x:Name="PasswordEntry"
-                   Placeholder="A megerősítéshez add meg a jelszavad:"
+                   Placeholder="A megerősítéshez add meg a jelszavad"
                    IsPassword="True"
                    ReturnType="Done" />
 
