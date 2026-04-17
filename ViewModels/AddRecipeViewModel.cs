@@ -10,6 +10,7 @@ public partial class AddRecipeViewModel : BaseViewModel
 {
     private readonly RecipeService _recipeService;
     private readonly AuthService _authService;
+    private readonly IApiService _apiService;
 
     [ObservableProperty]
     private string _recipeTitle = string.Empty;
@@ -24,7 +25,7 @@ public partial class AddRecipeViewModel : BaseViewModel
     private string _cookingTimeMinutes = string.Empty;
 
     [ObservableProperty]
-    private string _selectedCategory = "Főétel";
+    private ApiCategory? _selectedCategory;
 
     [ObservableProperty]
     private string _newIngredientName = string.Empty;
@@ -47,43 +48,73 @@ public partial class AddRecipeViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isSaved;
 
+    [ObservableProperty]
+    private bool _isLoadingData;
+
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public List<string> DifficultyOptions { get; } = new() { "Easy", "Medium", "Hard" };
-    public List<string> CategoryOptions { get; } = new() { "Desszert", "Főétel", "Leves", "Reggeli", "Saláta" };
+    public ObservableCollection<ApiCategory> CategoryOptions { get; } = new();
+    public ObservableCollection<SelectableTag> AvailableTags { get; } = new();
 
-    public ObservableCollection<SelectableTag> AvailableTags { get; } = new()
-    {
-        new() { Name = "gyors" },
-        new() { Name = "hagyományos" },
-        new() { Name = "magyar" },
-        new() { Name = "sültmentes" },
-        new() { Name = "vegetáriánus" },
-    };
-
-    private static readonly Dictionary<string, int> CategoryIdMap = new()
-    {
-        ["Desszert"] = 3,
-        ["Főétel"] = 2,
-        ["Leves"] = 1,
-        ["Reggeli"] = 4,
-        ["Saláta"] = 5,
-    };
-
-    private static readonly Dictionary<string, int> TagIdMap = new()
-    {
-        ["gyors"] = 3,
-        ["hagyományos"] = 4,
-        ["magyar"] = 1,
-        ["sültmentes"] = 5,
-        ["vegetáriánus"] = 2,
-    };
-
-    public AddRecipeViewModel(RecipeService recipeService, AuthService authService)
+    public AddRecipeViewModel(RecipeService recipeService, AuthService authService, IApiService apiService)
     {
         _recipeService = recipeService;
         _authService = authService;
+        _apiService = apiService;
         Title = "Add Recipe";
+    }
+
+    [RelayCommand]
+    private async Task LoadDataAsync()
+    {
+        if (CategoryOptions.Count > 0 && AvailableTags.Count > 0)
+            return;
+
+        IsLoadingData = true;
+        try
+        {
+            var categoriesTask = _apiService.GetCategoriesAsync();
+            var tagsTask = _apiService.GetTagsAsync();
+
+            await Task.WhenAll(categoriesTask, tagsTask);
+
+            var categoriesResult = await categoriesTask;
+            var tagsResult = await tagsTask;
+
+            if (categoriesResult.IsSuccess && categoriesResult.Data?.Categories != null)
+            {
+                CategoryOptions.Clear();
+                foreach (var cat in categoriesResult.Data.Categories)
+                    CategoryOptions.Add(cat);
+
+                if (CategoryOptions.Count > 0 && SelectedCategory == null)
+                    SelectedCategory = CategoryOptions[0];
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Hiba", "Nem sikerült betölteni a kategóriákat.", "OK");
+            }
+
+            if (tagsResult.IsSuccess && tagsResult.Data?.Tags != null)
+            {
+                AvailableTags.Clear();
+                foreach (var tag in tagsResult.Data.Tags)
+                    AvailableTags.Add(new SelectableTag { Id = tag.Id, Name = tag.Name });
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Hiba", "Nem sikerült betölteni a címkéket.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Hiba", $"Adatok betöltése sikertelen: {ex.Message}", "OK");
+        }
+        finally
+        {
+            IsLoadingData = false;
+        }
     }
 
     [RelayCommand]
@@ -249,12 +280,11 @@ public partial class AddRecipeViewModel : BaseViewModel
         {
             var preparationTime = int.Parse(CookingTimeMinutes);
 
-            var selectedCategoryId = CategoryIdMap.GetValueOrDefault(SelectedCategory, 0);
-            var categoryIds = selectedCategoryId > 0 ? new List<int> { selectedCategoryId } : null;
+            var categoryIds = SelectedCategory != null ? new List<int> { SelectedCategory.Id } : null;
 
             var tagIds = AvailableTags
-                .Where(t => t.IsSelected && TagIdMap.ContainsKey(t.Name))
-                .Select(t => TagIdMap[t.Name])
+                .Where(t => t.IsSelected)
+                .Select(t => t.Id)
                 .ToList();
 
             var (success, recipeId, error) = await _recipeService.CreateRecipeAsync(
@@ -282,7 +312,7 @@ public partial class AddRecipeViewModel : BaseViewModel
             Description = string.Empty;
             SelectedDifficulty = "Easy";
             CookingTimeMinutes = string.Empty;
-            SelectedCategory = "Főétel";
+            SelectedCategory = CategoryOptions.Count > 0 ? CategoryOptions[0] : null;
             foreach (var tag in AvailableTags)
                 tag.IsSelected = false;
             Ingredients.Clear();

@@ -13,6 +13,11 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <Grid>
+    <ActivityIndicator IsRunning="{Binding IsLoadingData}"
+                       IsVisible="{Binding IsLoadingData}"
+                       Color="{StaticResource Primary}"
+                       VerticalOptions="Center" HorizontalOptions="Center"
+                       ZIndex="1" />
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,100" Spacing="12">
 
@@ -64,6 +69,7 @@
             <!-- Category -->
             <Label Text="Kategóriák" FontSize="14" FontAttributes="Bold" />
             <Picker ItemsSource="{Binding CategoryOptions}"
+                    ItemDisplayBinding="{Binding Name}"
                     SelectedItem="{Binding SelectedCategory}" />
 
             <!-- Tags -->
