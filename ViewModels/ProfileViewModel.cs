@@ -75,6 +75,7 @@ public partial class ProfileViewModel : BaseViewModel
     public bool IsCommentsTabSelected => SelectedTab == "Comments";
 
     public ObservableCollection<Recipe> UserRecipes { get; } = new();
+    public ObservableCollection<RecipeBook> UserRecipeBooks { get; } = new();
     public ObservableCollection<UserComment> UserComments { get; } = new();
 
     public ProfileViewModel(AuthService authService, IApiService apiService,
@@ -148,6 +149,21 @@ public partial class ProfileViewModel : BaseViewModel
             UserComments.Clear();
             foreach (var c in comments)
                 UserComments.Add(c);
+
+            var booksResult = await _apiService.GetUserRecipeBooksAsync(userId);
+            UserRecipeBooks.Clear();
+            if (booksResult.IsSuccess && booksResult.Data != null)
+            {
+                foreach (var b in booksResult.Data.RecipeBooks)
+                    UserRecipeBooks.Add(new RecipeBook
+                    {
+                        Id = b.Id,
+                        Title = b.Name,
+                        Description = b.Description ?? string.Empty,
+                        RecipeCount = b.RecipeCount,
+                        CreatedAt = b.CreatedAt
+                    });
+            }
         }
         catch
         {
@@ -213,6 +229,7 @@ public partial class ProfileViewModel : BaseViewModel
         BioMaxLines = 3;
         SelectedTab = "Recipes";
         UserRecipes.Clear();
+        UserRecipeBooks.Clear();
         UserComments.Clear();
         RefreshState();
     }
@@ -241,6 +258,7 @@ public partial class ProfileViewModel : BaseViewModel
         {
             await LoadProfileAsync();
             await LoadUserRecipesAsync();
+            await LoadUserRecipeBooksAsync();
             await LoadUserCommentsAsync();
         }
     }
@@ -305,6 +323,34 @@ public partial class ProfileViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task LoadUserRecipeBooksAsync()
+    {
+        if (!IsLoggedIn || User == null)
+            return;
+
+        try
+        {
+            var result = await _apiService.GetUserRecipeBooksAsync(User.Id);
+            UserRecipeBooks.Clear();
+            if (result.IsSuccess && result.Data != null)
+            {
+                foreach (var b in result.Data.RecipeBooks)
+                    UserRecipeBooks.Add(new RecipeBook
+                    {
+                        Id = b.Id,
+                        Title = b.Name,
+                        Description = b.Description ?? string.Empty,
+                        RecipeCount = b.RecipeCount,
+                        CreatedAt = b.CreatedAt
+                    });
+            }
+        }
+        catch
+        {
+        }
+    }
+
+    [RelayCommand]
     private async Task LoadUserCommentsAsync()
     {
         if (!IsLoggedIn || User == null)
@@ -355,6 +401,13 @@ public partial class ProfileViewModel : BaseViewModel
     private void SelectTab(string tab)
     {
         SelectedTab = tab;
+    }
+
+    [RelayCommand]
+    private async Task GoToRecipeBookDetailAsync(RecipeBook book)
+    {
+        if (book == null) return;
+        await Shell.Current.GoToAsync($"RecipeBookDetails?bookId={book.Id}&bookTitle={Uri.EscapeDataString(book.Title)}");
     }
 
     [RelayCommand]

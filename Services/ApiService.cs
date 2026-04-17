@@ -220,6 +220,9 @@ public class ApiService : IApiService
     public Task<ApiResult<MessageResponse>> RemoveRecipeFromBookAsync(int bookId, int recipeId) =>
         DeleteAsync<MessageResponse>($"recipe-books/{bookId}/recipes/{recipeId}");
 
+    public Task<ApiResult<RecipesResponse>> GetRecipeBookRecipesAsync(int bookId, int page = 1, int limit = 20) =>
+        GetAsync<RecipesResponse>($"recipe-books/{bookId}/recipes?page={page}&limit={limit}");
+
     // ?? Users ????????????????????????????????????????????????????
 
     public Task<ApiResult<UserResponse>> GetUserAsync(int userId) =>

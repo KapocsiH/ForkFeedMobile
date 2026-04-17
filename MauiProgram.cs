@@ -59,6 +59,7 @@ namespace ForkFeedMobile
             builder.Services.AddTransient<ForgotPasswordViewModel>();
             builder.Services.AddTransient<EditProfileViewModel>();
             builder.Services.AddTransient<ShoppingListViewModel>();
+            builder.Services.AddTransient<RecipeBookDetailsViewModel>();
 
             // Pages
             builder.Services.AddTransient<HomePage>();
@@ -71,6 +72,7 @@ namespace ForkFeedMobile
             builder.Services.AddTransient<ForgotPasswordPage>();
             builder.Services.AddTransient<EditProfilePage>();
             builder.Services.AddTransient<ShoppingListPage>();
+            builder.Services.AddTransient<RecipeBookDetailsPage>();
 
 #if DEBUG
     		builder.Logging.AddDebug();
