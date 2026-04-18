@@ -13,7 +13,8 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <Grid>
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto"
+          IsVisible="{Binding IsNotLoading}">
 
         <!-- Error State -->
         <VerticalStackLayout Grid.Row="0"
@@ -136,11 +137,9 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <ActivityIndicator Grid.Row="2"
-                           IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           Color="{StaticResource Primary}" Margin="0,8" />
     </Grid>
+    <!-- Centered Loading Overlay -->
+    <controls:LoadingOverlay IsVisible="{Binding IsLoading}" />
     <controls:FloatingNavBar />
     </Grid>
 </ContentPage>

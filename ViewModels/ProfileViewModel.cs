@@ -104,6 +104,7 @@ public partial class ProfileViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            IsLoading = true;
             ClearError();
             IsLoggedIn = true;
 
@@ -176,6 +177,7 @@ public partial class ProfileViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            IsLoading = false;
             IsProfileLoaded = true;
         }
     }
@@ -254,6 +256,7 @@ public partial class ProfileViewModel : BaseViewModel
     private async Task RefreshAsync()
     {
         IsBusy = true;
+        IsLoading = !IsProfileLoaded;
         await _authService.TryRestoreSessionAsync();
         IsBusy = false;
         RefreshState();
@@ -265,6 +268,7 @@ public partial class ProfileViewModel : BaseViewModel
             await LoadUserRecipeBooksAsync();
             await LoadUserCommentsAsync();
         }
+        IsLoading = false;
     }
 
     [RelayCommand]

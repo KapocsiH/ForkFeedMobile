@@ -13,16 +13,8 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <Grid>
-    <ScrollView>
+    <ScrollView IsVisible="{Binding IsNotLoading}">
         <Grid RowDefinitions="Auto,*">
-
-            <!-- Loading -->
-            <ActivityIndicator Grid.Row="0"
-                               IsRunning="{Binding IsBusy}"
-                               IsVisible="{Binding IsBusy}"
-                               Color="{StaticResource Primary}"
-                               VerticalOptions="Center" HorizontalOptions="Center"
-                               Margin="0,40" />
 
             <!-- Error -->
             <VerticalStackLayout Grid.Row="0"
@@ -338,6 +330,8 @@
             </VerticalStackLayout>
         </Grid>
     </ScrollView>
+    <!-- Centered Loading Overlay -->
+    <controls:LoadingOverlay IsVisible="{Binding IsLoading}" />
     <controls:FloatingNavBar />
     </Grid>
 </ContentPage>

@@ -4,6 +4,7 @@
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:models="clr-namespace:ForkFeedMobile.Models"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.RecipeBookDetailsPage"
              x:DataType="vm:RecipeBookDetailsViewModel"
              Title="{Binding Title}"
@@ -12,14 +13,8 @@
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
     <Grid>
-        <ScrollView>
+        <ScrollView IsVisible="{Binding IsNotLoading}">
             <VerticalStackLayout Padding="24,8,24,24" Spacing="12">
-
-                <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                   IsVisible="{Binding IsBusy}"
-                                   Color="{StaticResource Primary}"
-                                   HorizontalOptions="Center"
-                                   Margin="0,12,0,0" />
 
                 <Label Text="{Binding ErrorMessage}"
                        TextColor="{StaticResource ErrorRed}"
@@ -133,5 +128,7 @@
 
             </VerticalStackLayout>
         </ScrollView>
+        <!-- Centered Loading Overlay -->
+        <controls:LoadingOverlay IsVisible="{Binding IsLoading}" />
     </Grid>
 </ContentPage>

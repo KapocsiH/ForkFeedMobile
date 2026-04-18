@@ -29,6 +29,7 @@ public partial class FavoritesViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            IsLoading = Favorites.Count == 0;
             ClearError();
 
             var favs = await _favoritesService.GetFavoritesAsync();
@@ -46,6 +47,7 @@ public partial class FavoritesViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            IsLoading = false;
         }
     }
 

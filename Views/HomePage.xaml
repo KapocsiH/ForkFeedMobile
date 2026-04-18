@@ -17,7 +17,8 @@
     </ContentPage.ToolbarItems>
 
     <Grid>
-        <Grid RowDefinitions="Auto,Auto,*,Auto" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
+        <Grid RowDefinitions="Auto,Auto,*,Auto" BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}"
+              IsVisible="{Binding IsNotLoading}">
 
         <!-- Search & Filter Bar -->
         <Border Grid.Row="0" Margin="16,12" Padding="6"
@@ -192,13 +193,9 @@
             </CollectionView>
         </RefreshView>
 
-        <!-- Loading Indicator -->
-        <ActivityIndicator Grid.Row="3"
-                           IsRunning="{Binding IsBusy}"
-                           IsVisible="{Binding IsBusy}"
-                           Color="{StaticResource Primary}"
-                           Margin="0,8" />
     </Grid>
+    <!-- Centered Loading Overlay -->
+    <controls:LoadingOverlay IsVisible="{Binding IsLoading}" />
     <controls:FloatingNavBar />
     </Grid>
 </ContentPage>

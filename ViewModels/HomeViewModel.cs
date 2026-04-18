@@ -51,6 +51,7 @@ public partial class HomeViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            IsLoading = Recipes.Count == 0;
             ClearError();
             IsEmpty = false;
 
@@ -81,6 +82,7 @@ public partial class HomeViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            IsLoading = false;
             IsRefreshing = false;
         }
     }

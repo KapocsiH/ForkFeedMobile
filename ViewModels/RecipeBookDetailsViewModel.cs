@@ -67,6 +67,7 @@ public partial class RecipeBookDetailsViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            IsLoading = Recipes.Count == 0;
             ClearError();
 
             var result = await _apiService.GetRecipeBookRecipesAsync(BookId);
@@ -93,6 +94,7 @@ public partial class RecipeBookDetailsViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            IsLoading = false;
         }
     }
 

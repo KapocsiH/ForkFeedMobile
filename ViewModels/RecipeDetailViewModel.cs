@@ -73,6 +73,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
         try
         {
             IsBusy = true;
+            IsLoading = true;
             ClearError();
 
             var recipe = await _recipeService.GetRecipeByIdAsync(RecipeId);
@@ -126,6 +127,7 @@ public partial class RecipeDetailViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+            IsLoading = false;
         }
     }
 
