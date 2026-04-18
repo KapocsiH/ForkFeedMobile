@@ -6,13 +6,15 @@ namespace ForkFeedMobile
     {
         private readonly AuthService _authService;
         private readonly ThemeService _themeService;
+        private readonly ConnectivityService _connectivityService;
 
-        public App(AuthService authService, ThemeService themeService)
+        public App(AuthService authService, ThemeService themeService, ConnectivityService connectivityService)
         {
             InitializeComponent();
 
             _authService = authService;
             _themeService = themeService;
+            _connectivityService = connectivityService;
             _themeService.Initialize();
             MainPage = new AppShell();
 
@@ -27,6 +29,7 @@ namespace ForkFeedMobile
         {
             base.OnStart();
             _themeService.UpdateStatusBar();
+            _connectivityService.Initialize();
             await _authService.TryRestoreSessionAsync();
         }
     }

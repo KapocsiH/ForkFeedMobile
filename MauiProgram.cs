@@ -47,6 +47,7 @@ namespace ForkFeedMobile
             builder.Services.AddSingleton<FavoritesService>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<ShoppingListService>();
+            builder.Services.AddSingleton<ConnectivityService>();
 
             // ViewModels
             builder.Services.AddTransient<HomeViewModel>();

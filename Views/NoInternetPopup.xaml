@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="ForkFeedMobile.Views.NoInternetPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               Color="Transparent">
+
+    <Border StrokeShape="RoundRectangle 16"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource CardDark}}"
+            Padding="24"
+            WidthRequest="320">
+        <Border.Shadow>
+            <Shadow Brush="Black" Offset="0,4" Radius="12" Opacity="0.3" />
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="16">
+
+            <Label Text="Nincs internet"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+
+            <Label x:Name="MessageLabel"
+                   FontSize="14"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                   HorizontalTextAlignment="Center" />
+
+            <Button x:Name="RetryButton"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="48"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    Clicked="OnRetryClicked" />
+
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>
