@@ -11,6 +11,7 @@ public partial class AddRecipeViewModel : BaseViewModel
     private readonly RecipeService _recipeService;
     private readonly AuthService _authService;
     private readonly IApiService _apiService;
+    private readonly CacheService _cacheService;
 
     [ObservableProperty]
     private string _recipeTitle = string.Empty;
@@ -54,11 +55,12 @@ public partial class AddRecipeViewModel : BaseViewModel
     public ObservableCollection<SelectableCategory> AvailableCategories { get; } = new();
     public ObservableCollection<SelectableTag> AvailableTags { get; } = new();
 
-    public AddRecipeViewModel(RecipeService recipeService, AuthService authService, IApiService apiService)
+    public AddRecipeViewModel(RecipeService recipeService, AuthService authService, IApiService apiService, CacheService cacheService)
     {
         _recipeService = recipeService;
         _authService = authService;
         _apiService = apiService;
+        _cacheService = cacheService;
         Title = "Add Recipe";
     }
 
@@ -71,18 +73,18 @@ public partial class AddRecipeViewModel : BaseViewModel
         IsLoadingData = true;
         try
         {
-            var categoriesTask = _apiService.GetCategoriesAsync();
-            var tagsTask = _apiService.GetTagsAsync();
+            var categoriesTask = _cacheService.GetCategoriesAsync();
+            var tagsTask = _cacheService.GetTagsAsync();
 
             await Task.WhenAll(categoriesTask, tagsTask);
 
-            var categoriesResult = await categoriesTask;
-            var tagsResult = await tagsTask;
+            var categories = categoriesTask.Result;
+            var tags = tagsTask.Result;
 
-            if (categoriesResult.IsSuccess && categoriesResult.Data?.Categories != null)
+            if (categories.Count > 0)
             {
                 AvailableCategories.Clear();
-                foreach (var cat in categoriesResult.Data.Categories)
+                foreach (var cat in categories)
                     AvailableCategories.Add(new SelectableCategory { Id = cat.Id, Name = cat.Name });
             }
             else
@@ -90,10 +92,10 @@ public partial class AddRecipeViewModel : BaseViewModel
                 await Shell.Current.DisplayAlert("Hiba", "Nem sikerült betölteni a kategóriákat.", "OK");
             }
 
-            if (tagsResult.IsSuccess && tagsResult.Data?.Tags != null)
+            if (tags.Count > 0)
             {
                 AvailableTags.Clear();
-                foreach (var tag in tagsResult.Data.Tags)
+                foreach (var tag in tags)
                     AvailableTags.Add(new SelectableTag { Id = tag.Id, Name = tag.Name });
             }
             else

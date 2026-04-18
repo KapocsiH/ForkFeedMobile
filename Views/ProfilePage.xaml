@@ -136,7 +136,7 @@
                            HorizontalTextAlignment="Center" />
 
                     <!-- Tab Switcher -->
-                    <Grid ColumnDefinitions="*,*,*"
+                    <Grid ColumnDefinitions="*,*"
                           Margin="0,8,0,0">
 
                         <!-- Recipes Tab -->
@@ -168,7 +168,7 @@
                         <VerticalStackLayout Grid.Column="1"
                                              Spacing="6"
                                              HorizontalOptions="Fill">
-                            <Label Text="Füzetek"
+                            <Label Text="Receptfüzetek"
                                    FontSize="15"
                                    HorizontalTextAlignment="Center">
                                 <Label.Triggers>
@@ -186,31 +186,6 @@
                             <VerticalStackLayout.GestureRecognizers>
                                 <TapGestureRecognizer Command="{Binding SelectTabCommand}"
                                                       CommandParameter="Books" />
-                            </VerticalStackLayout.GestureRecognizers>
-                        </VerticalStackLayout>
-
-                        <!-- Comments Tab -->
-                        <VerticalStackLayout Grid.Column="2"
-                                             Spacing="6"
-                                             HorizontalOptions="Fill">
-                            <Label Text="Kommentek"
-                                   FontSize="15"
-                                   HorizontalTextAlignment="Center">
-                                <Label.Triggers>
-                                    <DataTrigger TargetType="Label"
-                                                 Binding="{Binding IsCommentsTabSelected}"
-                                                 Value="True">
-                                        <Setter Property="FontAttributes" Value="Bold" />
-                                    </DataTrigger>
-                                </Label.Triggers>
-                            </Label>
-                            <BoxView HeightRequest="2"
-                                     HorizontalOptions="Fill"
-                                     Color="{StaticResource Primary}"
-                                     IsVisible="{Binding IsCommentsTabSelected}" />
-                            <VerticalStackLayout.GestureRecognizers>
-                                <TapGestureRecognizer Command="{Binding SelectTabCommand}"
-                                                      CommandParameter="Comments" />
                             </VerticalStackLayout.GestureRecognizers>
                         </VerticalStackLayout>
                     </Grid>
@@ -361,59 +336,6 @@
                         </CollectionView.ItemTemplate>
                     </CollectionView>
 
-                    <!-- Comments Tab Content -->
-                    <CollectionView ItemsSource="{Binding UserComments}"
-                                    IsVisible="{Binding IsCommentsTabSelected}"
-                                    SelectionMode="None">
-
-                        <CollectionView.EmptyView>
-                            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Padding="40">
-                                <icons:MauiIcon Icon="ChatEmpty24Filled" IconSize="48" HorizontalOptions="Center" />
-                                <Label Text="Nincsenek kommentek." FontSize="18"
-                                       TextColor="{StaticResource Gray400}"
-                                       HorizontalTextAlignment="Center" />
-                            </VerticalStackLayout>
-                        </CollectionView.EmptyView>
-
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="models:UserComment">
-                                <Frame Margin="0,8" Padding="0" CornerRadius="12" HasShadow="True" BorderColor="Transparent"
-                                       BackgroundColor="{AppThemeBinding Light={StaticResource CardLight}, Dark={StaticResource CardDark}}">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ProfileViewModel}}, Path=GoToCommentRecipeDetailCommand}"
-                                            CommandParameter="{Binding}" />
-                                    </Frame.GestureRecognizers>
-
-                                    <VerticalStackLayout Padding="12" Spacing="6">
-                                        <!-- Recipe Title -->
-                                        <Label Text="{Binding RecipeTitle}"
-                                               FontSize="18" FontAttributes="Bold"
-                                               LineBreakMode="TailTruncation" />
-
-                                        <!-- Recipe Author Row -->
-                                        <HorizontalStackLayout Spacing="8"
-                                                               VerticalOptions="Center">
-                                            <controls:AvatarView ImageUrl="{Binding RecipeAuthorProfileImageUrl}"
-                                                                  UserName="{Binding RecipeAuthorUsername}"
-                                                                  Size="28" />
-                                            <Label Text="{Binding RecipeAuthorUsername}"
-                                                   FontSize="14"
-                                                   TextColor="{StaticResource Gray500}"
-                                                   VerticalOptions="Center" />
-                                        </HorizontalStackLayout>
-
-                                        <!-- Comment Text -->
-                                        <Label Text="{Binding CommentText}"
-                                               FontSize="14"
-                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
-                                               LineBreakMode="TailTruncation"
-                                               MaxLines="3" />
-                                    </VerticalStackLayout>
-                                </Frame>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
                 </VerticalStackLayout>
 
                 <!-- Login View -->

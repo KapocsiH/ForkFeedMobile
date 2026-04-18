@@ -83,21 +83,12 @@ public partial class RecipeDetailViewModel : BaseViewModel
                 return;
             }
 
-            recipe.IsFavorite = await _favoritesService.IsFavoriteAsync(recipe.Id);
+            recipe.IsFavorite = _favoritesService.IsFavoriteAsync(recipe.Id).Result;
             Recipe = recipe;
             Title = recipe.Title;
             IsRecipeLoaded = true;
 
-            // Load the current user's own rating (0 if not rated)
-            if (_authService.IsLoggedIn)
-            {
-                UserRating = await _recipeService.GetMyRatingAsync(RecipeId);
-            }
-            else
-            {
-                UserRating = 0;
-            }
-
+            // Populate ingredients and steps immediately (already fetched in parallel by GetRecipeByIdAsync)
             Ingredients.Clear();
             SelectedIngredients.Clear();
             HasSelectedIngredients = false;
@@ -112,10 +103,19 @@ public partial class RecipeDetailViewModel : BaseViewModel
             foreach (var s in recipe.Steps)
                 Steps.Add(s);
 
-            Comments.Clear();
+            // Load rating and comments in parallel (non-critical for initial render)
             var currentUserId = _authService.CurrentUser?.Id;
-            var comments = await _recipeService.GetCommentsByRecipeIdAsync(RecipeId, currentUserId);
-            foreach (var c in comments)
+            var ratingTask = _authService.IsLoggedIn
+                ? _recipeService.GetMyRatingAsync(RecipeId)
+                : Task.FromResult(0);
+            var commentsTask = _recipeService.GetCommentsByRecipeIdAsync(RecipeId, currentUserId);
+
+            await Task.WhenAll(ratingTask, commentsTask);
+
+            UserRating = ratingTask.Result;
+
+            Comments.Clear();
+            foreach (var c in commentsTask.Result)
                 Comments.Add(c);
 
             HasNoComments = Comments.Count == 0;

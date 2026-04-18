@@ -383,17 +383,23 @@ public class ApiComment
     [JsonPropertyName("id")]
     public int Id { get; set; }
 
+    [JsonPropertyName("recipe_id")]
+    public int? RecipeId { get; set; }
+
     [JsonPropertyName("content")]
     public string Content { get; set; } = string.Empty;
 
     [JsonPropertyName("created_at")]
-    public DateTime CreatedAt { get; set; }
+    public DateTime? CreatedAt { get; set; }
 
     [JsonPropertyName("updated_at")]
     public DateTime? UpdatedAt { get; set; }
 
     [JsonPropertyName("user")]
     public ApiUser? User { get; set; }
+
+    [JsonPropertyName("recipe")]
+    public ApiRecipe? Recipe { get; set; }
 }
 
 public class CommentsResponse

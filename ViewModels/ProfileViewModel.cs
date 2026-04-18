@@ -76,6 +76,9 @@ public partial class ProfileViewModel : BaseViewModel
     public bool IsBooksTabSelected => SelectedTab == "Books";
     public bool IsCommentsTabSelected => SelectedTab == "Comments";
 
+    [ObservableProperty]
+    private bool _hasNoUserComments = true;
+
     public ObservableCollection<Recipe> UserRecipes { get; } = new();
     public ObservableCollection<RecipeBook> UserRecipeBooks { get; } = new();
     public ObservableCollection<UserComment> UserComments { get; } = new();
@@ -108,6 +111,7 @@ public partial class ProfileViewModel : BaseViewModel
             ClearError();
             IsLoggedIn = true;
 
+            // Fetch user info first (needed for display), then parallelize the rest
             var userResult = await _apiService.GetUserAsync(userId);
             if (userResult.IsSuccess && userResult.Data?.User != null)
             {
@@ -131,7 +135,15 @@ public partial class ProfileViewModel : BaseViewModel
                 return;
             }
 
-            var statsResult = await _apiService.GetUserStatsAsync(userId);
+            // Load stats, recipes, comments, and books in parallel
+            var statsTask = _apiService.GetUserStatsAsync(userId);
+            var recipesTask = _recipeService.GetUserRecipesAsync(userId);
+            var commentsTask = _recipeService.GetUserCommentsWithRecipeInfoAsync(userId);
+            var booksTask = _apiService.GetUserRecipeBooksAsync(userId);
+
+            await Task.WhenAll(statsTask, recipesTask, commentsTask, booksTask);
+
+            var statsResult = statsTask.Result;
             if (statsResult.IsSuccess && statsResult.Data?.Stats != null)
             {
                 var stats = statsResult.Data.Stats;
@@ -140,20 +152,20 @@ public partial class ProfileViewModel : BaseViewModel
                 CollectionCount = stats.RecipeBooksCount;
             }
 
-            var recipes = await _recipeService.GetUserRecipesAsync(userId);
+            var recipes = recipesTask.Result;
             UserRecipes.Clear();
             foreach (var r in recipes)
             {
-                r.IsFavorite = await _favoritesService.IsFavoriteAsync(r.Id);
+                r.IsFavorite = _favoritesService.IsFavoriteAsync(r.Id).Result;
                 UserRecipes.Add(r);
             }
 
-            var comments = await _recipeService.GetUserCommentsWithRecipeInfoAsync(userId);
             UserComments.Clear();
-            foreach (var c in comments)
+            foreach (var c in commentsTask.Result)
                 UserComments.Add(c);
+            HasNoUserComments = UserComments.Count == 0;
 
-            var booksResult = await _apiService.GetUserRecipeBooksAsync(userId);
+            var booksResult = booksTask.Result;
             UserRecipeBooks.Clear();
             if (booksResult.IsSuccess && booksResult.Data != null)
             {
@@ -237,6 +249,7 @@ public partial class ProfileViewModel : BaseViewModel
         UserRecipes.Clear();
         UserRecipeBooks.Clear();
         UserComments.Clear();
+        HasNoUserComments = true;
         RefreshState();
     }
 
@@ -261,12 +274,70 @@ public partial class ProfileViewModel : BaseViewModel
         IsBusy = false;
         RefreshState();
 
-        if (IsLoggedIn)
+        if (IsLoggedIn && User != null)
         {
-            await LoadProfileAsync();
-            await LoadUserRecipesAsync();
-            await LoadUserRecipeBooksAsync();
-            await LoadUserCommentsAsync();
+            try
+            {
+                // Fetch stats, recipes, and books in parallel
+                var statsTask = _apiService.GetMyStatsAsync();
+                var recipesTask = _recipeService.GetUserRecipesAsync(User.Id);
+                var booksTask = _apiService.GetUserRecipeBooksAsync(User.Id);
+
+                await Task.WhenAll(statsTask, recipesTask, booksTask);
+
+                // Update stats
+                var statsResult = statsTask.Result;
+                if (statsResult.IsSuccess && statsResult.Data?.Stats != null)
+                {
+                    var stats = statsResult.Data.Stats;
+                    AverageRating = Math.Round(stats.AverageRecipeRating, 1);
+                    RecipeCount = stats.RecipesCount;
+                    CollectionCount = stats.RecipeBooksCount;
+                }
+
+                // Update recipes
+                var recipes = recipesTask.Result;
+                UserRecipes.Clear();
+                foreach (var r in recipes)
+                {
+                    r.IsFavorite = await _favoritesService.IsFavoriteAsync(r.Id);
+                    UserRecipes.Add(r);
+                }
+
+                // Update books
+                var booksResult = booksTask.Result;
+                UserRecipeBooks.Clear();
+                if (booksResult.IsSuccess && booksResult.Data != null)
+                {
+                    foreach (var b in booksResult.Data.RecipeBooks)
+                        UserRecipeBooks.Add(new RecipeBook
+                        {
+                            Id = b.Id,
+                            Title = b.Name,
+                            Description = b.Description ?? string.Empty,
+                            RecipeCount = b.RecipeCount,
+                            CreatedAt = b.CreatedAt,
+                            IsPublic = b.IsPublic,
+                            IsOwn = true
+                        });
+                }
+
+                // Load comments after the parallel batch completes —
+                // GetUserCommentsWithRecipeInfoAsync makes multiple
+                // sequential API calls internally, so running it
+                // alongside the other fetches can cause silent failures.
+                var comments = await _recipeService.GetUserCommentsWithRecipeInfoAsync(User.Id);
+                UserComments.Clear();
+                foreach (var c in comments)
+                    UserComments.Add(c);
+                HasNoUserComments = UserComments.Count == 0;
+
+                IsProfileLoaded = true;
+            }
+            catch
+            {
+                SetError("Failed to load profile data.");
+            }
         }
         IsLoading = false;
     }
@@ -373,6 +444,7 @@ public partial class ProfileViewModel : BaseViewModel
             UserComments.Clear();
             foreach (var c in comments)
                 UserComments.Add(c);
+            HasNoUserComments = UserComments.Count == 0;
         }
         catch
         {

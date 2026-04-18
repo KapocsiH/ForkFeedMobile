@@ -43,11 +43,12 @@ namespace ForkFeedMobile
 
             // Services (singleton so state persists across pages)
             builder.Services.AddSingleton<ThemeService>();
+            builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<RecipeService>();
             builder.Services.AddSingleton<FavoritesService>();
-            builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<ShoppingListService>();
             builder.Services.AddSingleton<ConnectivityService>();
+            builder.Services.AddSingleton<CacheService>();
 
             // ViewModels
             builder.Services.AddTransient<HomeViewModel>();

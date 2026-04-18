@@ -5,10 +5,12 @@ namespace ForkFeedMobile.Services;
 public class RecipeService
 {
     private readonly IApiService _api;
+    private readonly AuthService _authService;
 
-    public RecipeService(IApiService api)
+    public RecipeService(IApiService api, AuthService authService)
     {
         _api = api;
+        _authService = authService;
     }
 
     public async Task<List<Recipe>> GetRecipesAsync(int page = 0, int pageSize = 6,
@@ -146,33 +148,87 @@ public class RecipeService
     {
         var comments = new List<UserComment>();
 
-        // Get all recipes to cross-reference comments with recipe info
-        var recipesResult = await _api.GetRecipesAsync(1, 100);
-        if (!recipesResult.IsSuccess || recipesResult.Data == null)
+        // Fetch all pages of comments
+        var allApiComments = new List<ApiComment>();
+        int page = 1;
+        const int pageSize = 50;
+        while (true)
+        {
+            var userCommentsResult = await _api.GetUserCommentsAsync(userId, page, pageSize);
+
+            if (!userCommentsResult.IsSuccess || userCommentsResult.Data == null)
+                break;
+
+            var fetched = userCommentsResult.Data.Comments;
+            if (fetched.Count == 0)
+                break;
+
+            allApiComments.AddRange(fetched);
+
+            // Stop if we got fewer than requested (last page) or no pagination info
+            var pagination = userCommentsResult.Data.Pagination;
+            if (fetched.Count < pageSize || (pagination != null && page >= pagination.TotalPages))
+                break;
+
+            page++;
+        }
+
+        if (allApiComments.Count == 0)
             return comments;
 
-        var recipes = recipesResult.Data.Recipes;
+        // Collect recipe IDs that we need to look up
+        var apiComments = allApiComments;
+        var recipeIdsToFetch = apiComments
+            .Where(c => (c.RecipeId ?? 0) > 0 && c.Recipe == null)
+            .Select(c => c.RecipeId!.Value)
+            .Distinct()
+            .ToList();
 
-        foreach (var recipe in recipes)
+        // Build a lookup from embedded recipe data first
+        var recipeLookup = new Dictionary<int, ApiRecipe>();
+        foreach (var c in apiComments.Where(c => c.Recipe != null))
+            recipeLookup[c.Recipe!.Id] = c.Recipe;
+
+        // Fetch any missing recipe info in parallel
+        if (recipeIdsToFetch.Count > 0)
         {
-            var commentsResult = await _api.GetRecipeCommentsAsync(recipe.Id, 1, 100);
-            if (!commentsResult.IsSuccess || commentsResult.Data == null)
-                continue;
-
-            var userComments = commentsResult.Data.Comments
-                .Where(c => c.User?.Id == userId);
-
-            foreach (var c in userComments)
+            var recipesResult = await _api.GetRecipesAsync(1, 100);
+            if (recipesResult.IsSuccess && recipesResult.Data != null)
             {
-                comments.Add(new UserComment
-                {
-                    RecipeId = recipe.Id,
-                    RecipeTitle = recipe.Title,
-                    RecipeAuthorUsername = recipe.Author?.Username ?? "Unknown",
-                    RecipeAuthorProfileImageUrl = ResolveImageUrl(recipe.Author?.ProfileImageUrl),
-                    CommentText = c.Content
-                });
+                foreach (var r in recipesResult.Data.Recipes)
+                    recipeLookup.TryAdd(r.Id, r);
             }
+        }
+
+        foreach (var c in apiComments)
+        {
+            var recipeId = c.RecipeId ?? 0;
+            var recipeTitle = "Unknown Recipe";
+            var authorUsername = "Unknown";
+            var authorImageUrl = string.Empty;
+
+            if (c.Recipe != null)
+            {
+                recipeId = c.Recipe.Id;
+                recipeTitle = c.Recipe.Title;
+                authorUsername = c.Recipe.Author?.Username ?? "Unknown";
+                authorImageUrl = ResolveImageUrl(c.Recipe.Author?.ProfileImageUrl);
+            }
+            else if (recipeId > 0 && recipeLookup.TryGetValue(recipeId, out var recipe))
+            {
+                recipeTitle = recipe.Title;
+                authorUsername = recipe.Author?.Username ?? "Unknown";
+                authorImageUrl = ResolveImageUrl(recipe.Author?.ProfileImageUrl);
+            }
+
+            comments.Add(new UserComment
+            {
+                RecipeId = recipeId,
+                RecipeTitle = recipeTitle,
+                RecipeAuthorUsername = authorUsername,
+                RecipeAuthorProfileImageUrl = authorImageUrl,
+                CommentText = c.Content
+            });
         }
 
         return comments;
@@ -260,7 +316,7 @@ public class RecipeService
             UserId = c.User?.Id ?? 0,
             Username = c.User?.Username ?? "Unknown",
             ProfileImageUrl = ResolveImageUrl(c.User?.ProfileImageUrl),
-            CreatedAt = c.CreatedAt,
+            CreatedAt = c.CreatedAt ?? DateTime.MinValue,
             Text = c.Content,
             IsOwnComment = currentUserId.HasValue && c.User?.Id == currentUserId.Value
         }).ToList();
@@ -318,22 +374,21 @@ public class RecipeService
         if (!result.IsSuccess)
             return null;
 
-        // Fetch the current user info so the comment shows the correct name/avatar
-        var meResult = await _api.GetMeAsync();
-        var user = meResult.Data?.User;
+        // Use cached user from AuthService instead of an extra API call
+        var currentUser = _authService.CurrentUser;
 
         // Re-fetch comments to get the server-assigned ID for the new comment
         var commentsResult = await _api.GetRecipeCommentsAsync(recipeId, 1, 100);
         var newComment = commentsResult.Data?.Comments
             .OrderByDescending(c => c.CreatedAt)
-            .FirstOrDefault(c => c.User?.Id == user?.Id && c.Content == text);
+            .FirstOrDefault(c => c.User?.Id == currentUser?.Id && c.Content == text);
 
         return new Comment
         {
             Id = newComment?.Id ?? 0,
-            UserId = user?.Id ?? 0,
-            Username = user?.Username ?? "You",
-            ProfileImageUrl = ResolveImageUrl(user?.ProfileImageUrl),
+            UserId = currentUser?.Id ?? 0,
+            Username = currentUser?.DisplayName ?? "You",
+            ProfileImageUrl = currentUser?.AvatarUrl ?? string.Empty,
             CreatedAt = DateTime.UtcNow,
             Text = text,
             IsOwnComment = true
