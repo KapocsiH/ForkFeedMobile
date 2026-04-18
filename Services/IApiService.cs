@@ -21,6 +21,7 @@ public interface IApiService
         int page = 1, int limit = 20,
         string? search = null, string? difficulty = null,
         string? sort = null, string? order = null);
+    Task<ApiResult<CreateRecipeResponse>> GetRecipeAsync(int recipeId);
     Task<ApiResult<RecipeSummaryResponse>> GetRecipeSummaryAsync(int recipeId);
     Task<ApiResult<IngredientsResponse>> GetRecipeIngredientsAsync(int recipeId);
     Task<ApiResult<MessageResponse>> AddRecipeIngredientAsync(int recipeId, ApiIngredient ingredient);

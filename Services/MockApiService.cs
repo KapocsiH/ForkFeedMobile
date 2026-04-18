@@ -91,6 +91,13 @@ public class MockApiService : IApiService
         });
     }
 
+    public Task<ApiResult<CreateRecipeResponse>> GetRecipeAsync(int recipeId)
+    {
+        var r = _recipes.FirstOrDefault(x => x.Id == recipeId);
+        if (r == null) return Fail<CreateRecipeResponse>("Not found", 404);
+        return Ok(new CreateRecipeResponse { Recipe = r });
+    }
+
     public Task<ApiResult<RecipeSummaryResponse>> GetRecipeSummaryAsync(int recipeId)
     {
         var r = _recipes.FirstOrDefault(x => x.Id == recipeId);

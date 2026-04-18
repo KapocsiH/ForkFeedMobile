@@ -254,6 +254,13 @@ public partial class RecipeDetailViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task CommentAuthorTappedAsync(Comment comment)
+    {
+        if (comment == null || comment.UserId <= 0) return;
+        await Shell.Current.GoToAsync($"UserProfile?userId={comment.UserId}");
+    }
+
+    [RelayCommand]
     private async Task SaveToCookbookAsync()
     {
         await Shell.Current.DisplayAlert("Save to Cookbook", "This feature is coming soon!", "OK");

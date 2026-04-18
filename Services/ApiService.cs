@@ -91,6 +91,9 @@ public class ApiService : IApiService
         return GetAsync<RecipesResponse>(url);
     }
 
+    public Task<ApiResult<CreateRecipeResponse>> GetRecipeAsync(int recipeId) =>
+        GetAsync<CreateRecipeResponse>($"recipes/{recipeId}");
+
     public Task<ApiResult<RecipeSummaryResponse>> GetRecipeSummaryAsync(int recipeId) =>
         GetAsync<RecipeSummaryResponse>($"recipes/{recipeId}/summary");
 

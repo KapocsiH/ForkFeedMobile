@@ -68,42 +68,32 @@ public class RecipeService
 
     public async Task<Recipe?> GetRecipeByIdAsync(int id)
     {
-        // Fetch summary, ingredients, and steps in parallel
-        var summaryTask = _api.GetRecipeSummaryAsync(id);
+        // Fetch full recipe, ingredients, and steps in parallel
+        var recipeTask = _api.GetRecipeAsync(id);
         var ingredientsTask = _api.GetRecipeIngredientsAsync(id);
         var stepsTask = _api.GetRecipeStepsAsync(id);
 
-        await Task.WhenAll(summaryTask, ingredientsTask, stepsTask);
+        await Task.WhenAll(recipeTask, ingredientsTask, stepsTask);
 
-        var summaryResult = summaryTask.Result;
-        if (!summaryResult.IsSuccess || summaryResult.Data?.Summary == null)
+        var recipeResult = recipeTask.Result;
+        if (!recipeResult.IsSuccess || recipeResult.Data?.Recipe == null)
             return null;
 
-        var s = summaryResult.Data.Summary;
+        var api = recipeResult.Data.Recipe;
         var recipe = new Recipe
         {
-            Id = s.Id,
-            Title = s.Title,
-            Difficulty = CapitalizeFirst(s.Difficulty),
-            TimeMinutes = s.PreparationTime,
-            Rating = s.AverageRating,
+            Id = api.Id,
+            Title = api.Title,
+            Description = api.Description ?? string.Empty,
+            ImageUrl = ResolveImageUrl(api.ImageUrl),
+            Difficulty = CapitalizeFirst(api.Difficulty),
+            TimeMinutes = api.PreparationTime,
+            Rating = api.AverageRating,
+            CreatedAt = api.CreatedAt,
+            AuthorId = api.Author?.Id ?? 0,
+            AuthorUsername = api.Author?.Username ?? string.Empty,
+            AuthorProfileImageUrl = ResolveImageUrl(api.Author?.ProfileImageUrl),
         };
-
-        // Try to get the image from the list endpoint (summary doesn't include it)
-        var listResult = await _api.GetRecipesAsync(1, 100);
-        if (listResult.IsSuccess && listResult.Data != null)
-        {
-            var match = listResult.Data.Recipes.FirstOrDefault(r => r.Id == id);
-            if (match != null)
-            {
-                recipe.ImageUrl = match.ImageUrl ?? string.Empty;
-                recipe.Description = match.Description ?? string.Empty;
-                recipe.CreatedAt = match.CreatedAt;
-                recipe.AuthorId = match.Author?.Id ?? 0;
-                recipe.AuthorUsername = match.Author?.Username ?? string.Empty;
-                recipe.AuthorProfileImageUrl = ResolveImageUrl(match.Author?.ProfileImageUrl);
-            }
-        }
 
         // Ingredients
         if (ingredientsTask.Result.IsSuccess && ingredientsTask.Result.Data != null)
@@ -267,6 +257,7 @@ public class RecipeService
         return result.Data.Comments.Select(c => new Comment
         {
             Id = c.Id,
+            UserId = c.User?.Id ?? 0,
             Username = c.User?.Username ?? "Unknown",
             ProfileImageUrl = ResolveImageUrl(c.User?.ProfileImageUrl),
             CreatedAt = c.CreatedAt,
@@ -340,6 +331,7 @@ public class RecipeService
         return new Comment
         {
             Id = newComment?.Id ?? 0,
+            UserId = user?.Id ?? 0,
             Username = user?.Username ?? "You",
             ProfileImageUrl = ResolveImageUrl(user?.ProfileImageUrl),
             CreatedAt = DateTime.UtcNow,

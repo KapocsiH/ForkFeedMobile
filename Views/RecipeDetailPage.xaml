@@ -62,7 +62,12 @@
                     <Label Text="{Binding Recipe.Title}"
                            FontSize="24" FontAttributes="Bold" />
 
-                    <!-- Action Buttons Row -->
+                    <!-- Description -->
+                    <Label Text="{Binding Recipe.Description}"
+                           FontSize="15" TextColor="{StaticResource Gray500}"
+                           LineBreakMode="WordWrap" />
+
+                        <!-- Action Buttons Row -->
                     <HorizontalStackLayout Spacing="16">
                         <!-- Favorite -->
                         <icons:MauiIcon Icon="{Binding Recipe.IsFavorite, Converter={StaticResource FavoriteIcon}}"
@@ -165,10 +170,7 @@
                         </HorizontalStackLayout>
                     </VerticalStackLayout>
 
-                    <!-- Description -->
-                    <Label Text="{Binding Recipe.Description}"
-                           FontSize="15" TextColor="{StaticResource Gray500}"
-                           LineBreakMode="WordWrap" />
+                    
 
                     <!-- Ingredients Section -->
                     <Label Text="Hozzávalók" FontSize="20" FontAttributes="Bold" Margin="0,4,0,0" />
@@ -275,13 +277,23 @@
                                                               ImageUrl="{Binding ProfileImageUrl}"
                                                               UserName="{Binding Username}"
                                                               Size="36"
-                                                              VerticalOptions="Start" />
+                                                              VerticalOptions="Start">
+                                            <controls:AvatarView.GestureRecognizers>
+                                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=CommentAuthorTappedCommand}"
+                                                                      CommandParameter="{Binding}" />
+                                            </controls:AvatarView.GestureRecognizers>
+                                        </controls:AvatarView>
 
                                         <!-- Username + Timestamp -->
                                         <HorizontalStackLayout Grid.Column="1" Spacing="6" VerticalOptions="Center">
                                             <Label Text="{Binding Username}"
                                                    FontSize="14" FontAttributes="Bold"
-                                                   VerticalOptions="Center" />
+                                                   VerticalOptions="Center">
+                                                <Label.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:RecipeDetailViewModel}}, Path=CommentAuthorTappedCommand}"
+                                                                          CommandParameter="{Binding}" />
+                                                </Label.GestureRecognizers>
+                                            </Label>
                                             <Label Text="{Binding CreatedAt, Converter={StaticResource DateTimeToRelative}}"
                                                    FontSize="12" TextColor="{StaticResource Gray400}"
                                                    VerticalOptions="Center" />
