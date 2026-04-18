@@ -20,8 +20,7 @@ namespace ForkFeedMobile
 
             RequestedThemeChanged += (s, e) =>
             {
-                if (_themeService.CurrentTheme == AppTheme.Unspecified)
-                    _themeService.UpdateStatusBar();
+                _themeService.UpdateStatusBar();
             };
         }
 
