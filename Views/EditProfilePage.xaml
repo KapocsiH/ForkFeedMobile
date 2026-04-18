@@ -7,9 +7,11 @@
              x:Class="ForkFeedMobile.Views.EditProfilePage"
              x:DataType="vm:EditProfileViewModel"
              Title="Profil szerkesztése"
-             Shell.NavBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
+    <Grid>
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 
@@ -130,4 +132,6 @@
 
         </VerticalStackLayout>
     </ScrollView>
+    <controls:FloatingNavBar />
+    </Grid>
 </ContentPage>

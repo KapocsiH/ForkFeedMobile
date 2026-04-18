@@ -3,13 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:ForkFeedMobile.ViewModels"
              xmlns:icons="clr-namespace:MauiIcons.FluentFilled;assembly=MauiIcons.FluentFilled"
+             xmlns:controls="clr-namespace:ForkFeedMobile.Controls"
              x:Class="ForkFeedMobile.Views.CookingModePage"
              x:DataType="vm:CookingModeViewModel"
              Title="Főzés mód"
-             Shell.NavBarIsVisible="True"
+             Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource NavBarBackground}}">
 
-    <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="24">
+    <Grid>
+    <Grid RowDefinitions="Auto,*,Auto,Auto" Padding="24,24,24,104">
 
         <!-- Progress -->
         <Label Grid.Row="0"
@@ -59,7 +62,7 @@
                     BackgroundColor="{StaticResource Gray200}"
                     TextColor="{StaticResource Gray600}"
                     CornerRadius="12"
-                    HeightRequest="50" />
+                    HeightRequest="50"/>
             <Button Grid.Column="1"
                     Text="Következő"
                     Command="{Binding NextStepCommand}"
@@ -67,7 +70,7 @@
                     BackgroundColor="{StaticResource Primary}"
                     TextColor="White"
                     CornerRadius="12"
-                    HeightRequest="50" />
+                    HeightRequest="50"/>
         </Grid>
 
         <!-- Finish Button (visible on last step) -->
@@ -81,5 +84,7 @@
                 CornerRadius="12"
                 HeightRequest="56"
                 Margin="0,12,0,0" />
+    </Grid>
+    <controls:FloatingNavBar />
     </Grid>
 </ContentPage>
