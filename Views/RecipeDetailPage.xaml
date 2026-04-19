@@ -97,10 +97,17 @@
 
                     <!-- Meta info -->
                     <HorizontalStackLayout Spacing="16">
-                        <Frame Padding="8,4" CornerRadius="8"
-                               BackgroundColor="{StaticResource Secondary}" BorderColor="Transparent">
-                            <Label Text="{Binding Recipe.Difficulty}" FontSize="13" />
-                        </Frame>
+                        <Border StrokeShape="RoundRectangle 12"
+                                Stroke="{Binding Recipe.DifficultyBorderColor}"
+                                BackgroundColor="{Binding Recipe.DifficultyBackgroundColor}"
+                                Padding="10,4"
+                                StrokeThickness="1.5"
+                                VerticalOptions="Center">
+                            <Label Text="{Binding Recipe.DifficultyDisplay}"
+                                   FontSize="12"
+                                   FontAttributes="Bold"
+                                   TextColor="White" />
+                        </Border>
                         <HorizontalStackLayout Spacing="4" VerticalOptions="Center">
                             <icons:MauiIcon Icon="Timer24Filled" IconSize="14" IconColor="{StaticResource Gray500}" VerticalOptions="Center" />
                             <Label VerticalOptions="Center" FontSize="14" TextColor="{StaticResource Gray500}">

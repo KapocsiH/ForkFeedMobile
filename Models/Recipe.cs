@@ -16,6 +16,30 @@ public class Recipe
     public int AuthorId { get; set; }
     public string AuthorUsername { get; set; } = string.Empty;
     public string AuthorProfileImageUrl { get; set; } = string.Empty;
+
+    public string DifficultyDisplay => Difficulty?.ToLower() switch
+    {
+        "easy" => "Könnyű",
+        "medium" => "Közepes",
+        "hard" => "Nehéz",
+        _ => Difficulty ?? string.Empty
+    };
+
+    public Color DifficultyBorderColor => Difficulty?.ToLower() switch
+    {
+        "easy" => Color.FromArgb("#4CAF50"),
+        "medium" => Color.FromArgb("#FFC107"),
+        "hard" => Color.FromArgb("#F44336"),
+        _ => Color.FromArgb("#9E9E9E")
+    };
+
+    public Color DifficultyBackgroundColor => Difficulty?.ToLower() switch
+    {
+        "easy" => Color.FromArgb("#1B5E20"),
+        "medium" => Color.FromArgb("#F57F17"),
+        "hard" => Color.FromArgb("#B71C1C"),
+        _ => Color.FromArgb("#616161")
+    };
 }
 
 public partial class Ingredient : CommunityToolkit.Mvvm.ComponentModel.ObservableObject

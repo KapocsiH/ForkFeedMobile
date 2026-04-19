@@ -92,11 +92,17 @@
                                         </Grid>
 
                                         <HorizontalStackLayout Spacing="12">
-                                            <Label Text="{Binding Difficulty}"
-                                                   FontSize="13"
-                                                   TextColor="{StaticResource Gray500}"
-                                                   Padding="6,2"
-                                                   BackgroundColor="{StaticResource Secondary}" />
+                                            <Border StrokeShape="RoundRectangle 12"
+                                                    Stroke="{Binding DifficultyBorderColor}"
+                                                    BackgroundColor="{Binding DifficultyBackgroundColor}"
+                                                    Padding="10,4"
+                                                    StrokeThickness="1.5"
+                                                    VerticalOptions="Center">
+                                                <Label Text="{Binding DifficultyDisplay}"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold"
+                                                       TextColor="White" />
+                                            </Border>
                                             <HorizontalStackLayout Spacing="4">
                                                 <icons:MauiIcon Icon="Timer24Filled" IconSize="13" IconColor="{StaticResource Gray500}" VerticalOptions="Center" />
                                                 <Label FontSize="13" TextColor="{StaticResource Gray500}" VerticalOptions="Center">
