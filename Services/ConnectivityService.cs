@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using ForkFeedMobile.Views;
 
 namespace ForkFeedMobile.Services;
@@ -41,8 +41,6 @@ public class ConnectivityService
 
                 var popup = new NoInternetPopup();
                 await page.ShowPopupAsync(popup);
-
-                // If closed with true, internet is back
                 if (Connectivity.Current.NetworkAccess == NetworkAccess.Internet)
                     break;
             }

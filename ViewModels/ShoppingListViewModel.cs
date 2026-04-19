@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ForkFeedMobile.Models;
@@ -83,12 +83,8 @@ public partial class ShoppingListViewModel : BaseViewModel
 
         var userId = _authService.CurrentUser?.Id ?? 0;
         if (userId == 0) return;
-
-        // Persist the checked state
         var items = new List<ShoppingListItem>(Items);
         await _shoppingListService.SaveAsync(userId, items);
-
-        // Refresh the item in the collection to trigger UI update
         var index = Items.IndexOf(item);
         if (index >= 0)
         {

@@ -1,4 +1,4 @@
-using ForkFeedMobile.Models;
+﻿using ForkFeedMobile.Models;
 
 namespace ForkFeedMobile.Services;
 
@@ -21,9 +21,6 @@ public class FavoritesService
             return new List<Recipe>();
 
         var apiRecipes = result.Data.AllRecipes;
-
-        // The favorites endpoint may return incomplete recipe objects (e.g. missing
-        // preparation_time). Fetch the full recipe list and merge any missing data.
         var needsSupplement = apiRecipes.Any(r => r.PreparationTime == 0);
         if (needsSupplement)
         {
@@ -49,8 +46,6 @@ public class FavoritesService
         }
 
         var recipes = apiRecipes.Select(MapToRecipe).ToList();
-
-        // Sync the local cache with what the server returned
         _favoriteIds.Clear();
         foreach (var r in recipes)
         {
@@ -64,11 +59,6 @@ public class FavoritesService
     {
         return Task.FromResult(_favoriteIds.Contains(recipeId));
     }
-
-    /// <summary>
-    /// Toggles the favorite state on the backend and updates the local cache.
-    /// Returns true if the API call succeeded.
-    /// </summary>
     public async Task<bool> ToggleFavoriteAsync(Recipe recipe)
     {
         var wasFavorite = _favoriteIds.Contains(recipe.Id);

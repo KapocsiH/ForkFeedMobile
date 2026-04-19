@@ -17,6 +17,5 @@ public partial class NoInternetPopup : Popup
         {
             await CloseAsync(true);
         }
-        // If still no internet, do nothing — popup stays visible
     }
 }

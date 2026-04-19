@@ -1,4 +1,4 @@
-using ForkFeedMobile.ViewModels;
+﻿using ForkFeedMobile.ViewModels;
 
 namespace ForkFeedMobile.Views;
 
@@ -16,9 +16,6 @@ public partial class ProfilePage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        // External user profile is loaded via the UserId query property;
-        // only run the full refresh flow for the current user's own profile.
         if (_vm.UserId > 0)
         {
             await AnimateHeaderAsync();

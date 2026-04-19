@@ -7,8 +7,6 @@ namespace ForkFeedMobile
         public AppShell()
         {
             InitializeComponent();
-
-            // Register detail routes (not in TabBar)
             Routing.RegisterRoute("RecipeDetail", typeof(RecipeDetailPage));
             Routing.RegisterRoute("CookingMode", typeof(CookingModePage));
             Routing.RegisterRoute("Register", typeof(RegisterPage));

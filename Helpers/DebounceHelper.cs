@@ -1,5 +1,3 @@
-using System.Windows.Input;
-
 namespace ForkFeedMobile.Helpers;
 
 public class DebounceHelper
@@ -18,7 +16,6 @@ public class DebounceHelper
         }
         catch (TaskCanceledException)
         {
-            // TODO
         }
     }
 }

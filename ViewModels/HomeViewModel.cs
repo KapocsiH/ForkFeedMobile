@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ForkFeedMobile.Helpers;
@@ -115,7 +115,6 @@ public partial class HomeViewModel : BaseViewModel
         }
         catch
         {
-            // Silently fail on load-more; user can scroll again to retry
             _currentPage--;
         }
         finally

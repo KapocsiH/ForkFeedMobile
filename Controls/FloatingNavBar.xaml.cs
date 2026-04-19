@@ -1,4 +1,4 @@
-using Microsoft.Maui.Controls.Shapes;
+﻿using Microsoft.Maui.Controls.Shapes;
 using ShapePath = Microsoft.Maui.Controls.Shapes.Path;
 
 namespace ForkFeedMobile.Controls;
@@ -58,7 +58,6 @@ public partial class FloatingNavBar : ContentView
 
     private void OnThemeChanged(object? sender, AppThemeChangedEventArgs e)
     {
-        // Force re-apply icon colors for the new theme
         var prev = _selectedIndex;
         _selectedIndex = -1;
         SetSelected(prev);
@@ -120,7 +119,6 @@ public partial class FloatingNavBar : ContentView
             }
             catch
             {
-                // Navigation may fail if already on the route
             }
         }
     }

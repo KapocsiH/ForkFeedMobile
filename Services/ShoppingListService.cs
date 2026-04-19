@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using ForkFeedMobile.Models;
 
 namespace ForkFeedMobile.Services;
@@ -6,10 +6,6 @@ namespace ForkFeedMobile.Services;
 public class ShoppingListService
 {
     private const string PreferenceKeyPrefix = "shopping_list_";
-
-    /// <summary>
-    /// Loads the shopping list for a specific user from local storage.
-    /// </summary>
     public Task<List<ShoppingListItem>> LoadAsync(int userId)
     {
         var key = GetKey(userId);
@@ -28,10 +24,6 @@ public class ShoppingListService
             return Task.FromResult(new List<ShoppingListItem>());
         }
     }
-
-    /// <summary>
-    /// Saves the shopping list for a specific user to local storage.
-    /// </summary>
     public Task SaveAsync(int userId, List<ShoppingListItem> items)
     {
         var key = GetKey(userId);
@@ -39,12 +31,6 @@ public class ShoppingListService
         Preferences.Default.Set(key, json);
         return Task.CompletedTask;
     }
-
-    /// <summary>
-    /// Adds ingredients to the user's shopping list with merge/stacking logic.
-    /// Items with the same name (case-insensitive) and same unit (case-insensitive)
-    /// are merged by summing their quantities. Otherwise they are added as separate items.
-    /// </summary>
     public async Task AddIngredientsAsync(int userId, IEnumerable<Ingredient> ingredients)
     {
         var items = await LoadAsync(userId);
@@ -78,10 +64,6 @@ public class ShoppingListService
 
         await SaveAsync(userId, items);
     }
-
-    /// <summary>
-    /// Removes a specific item from the user's shopping list.
-    /// </summary>
     public async Task RemoveItemAsync(int userId, ShoppingListItem item)
     {
         var items = await LoadAsync(userId);
@@ -96,10 +78,6 @@ public class ShoppingListService
             await SaveAsync(userId, items);
         }
     }
-
-    /// <summary>
-    /// Clears all items from the user's shopping list.
-    /// </summary>
     public async Task ClearAsync(int userId)
     {
         await SaveAsync(userId, new List<ShoppingListItem>());

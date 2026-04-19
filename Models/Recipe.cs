@@ -1,4 +1,4 @@
-namespace ForkFeedMobile.Models;
+﻿namespace ForkFeedMobile.Models;
 
 public class Recipe
 {
@@ -23,10 +23,6 @@ public partial class Ingredient : CommunityToolkit.Mvvm.ComponentModel.Observabl
     public string Name { get; set; } = string.Empty;
     public double? Quantity { get; set; }
     public string Unit { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Formatted string for UI display (e.g. "200 g", "0.5 ml", or empty).
-    /// </summary>
     public string DisplayQuantity =>
         Quantity.HasValue
             ? string.IsNullOrWhiteSpace(Unit)

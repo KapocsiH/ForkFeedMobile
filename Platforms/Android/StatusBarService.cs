@@ -1,4 +1,4 @@
-using Android.OS;
+﻿using Android.OS;
 using Android.Views;
 using Microsoft.Maui.Platform;
 
@@ -49,7 +49,7 @@ namespace ForkFeedMobile.Services
             }
             else
             {
-#pragma warning disable CS0618 // Fallback for older Android versions
+#pragma warning disable CS0618
                 var flags = window.DecorView.SystemUiVisibility;
                 if (darkIcons)
                     flags |= (StatusBarVisibility)SystemUiFlags.LightStatusBar;

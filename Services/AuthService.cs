@@ -1,4 +1,4 @@
-using ForkFeedMobile.Models;
+﻿using ForkFeedMobile.Models;
 
 namespace ForkFeedMobile.Services;
 
@@ -190,7 +190,7 @@ public class AuthService
     private static async Task SaveTokenAsync(string token)
     {
         try { await SecureStorage.Default.SetAsync("auth_token", token); }
-        catch { /* SecureStorage may not be available on all platforms */ }
+        catch { }
     }
 
     private static async Task<string?> GetSavedTokenAsync()
@@ -202,7 +202,7 @@ public class AuthService
     private static Task RemoveTokenAsync()
     {
         try { SecureStorage.Default.Remove("auth_token"); }
-        catch { /* ignore */ }
+        catch { }
         return Task.CompletedTask;
     }
 }

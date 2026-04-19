@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Alerts;
+﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -86,7 +86,6 @@ public partial class EditProfileViewModel : BaseViewModel
         }
         catch
         {
-            // Silently ignore
         }
     }
 
@@ -113,7 +112,6 @@ public partial class EditProfileViewModel : BaseViewModel
         }
         catch
         {
-            // Silently ignore
         }
     }
 
@@ -133,8 +131,6 @@ public partial class EditProfileViewModel : BaseViewModel
         try
         {
             string? newAvatarUrl = null;
-
-            // Upload new profile image if one was selected
             if (!string.IsNullOrEmpty(_selectedImagePath))
             {
                 using var stream = File.OpenRead(_selectedImagePath);
@@ -150,11 +146,7 @@ public partial class EditProfileViewModel : BaseViewModel
 
                 newAvatarUrl = uploadResult.Data.Url;
             }
-
-            // Use the newly uploaded URL, or fall back to the existing one
             var effectiveAvatarUrl = newAvatarUrl ?? CurrentAvatarUrl;
-
-            // Update profile data (including image URL if one was uploaded)
             var request = new UpdateProfileRequest
             {
                 Username = Username.Trim(),
@@ -170,8 +162,6 @@ public partial class EditProfileViewModel : BaseViewModel
                 IsBusy = false;
                 return;
             }
-
-            // Update local user state so the Profile Page reflects changes immediately
             _authService.UpdateCurrentUser(
                 displayName: Username.Trim(),
                 bio: Bio?.Trim(),
@@ -220,10 +210,7 @@ public partial class EditProfileViewModel : BaseViewModel
 
         if (result is true)
         {
-            // Logout and clear session
             await _authService.LogoutAsync();
-
-            // Navigate to the profile/login page and clear the navigation stack
             await Shell.Current.GoToAsync("//Profile");
 
             var toast = Toast.Make("Your profile has been deactivated.", ToastDuration.Long, 14);

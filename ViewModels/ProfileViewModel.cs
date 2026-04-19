@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+ï»¿using System.Collections.ObjectModel;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
@@ -110,8 +110,6 @@ public partial class ProfileViewModel : BaseViewModel
             IsLoading = true;
             ClearError();
             IsLoggedIn = true;
-
-            // Fetch user info first (needed for display), then parallelize the rest
             var userResult = await _apiService.GetUserAsync(userId);
             if (userResult.IsSuccess && userResult.Data?.User != null)
             {
@@ -134,8 +132,6 @@ public partial class ProfileViewModel : BaseViewModel
                 SetError("Could not load user profile.");
                 return;
             }
-
-            // Load stats, recipes, comments, and books in parallel
             var statsTask = _apiService.GetUserStatsAsync(userId);
             var recipesTask = _recipeService.GetUserRecipesAsync(userId);
             var commentsTask = _recipeService.GetUserCommentsWithRecipeInfoAsync(userId);
@@ -216,9 +212,6 @@ public partial class ProfileViewModel : BaseViewModel
             RefreshState();
             Email = string.Empty;
             Password = string.Empty;
-
-            // Navigate to Home so the Profile tab gets a fresh OnAppearing
-            // the next time the user opens it.
             await Shell.Current.GoToAsync("//Home");
 
             var toast = Toast.Make("Logged in successfully! ??", ToastDuration.Short, 14);
@@ -278,14 +271,11 @@ public partial class ProfileViewModel : BaseViewModel
         {
             try
             {
-                // Fetch stats, recipes, and books in parallel
                 var statsTask = _apiService.GetMyStatsAsync();
                 var recipesTask = _recipeService.GetUserRecipesAsync(User.Id);
                 var booksTask = _apiService.GetUserRecipeBooksAsync(User.Id);
 
                 await Task.WhenAll(statsTask, recipesTask, booksTask);
-
-                // Update stats
                 var statsResult = statsTask.Result;
                 if (statsResult.IsSuccess && statsResult.Data?.Stats != null)
                 {
@@ -294,8 +284,6 @@ public partial class ProfileViewModel : BaseViewModel
                     RecipeCount = stats.RecipesCount;
                     CollectionCount = stats.RecipeBooksCount;
                 }
-
-                // Update recipes
                 var recipes = recipesTask.Result;
                 UserRecipes.Clear();
                 foreach (var r in recipes)
@@ -303,8 +291,6 @@ public partial class ProfileViewModel : BaseViewModel
                     r.IsFavorite = await _favoritesService.IsFavoriteAsync(r.Id);
                     UserRecipes.Add(r);
                 }
-
-                // Update books
                 var booksResult = booksTask.Result;
                 UserRecipeBooks.Clear();
                 if (booksResult.IsSuccess && booksResult.Data != null)
@@ -321,11 +307,6 @@ public partial class ProfileViewModel : BaseViewModel
                             IsOwn = true
                         });
                 }
-
-                // Load comments after the parallel batch completes —
-                // GetUserCommentsWithRecipeInfoAsync makes multiple
-                // sequential API calls internally, so running it
-                // alongside the other fetches can cause silent failures.
                 var comments = await _recipeService.GetUserCommentsWithRecipeInfoAsync(User.Id);
                 UserComments.Clear();
                 foreach (var c in comments)
@@ -397,7 +378,6 @@ public partial class ProfileViewModel : BaseViewModel
         }
         catch
         {
-            // Silently fail; the user can retry by switching tabs
         }
     }
 
@@ -448,7 +428,6 @@ public partial class ProfileViewModel : BaseViewModel
         }
         catch
         {
-            // Silently fail; the user can retry by switching tabs
         }
     }
 

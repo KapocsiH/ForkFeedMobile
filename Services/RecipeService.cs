@@ -1,4 +1,4 @@
-using ForkFeedMobile.Models;
+ï»¿using ForkFeedMobile.Models;
 
 namespace ForkFeedMobile.Services;
 
@@ -16,10 +16,7 @@ public class RecipeService
     public async Task<List<Recipe>> GetRecipesAsync(int page = 0, int pageSize = 6,
         string? search = null, string? difficulty = null, string? sortBy = null)
     {
-        // API uses 1-based pages; existing callers use 0-based
         var apiPage = page + 1;
-
-        // Map UI sort options to API query params
         string? sort = null;
         string? order = null;
         switch (sortBy)
@@ -37,14 +34,9 @@ public class RecipeService
                 order = "desc";
                 break;
         }
-
-        // Map "All" to null so the API returns everything
         var diff = string.IsNullOrWhiteSpace(difficulty) || difficulty == "All"
             ? null
             : difficulty.ToLower();
-
-        // The API does not support server-side text search, so when a search
-        // term is provided we fetch a larger batch and filter client-side.
         var hasSearch = !string.IsNullOrWhiteSpace(search);
         var fetchLimit = hasSearch ? 200 : pageSize;
         var fetchPage = hasSearch ? 1 : apiPage;
@@ -60,8 +52,6 @@ public class RecipeService
         {
             recipes = recipes.Where(r =>
                 r.Title.Contains(search!, StringComparison.OrdinalIgnoreCase));
-
-            // Apply manual pagination over the filtered set
             recipes = recipes.Skip(page * pageSize).Take(pageSize);
         }
 
@@ -70,7 +60,6 @@ public class RecipeService
 
     public async Task<Recipe?> GetRecipeByIdAsync(int id)
     {
-        // Fetch full recipe, ingredients, and steps in parallel
         var recipeTask = _api.GetRecipeAsync(id);
         var ingredientsTask = _api.GetRecipeIngredientsAsync(id);
         var stepsTask = _api.GetRecipeStepsAsync(id);
@@ -96,8 +85,6 @@ public class RecipeService
             AuthorUsername = api.Author?.Username ?? string.Empty,
             AuthorProfileImageUrl = ResolveImageUrl(api.Author?.ProfileImageUrl),
         };
-
-        // Ingredients
         if (ingredientsTask.Result.IsSuccess && ingredientsTask.Result.Data != null)
         {
             recipe.Ingredients = ingredientsTask.Result.Data.Ingredients
@@ -117,8 +104,6 @@ public class RecipeService
                     };
                 }).ToList();
         }
-
-        // Steps
         if (stepsTask.Result.IsSuccess && stepsTask.Result.Data != null)
         {
             recipe.Steps = stepsTask.Result.Data.Steps
@@ -147,8 +132,6 @@ public class RecipeService
     public async Task<List<UserComment>> GetUserCommentsWithRecipeInfoAsync(int userId)
     {
         var comments = new List<UserComment>();
-
-        // Fetch all pages of comments
         var allApiComments = new List<ApiComment>();
         int page = 1;
         const int pageSize = 50;
@@ -164,8 +147,6 @@ public class RecipeService
                 break;
 
             allApiComments.AddRange(fetched);
-
-            // Stop if we got fewer than requested (last page) or no pagination info
             var pagination = userCommentsResult.Data.Pagination;
             if (fetched.Count < pageSize || (pagination != null && page >= pagination.TotalPages))
                 break;
@@ -175,21 +156,15 @@ public class RecipeService
 
         if (allApiComments.Count == 0)
             return comments;
-
-        // Collect recipe IDs that we need to look up
         var apiComments = allApiComments;
         var recipeIdsToFetch = apiComments
             .Where(c => (c.RecipeId ?? 0) > 0 && c.Recipe == null)
             .Select(c => c.RecipeId!.Value)
             .Distinct()
             .ToList();
-
-        // Build a lookup from embedded recipe data first
         var recipeLookup = new Dictionary<int, ApiRecipe>();
         foreach (var c in apiComments.Where(c => c.Recipe != null))
             recipeLookup[c.Recipe!.Id] = c.Recipe;
-
-        // Fetch any missing recipe info in parallel
         if (recipeIdsToFetch.Count > 0)
         {
             var recipesResult = await _api.GetRecipesAsync(1, 100);
@@ -241,7 +216,6 @@ public class RecipeService
         List<int>? categoryIds = null,
         List<int>? tagIds = null)
     {
-        // 1. Create the recipe (with optional image via multipart/form-data)
         Stream? imageStream = null;
         string? imageFileName = null;
 
@@ -269,8 +243,6 @@ public class RecipeService
                 return (false, null, createResult.ErrorMessage ?? "Failed to create recipe.");
 
             var recipeId = createResult.Data.Recipe.Id;
-
-            // 2. Add ingredients one by one
             foreach (var ing in ingredients)
             {
                 var qtyStr = ing.Quantity.HasValue
@@ -284,8 +256,6 @@ public class RecipeService
                     Unit = string.IsNullOrWhiteSpace(ing.Unit) ? "pcs" : ing.Unit
                 });
             }
-
-            // 3. Add steps one by one
             foreach (var step in steps)
             {
                 await _api.AddRecipeStepAsync(recipeId, new ApiStep
@@ -340,14 +310,10 @@ public class RecipeService
     public async Task<(bool Success, double? UpdatedAverageRating)> RateRecipeAsync(int recipeId, int rating)
     {
         var request = new CreateRatingRequest { Rating = rating };
-
-        // The backend uses PUT /recipes/{id}/ratings/me for both create and update
         var result = await _api.RateRecipeAsync(recipeId, request);
 
         if (!result.IsSuccess)
             return (false, null);
-
-        // Fetch the updated average rating after successful submission
         var average = await GetRecipeAverageRatingAsync(recipeId);
         return (true, average);
     }
@@ -357,8 +323,6 @@ public class RecipeService
         var ratingsResult = await _api.GetRecipeRatingsAsync(recipeId, 1, 1);
         if (ratingsResult.IsSuccess && ratingsResult.Data?.Summary != null)
             return ratingsResult.Data.Summary.AverageRating;
-
-        // Fallback to summary endpoint
         var summaryResult = await _api.GetRecipeSummaryAsync(recipeId);
         if (summaryResult.IsSuccess && summaryResult.Data?.Summary != null)
             return summaryResult.Data.Summary.AverageRating;
@@ -373,11 +337,7 @@ public class RecipeService
 
         if (!result.IsSuccess)
             return null;
-
-        // Use cached user from AuthService instead of an extra API call
         var currentUser = _authService.CurrentUser;
-
-        // Re-fetch comments to get the server-assigned ID for the new comment
         var commentsResult = await _api.GetRecipeCommentsAsync(recipeId, 1, 100);
         var newComment = commentsResult.Data?.Comments
             .OrderByDescending(c => c.CreatedAt)
@@ -394,8 +354,6 @@ public class RecipeService
             IsOwnComment = true
         };
     }
-
-    // ?? Mapping helpers ??????????????????????????????????????????
 
     private const string BaseUrl = "https://forkfeed.vercel.app";
 
@@ -418,13 +376,9 @@ public class RecipeService
     {
         if (string.IsNullOrWhiteSpace(url))
             return string.Empty;
-
-        // Already absolute
         if (url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ||
             url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
             return url;
-
-        // Relative path — resolve against the API base
         return $"{BaseUrl}{(url.StartsWith('/') ? url : "/" + url)}";
     }
 

@@ -1,4 +1,4 @@
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Maui.Alerts;
@@ -87,8 +87,6 @@ public partial class RecipeDetailViewModel : BaseViewModel
             Recipe = recipe;
             Title = recipe.Title;
             IsRecipeLoaded = true;
-
-            // Populate ingredients and steps immediately (already fetched in parallel by GetRecipeByIdAsync)
             Ingredients.Clear();
             SelectedIngredients.Clear();
             HasSelectedIngredients = false;
@@ -102,8 +100,6 @@ public partial class RecipeDetailViewModel : BaseViewModel
             Steps.Clear();
             foreach (var s in recipe.Steps)
                 Steps.Add(s);
-
-            // Load rating and comments in parallel (non-critical for initial render)
             var currentUserId = _authService.CurrentUser?.Id;
             var ratingTask = _authService.IsLoggedIn
                 ? _recipeService.GetMyRatingAsync(RecipeId)

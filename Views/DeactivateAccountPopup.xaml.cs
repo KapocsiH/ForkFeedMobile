@@ -1,4 +1,4 @@
-using CommunityToolkit.Maui.Views;
+﻿using CommunityToolkit.Maui.Views;
 using ForkFeedMobile.Models;
 using ForkFeedMobile.Services;
 
@@ -28,8 +28,6 @@ public partial class DeactivateAccountPopup : Popup
 
         SetLoading(true);
         ErrorLabel.IsVisible = false;
-
-        // Validate password by attempting login with current user's email
         var email = _authService.CurrentUser?.Email;
         if (string.IsNullOrWhiteSpace(email))
         {
@@ -50,12 +48,8 @@ public partial class DeactivateAccountPopup : Popup
             SetLoading(false);
             return;
         }
-
-        // Re-set the token from the login response (in case it changed)
         if (loginResult.Data?.Token != null && _apiService is ApiService apiService)
             apiService.SetAuthToken(loginResult.Data.Token);
-
-        // Deactivate the account
         var deactivateResult = await _apiService.DeactivateMyAccountAsync(password);
 
         if (!deactivateResult.IsSuccess)

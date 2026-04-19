@@ -205,7 +205,6 @@ public partial class AddRecipeViewModel : BaseViewModel
         }
         catch
         {
-            // TODO
         }
     }
 
@@ -232,7 +231,6 @@ public partial class AddRecipeViewModel : BaseViewModel
         }
         catch
         {
-            // TODO
         }
     }
 
@@ -312,8 +310,6 @@ public partial class AddRecipeViewModel : BaseViewModel
 
             IsSaved = true;
             await Shell.Current.DisplayAlert("Success", "Recipe created successfully!", "OK");
-
-            // Clear form
             RecipeTitle = string.Empty;
             Description = string.Empty;
             SelectedDifficulty = "Easy";
@@ -331,8 +327,6 @@ public partial class AddRecipeViewModel : BaseViewModel
             NewIngredientUnit = string.Empty;
             NewStepDescription = string.Empty;
             IsSaved = false;
-
-            // Navigate back to home
             await Shell.Current.GoToAsync("//Home");
         }
         catch (Exception ex)

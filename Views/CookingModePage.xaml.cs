@@ -1,4 +1,4 @@
-using ForkFeedMobile.ViewModels;
+﻿using ForkFeedMobile.ViewModels;
 
 namespace ForkFeedMobile.Views;
 
@@ -13,7 +13,6 @@ public partial class CookingModePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        // Keep screen awake during cooking
         DeviceDisplay.Current.KeepScreenOn = true;
     }
 

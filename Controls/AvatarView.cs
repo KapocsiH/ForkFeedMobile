@@ -1,20 +1,19 @@
-namespace ForkFeedMobile.Controls;
+﻿namespace ForkFeedMobile.Controls;
 
 public partial class AvatarView : ContentView
 {
-    // A palette of Material-Design-inspired colors for placeholders
     private static readonly Color[] AvatarColors =
     [
-        Color.FromArgb("#E53935"), // Red
-        Color.FromArgb("#8E24AA"), // Purple
-        Color.FromArgb("#3949AB"), // Indigo
-        Color.FromArgb("#039BE5"), // Light Blue
-        Color.FromArgb("#00897B"), // Teal
-        Color.FromArgb("#43A047"), // Green
-        Color.FromArgb("#FF6B35"), // Orange (brand)
-        Color.FromArgb("#6D4C41"), // Brown
-        Color.FromArgb("#546E7A"), // Blue Grey
-        Color.FromArgb("#D81B60"), // Pink
+        Color.FromArgb("#E53935"),
+        Color.FromArgb("#8E24AA"),
+        Color.FromArgb("#3949AB"),
+        Color.FromArgb("#039BE5"),
+        Color.FromArgb("#00897B"),
+        Color.FromArgb("#43A047"),
+        Color.FromArgb("#FF6B35"),
+        Color.FromArgb("#6D4C41"),
+        Color.FromArgb("#546E7A"),
+        Color.FromArgb("#D81B60"),
     ];
 
     public static readonly BindableProperty ImageUrlProperty =
@@ -43,8 +42,6 @@ public partial class AvatarView : ContentView
         get => (double)GetValue(SizeProperty);
         set => SetValue(SizeProperty, value);
     }
-
-    // Computed properties for binding
     public double HalfSize => Size / 2;
     public double FontSize => Size * 0.42;
 

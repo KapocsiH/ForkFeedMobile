@@ -22,8 +22,6 @@ namespace ForkFeedMobile
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-            // ── API Service ──────────────────────────────────────
-            // REAL API – uses the Vercel backend
             builder.Services.AddSingleton<IApiService>(sp =>
             {
                 var httpClient = new HttpClient
@@ -34,14 +32,10 @@ namespace ForkFeedMobile
                 return new ApiService(httpClient);
             });
 
-            // MOCK API – uncomment the line below (and comment the block above) to use mock data
-            // builder.Services.AddSingleton<IApiService, MockApiService>();
-
 #if ANDROID
             builder.Services.AddSingleton<IStatusBarService, ForkFeedMobile.Services.StatusBarService>();
 #endif
 
-            // Services (singleton so state persists across pages)
             builder.Services.AddSingleton<ThemeService>();
             builder.Services.AddSingleton<AuthService>();
             builder.Services.AddSingleton<RecipeService>();
@@ -50,7 +44,6 @@ namespace ForkFeedMobile
             builder.Services.AddSingleton<ConnectivityService>();
             builder.Services.AddSingleton<CacheService>();
 
-            // ViewModels
             builder.Services.AddTransient<HomeViewModel>();
             builder.Services.AddTransient<RecipeDetailViewModel>();
             builder.Services.AddTransient<CookingModeViewModel>();
@@ -63,7 +56,6 @@ namespace ForkFeedMobile
             builder.Services.AddTransient<ShoppingListViewModel>();
             builder.Services.AddTransient<RecipeBookDetailsViewModel>();
 
-            // Pages
             builder.Services.AddTransient<HomePage>();
             builder.Services.AddTransient<RecipeDetailPage>();
             builder.Services.AddTransient<CookingModePage>();
