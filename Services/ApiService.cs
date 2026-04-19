@@ -214,6 +214,9 @@ public class ApiService : IApiService
     public Task<ApiResult<MessageResponse>> UpdateRecipeBookAsync(int bookId, UpdateRecipeBookRequest request) =>
         PatchAsync<MessageResponse>($"recipe-books/{bookId}", request);
 
+    public Task<ApiResult<MessageResponse>> DeleteRecipeBookAsync(int bookId) =>
+        DeleteAsync<MessageResponse>($"recipe-books/{bookId}");
+
     public Task<ApiResult<UserResponse>> GetUserAsync(int userId) =>
         GetAsync<UserResponse>($"users/{userId}");
 

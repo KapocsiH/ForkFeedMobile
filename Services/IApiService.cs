@@ -62,6 +62,7 @@ public interface IApiService
     Task<ApiResult<MessageResponse>> RemoveRecipeFromBookAsync(int bookId, int recipeId);
     Task<ApiResult<RecipesResponse>> GetRecipeBookRecipesAsync(int bookId, int page = 1, int limit = 20);
     Task<ApiResult<MessageResponse>> UpdateRecipeBookAsync(int bookId, UpdateRecipeBookRequest request);
+    Task<ApiResult<MessageResponse>> DeleteRecipeBookAsync(int bookId);
 
     Task<ApiResult<UserResponse>> GetUserAsync(int userId);
     Task<ApiResult<RecipesResponse>> GetUserRecipesAsync(int userId, int page = 1, int limit = 20);

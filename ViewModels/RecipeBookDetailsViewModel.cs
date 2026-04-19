@@ -166,6 +166,41 @@ public partial class RecipeBookDetailsViewModel : BaseViewModel
         }
     }
 
+    [RelayCommand]
+    private async Task DeleteBookAsync()
+    {
+        var confirm = await Shell.Current.DisplayAlert(
+            "Törlés", "Biztosan törölni szeretnéd ezt a receptfüzetet?",
+            "Törlés", "Mégsem");
+
+        if (!confirm) return;
+
+        try
+        {
+            IsBusy = true;
+            ClearError();
+
+            var result = await _apiService.DeleteRecipeBookAsync(BookId);
+
+            if (result.IsSuccess)
+            {
+                await Shell.Current.GoToAsync("..");
+            }
+            else
+            {
+                SetError(result.ErrorMessage ?? "Nem sikerült törölni a receptfüzetet.");
+            }
+        }
+        catch
+        {
+            SetError("Nem sikerült törölni a receptfüzetet.");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
     private const string BaseUrl = "https://forkfeed.vercel.app";
 
     private static Recipe MapToRecipe(ApiRecipe api) => new()

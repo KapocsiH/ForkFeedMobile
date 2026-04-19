@@ -24,7 +24,8 @@
 
                 <!-- Visibility tag + Edit button for own books -->
                 <Grid IsVisible="{Binding IsOwn}"
-                      ColumnDefinitions="Auto,*,Auto"
+                      ColumnDefinitions="Auto,*,Auto,Auto"
+                      ColumnSpacing="8"
                       Margin="0,4,0,0">
                     <Border Grid.Column="0"
                             StrokeShape="RoundRectangle 12"
@@ -42,6 +43,15 @@
                             Text="Szerkesztés"
                             Command="{Binding EditBookCommand}"
                             BackgroundColor="{StaticResource Primary}"
+                            TextColor="White"
+                            CornerRadius="12"
+                            FontSize="13"
+                            HeightRequest="36"
+                            Padding="16,0" />
+                    <Button Grid.Column="3"
+                            Text="Törlés"
+                            Command="{Binding DeleteBookCommand}"
+                            BackgroundColor="{StaticResource ErrorRed}"
                             TextColor="White"
                             CornerRadius="12"
                             FontSize="13"
