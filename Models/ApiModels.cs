@@ -638,6 +638,33 @@ public class UpdateRecipeBookRequest
     public bool? IsPublic { get; set; }
 }
 
+public class CreateRecipeBookRequest
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("description")]
+    public string? Description { get; set; }
+
+    [JsonPropertyName("is_public")]
+    public bool IsPublic { get; set; }
+}
+
+public class CreateRecipeBookResponse
+{
+    [JsonPropertyName("recipe_book")]
+    public ApiRecipeBook? RecipeBook { get; set; }
+
+    [JsonPropertyName("message")]
+    public string? Message { get; set; }
+}
+
+public class AddRecipeToBookRequest
+{
+    [JsonPropertyName("recipeId")]
+    public int RecipeId { get; set; }
+}
+
 public class MessageResponse
 {
     [JsonPropertyName("message")]

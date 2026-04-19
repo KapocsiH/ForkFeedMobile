@@ -21,6 +21,10 @@
             <helpers:DateTimeToRelativeConverter x:Key="DateTimeToRelative" />
             <helpers:TagBackgroundConverter x:Key="TagBackgroundConverter" />
             <helpers:TagTextColorConverter x:Key="TagTextColorConverter" />
+            <helpers:TabActiveBackgroundConverter x:Key="TabActiveBackground" />
+            <helpers:TabActiveTextConverter x:Key="TabActiveText" />
+            <helpers:TabInactiveBackgroundConverter x:Key="TabInactiveBackground" />
+            <helpers:TabInactiveTextConverter x:Key="TabInactiveText" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

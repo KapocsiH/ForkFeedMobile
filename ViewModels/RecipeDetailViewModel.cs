@@ -261,7 +261,21 @@ public partial class RecipeDetailViewModel : BaseViewModel
     [RelayCommand]
     private async Task SaveToCookbookAsync()
     {
-        await Shell.Current.DisplayAlert("Save to Cookbook", "This feature is coming soon!", "OK");
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Bejelentkezés szükséges", "Kérjük, jelentkezz be.", "OK");
+            return;
+        }
+
+        var userId = _authService.CurrentUser?.Id ?? 0;
+        var popup = new SaveToRecipeBookPopup(_apiService, RecipeId, userId);
+        var result = await Shell.Current.CurrentPage.ShowPopupAsync(popup);
+
+        if (result is true)
+        {
+            var toast = CommunityToolkit.Maui.Alerts.Toast.Make("Recept mentve!", ToastDuration.Short, 14);
+            await toast.Show();
+        }
     }
 
     [RelayCommand]

@@ -21,6 +21,55 @@
     <ScrollView>
         <VerticalStackLayout Padding="16,16,16,100" Spacing="12">
 
+            <!-- Tab Switcher -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Grid.Column="0" Text="Recept"
+                        Command="{Binding SelectRecipeTabCommand}"
+                        BackgroundColor="{Binding IsRecipeTabSelected, Converter={StaticResource TabActiveBackground}}"
+                        TextColor="{Binding IsRecipeTabSelected, Converter={StaticResource TabActiveText}}"
+                        CornerRadius="12" HeightRequest="44" FontSize="15" FontAttributes="Bold" />
+                <Button Grid.Column="1" Text="Receptfüzet"
+                        Command="{Binding SelectBookTabCommand}"
+                        BackgroundColor="{Binding IsRecipeTabSelected, Converter={StaticResource TabInactiveBackground}}"
+                        TextColor="{Binding IsRecipeTabSelected, Converter={StaticResource TabInactiveText}}"
+                        CornerRadius="12" HeightRequest="44" FontSize="15" FontAttributes="Bold" />
+            </Grid>
+
+            <!-- Recipe Book Form -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding IsRecipeTabSelected, Converter={StaticResource InvertBool}}">
+                <Label Text="Receptfüzet neve" FontSize="14" FontAttributes="Bold" />
+                <Entry Placeholder="pl. Kedvenc sütemények"
+                       Text="{Binding BookName}" />
+
+                <Label Text="Rövid leírás" FontSize="14" FontAttributes="Bold" />
+                <Editor Placeholder="Írj röviden a receptfüzetről..."
+                        Text="{Binding BookDescription}"
+                        HeightRequest="80"
+                        AutoSize="TextChanges" />
+
+                <HorizontalStackLayout Spacing="10" VerticalOptions="Center">
+                    <Label Text="Nyilvános" FontSize="14" FontAttributes="Bold" VerticalOptions="Center" />
+                    <Switch IsToggled="{Binding BookIsPublic}" OnColor="{StaticResource Primary}" />
+                </HorizontalStackLayout>
+
+                <Button Text="Létrehozás"
+                        Command="{Binding CreateRecipeBookCommand}"
+                        BackgroundColor="{StaticResource Primary}"
+                        TextColor="White"
+                        FontSize="18" FontAttributes="Bold"
+                        CornerRadius="12"
+                        HeightRequest="56"
+                        Margin="0,16,0,24"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertBool}}" />
+
+                <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                   IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource Primary}" />
+            </VerticalStackLayout>
+
+            <!-- Recipe Form (existing) -->
+            <VerticalStackLayout Spacing="12" IsVisible="{Binding IsRecipeTabSelected}">
+
             <!-- Image Picker -->
             <Frame CornerRadius="12" Padding="0" HeightRequest="200"
                    BackgroundColor="{StaticResource Gray100}" BorderColor="Transparent"
@@ -200,6 +249,7 @@
             <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                Color="{StaticResource Primary}" />
+            </VerticalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
     <controls:FloatingNavBar />

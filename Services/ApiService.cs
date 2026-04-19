@@ -190,14 +190,20 @@ public class ApiService : IApiService
     public Task<ApiResult<RolesResponse>> GetRolesAsync() =>
         GetAsync<RolesResponse>("meta/roles");
 
+    public Task<ApiResult<CreateRecipeBookResponse>> CreateRecipeBookAsync(CreateRecipeBookRequest request) =>
+        PostAsync<CreateRecipeBookResponse>("recipe-books", request);
+
     public Task<ApiResult<RecipeBooksResponse>> GetRecipeBooksAsync(int page = 1, int limit = 20) =>
         GetAsync<RecipeBooksResponse>($"recipe-books?page={page}&limit={limit}");
+
+    public Task<ApiResult<RecipeBooksResponse>> GetMyRecipeBooksAsync(int page = 1, int limit = 20) =>
+        GetAsync<RecipeBooksResponse>($"users/me/recipe-books?page={page}&limit={limit}");
 
     public Task<ApiResult<MessageResponse>> CloneRecipeBookAsync(int bookId) =>
         PostAsync<MessageResponse>($"recipe-books/{bookId}/clone", null);
 
     public Task<ApiResult<MessageResponse>> AddRecipeToBookAsync(int bookId, int recipeId) =>
-        PostAsync<MessageResponse>($"recipe-books/{bookId}/recipes/{recipeId}", null);
+        PostAsync<MessageResponse>($"recipe-books/{bookId}/recipes", new AddRecipeToBookRequest { RecipeId = recipeId });
 
     public Task<ApiResult<MessageResponse>> RemoveRecipeFromBookAsync(int bookId, int recipeId) =>
         DeleteAsync<MessageResponse>($"recipe-books/{bookId}/recipes/{recipeId}");

@@ -49,6 +49,18 @@ public partial class AddRecipeViewModel : BaseViewModel
     [ObservableProperty]
     private bool _isLoadingData;
 
+    [ObservableProperty]
+    private bool _isRecipeTabSelected = true;
+
+    [ObservableProperty]
+    private string _bookName = string.Empty;
+
+    [ObservableProperty]
+    private string _bookDescription = string.Empty;
+
+    [ObservableProperty]
+    private bool _bookIsPublic;
+
     public ObservableCollection<Ingredient> Ingredients { get; } = new();
     public ObservableCollection<RecipeStep> Steps { get; } = new();
     public List<string> DifficultyOptions { get; } = new() { "Easy", "Medium", "Hard" };
@@ -62,6 +74,66 @@ public partial class AddRecipeViewModel : BaseViewModel
         _apiService = apiService;
         _cacheService = cacheService;
         Title = "Add Recipe";
+    }
+
+    [RelayCommand]
+    private void SelectRecipeTab()
+    {
+        IsRecipeTabSelected = true;
+    }
+
+    [RelayCommand]
+    private void SelectBookTab()
+    {
+        IsRecipeTabSelected = false;
+    }
+
+    [RelayCommand]
+    private async Task CreateRecipeBookAsync()
+    {
+        if (string.IsNullOrWhiteSpace(BookName))
+        {
+            await Shell.Current.DisplayAlert("Hiba", "A receptfüzet neve kötelező.", "OK");
+            return;
+        }
+
+        if (!_authService.IsLoggedIn)
+        {
+            await Shell.Current.DisplayAlert("Hiba", "Be kell jelentkezned a receptfüzet létrehozásához.", "OK");
+            return;
+        }
+
+        IsBusy = true;
+        try
+        {
+            var request = new CreateRecipeBookRequest
+            {
+                Name = BookName.Trim(),
+                Description = string.IsNullOrWhiteSpace(BookDescription) ? null : BookDescription.Trim(),
+                IsPublic = BookIsPublic
+            };
+
+            var result = await _apiService.CreateRecipeBookAsync(request);
+            if (result.IsSuccess)
+            {
+                await Shell.Current.DisplayAlert("Siker", "Receptfüzet létrehozva!", "OK");
+                BookName = string.Empty;
+                BookDescription = string.Empty;
+                BookIsPublic = false;
+            }
+            else
+            {
+                await Shell.Current.DisplayAlert("Hiba", result.ErrorMessage ?? "Nem sikerült létrehozni.", "OK");
+            }
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlert("Hiba", $"Váratlan hiba: {ex.Message}", "OK");
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]

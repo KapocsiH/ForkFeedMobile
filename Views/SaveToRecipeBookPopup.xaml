@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               x:Class="ForkFeedMobile.Views.SaveToRecipeBookPopup"
+               CanBeDismissedByTappingOutsideOfPopup="False"
+               Color="Transparent">
+
+    <Border StrokeShape="RoundRectangle 16"
+            StrokeThickness="0"
+            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource CardDark}}"
+            Padding="24"
+            WidthRequest="320">
+        <Border.Shadow>
+            <Shadow Brush="Black" Offset="0,4" Radius="12" Opacity="0.3" />
+        </Border.Shadow>
+
+        <VerticalStackLayout Spacing="16">
+
+            <Label x:Name="TitleLabel"
+                   Text="Receptfuzetbe mentes"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalTextAlignment="Center" />
+
+            <ActivityIndicator x:Name="LoadingIndicator"
+                               IsRunning="True"
+                               IsVisible="True"
+                               Color="{StaticResource Primary}" />
+
+            <Label x:Name="EmptyLabel"
+                   Text="Nincs receptfuzeted."
+                   FontSize="14"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False" />
+
+            <CollectionView x:Name="BooksCollection"
+                            SelectionMode="Single"
+                            HeightRequest="200"
+                            IsVisible="False"
+                            SelectionChanged="OnSelectionChanged">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Padding="8,6" ColumnDefinitions="*,Auto">
+                            <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                <Label Text="{Binding Name}" FontSize="15" FontAttributes="Bold" />
+                                <Label Text="{Binding Description}" FontSize="12"
+                                       TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                                       LineBreakMode="TailTruncation" />
+                            </VerticalStackLayout>
+                            <Label Grid.Column="1" Text="{Binding RecipeCount, StringFormat='{0} recept'}"
+                                   FontSize="12" VerticalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label x:Name="ErrorLabel"
+                   TextColor="{StaticResource ErrorRed}"
+                   FontSize="13"
+                   HorizontalTextAlignment="Center"
+                   IsVisible="False" />
+
+            <Button x:Name="SaveButton"
+                    Text="Mentes"
+                    BackgroundColor="{StaticResource Primary}"
+                    TextColor="White"
+                    CornerRadius="12"
+                    HeightRequest="48"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    IsEnabled="False"
+                    Clicked="OnSaveClicked" />
+
+            <Button x:Name="CancelButton"
+                    Text="Megsem"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                    FontSize="14"
+                    Padding="0"
+                    HeightRequest="40"
+                    Clicked="OnCancelClicked" />
+
+        </VerticalStackLayout>
+    </Border>
+</toolkit:Popup>

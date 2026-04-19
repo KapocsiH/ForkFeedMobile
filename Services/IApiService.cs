@@ -54,7 +54,9 @@ public interface IApiService
     Task<ApiResult<DifficultiesResponse>> GetDifficultiesAsync();
     Task<ApiResult<RolesResponse>> GetRolesAsync();
 
+    Task<ApiResult<CreateRecipeBookResponse>> CreateRecipeBookAsync(CreateRecipeBookRequest request);
     Task<ApiResult<RecipeBooksResponse>> GetRecipeBooksAsync(int page = 1, int limit = 20);
+    Task<ApiResult<RecipeBooksResponse>> GetMyRecipeBooksAsync(int page = 1, int limit = 20);
     Task<ApiResult<MessageResponse>> CloneRecipeBookAsync(int bookId);
     Task<ApiResult<MessageResponse>> AddRecipeToBookAsync(int bookId, int recipeId);
     Task<ApiResult<MessageResponse>> RemoveRecipeFromBookAsync(int bookId, int recipeId);
